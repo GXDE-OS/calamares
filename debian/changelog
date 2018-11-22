@@ -1,7 +1,13 @@
+calamares (3.2.2-2) unstable; urgency=medium
+
+  * Version bump (no changes)
+
+ -- Jonathan Carter <jcc@debian.org>  Thu, 22 Nov 2018 23:07:48 +0200
+
 calamares (3.2.2-1) unstable; urgency=medium
 
   * New upstream release
-  * Update standards version to 4.2.1 
+  * Update standards version to 4.2.1
   * debian/control: wrap-and-sort
   * Remove 0002-Add-patch-to-compile-with-pythonQt.patch (fixed upstream)
   * Remove 0003-remove-wrong-path.patch (no longer needed)
