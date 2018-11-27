@@ -1,3 +1,9 @@
+calamares (3.2.2-3) unstable; urgency=medium
+
+  * Re-add lintian-overrides removed in error
+
+ -- Jonathan Carter <jcc@debian.org>  Tue, 27 Nov 2018 09:45:18 +0200
+
 calamares (3.2.2-2) unstable; urgency=medium
 
   * Version bump (no changes)
