@@ -8,3 +8,6 @@ calamares: package-name-doesnt-match-sonames
 
 # Debian live media relies on sudo so this message isn't needed
 calamares: desktop-command-not-in-package usr/share/applications/calamares.desktop sudo
+
+# For the initramfs module this is really the best place for its readme file
+calamares: package-contains-documentation-outside-usr-share-doc

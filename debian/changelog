@@ -1,3 +1,9 @@
+calamares (3.2.2-4) unstable; urgency=medium
+
+  * Rebuild for latest pythonqt with Python 3.7
+
+ -- Jonathan Carter <jcc@debian.org>  Mon, 10 Dec 2018 14:10:22 +0200
+
 calamares (3.2.2-3) unstable; urgency=medium
 
   * Re-add lintian-overrides removed in error
