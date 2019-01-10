@@ -1,3 +1,11 @@
+calamares (3.2.3-1) unstable; urgency=medium
+
+  * New upstream release
+  * Update copyright years
+  * Update standards version to 4.3.0
+
+ -- Jonathan Carter <jcc@debian.org>  Thu, 10 Jan 2019 09:09:48 +0200
+
 calamares (3.2.2-4) unstable; urgency=medium
 
   * Rebuild for latest pythonqt with Python 3.7
