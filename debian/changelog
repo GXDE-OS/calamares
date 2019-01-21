@@ -1,3 +1,11 @@
+calamares (3.2.3-2) unstable; urgency=medium
+
+  * Add libpwquality-dev to build-depends
+  * Remove patch to use sudo instead of pkexec
+    (pkexec seems to work fine now on all debian variants)
+
+ -- Jonathan Carter <jcc@debian.org>  Mon, 21 Jan 2019 11:58:37 +0200
+
 calamares (3.2.3-1) unstable; urgency=medium
 
   * New upstream release
