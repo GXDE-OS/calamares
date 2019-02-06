@@ -54,7 +54,7 @@ Description: distribution-independent installer framework
  It provides a graphical installer that can be used with nearly
  any distribution. This package is suitable for live media on
  Debian-based systems, and won't be of any particular use on
- and already installed system.
+ an already installed system.
  .
  You will likely want to provide your own config files to match
  your distribution, reading the Calamares documentation will guide
