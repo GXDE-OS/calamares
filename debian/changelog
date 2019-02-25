@@ -1,3 +1,9 @@
+calamares (3.2.4-3) unstable; urgency=medium
+
+  * Do not build against pythonqt (avoid buggy dep during freeze)
+
+ -- Jonathan Carter <jcc@debian.org>  Thu, 21 Feb 2019 08:45:45 +0000
+
 calamares (3.2.4-2) unstable; urgency=medium
 
   * Add libkf5plasma-dev as build dependency (Closes: #922105)
