@@ -1,3 +1,9 @@
+calamares (3.2.4-4) UNRELEASED; urgency=medium
+
+  * Update VCS location
+
+ -- Jonathan Carter <jcc@debian.org>  Mon, 25 Feb 2019 07:32:20 +0000
+
 calamares (3.2.4-3) unstable; urgency=medium
 
   * Do not build against pythonqt (avoid buggy dep during freeze)
