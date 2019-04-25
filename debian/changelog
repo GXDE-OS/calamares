@@ -1,3 +1,9 @@
+calamares (3.2.5-1~exp1) experimental; urgency=medium
+
+  * New upstream release
+
+ -- Jonathan Carter <jcc@debian.org>  Wed, 24 Apr 2019 12:19:56 +0200
+
 calamares (3.2.4-4) unstable; urgency=medium
 
   * Update VCS location
