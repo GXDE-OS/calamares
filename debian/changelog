@@ -1,3 +1,9 @@
+calamares (3.2.7-1~exp1) experimental; urgency=medium
+
+  * New upstream release 
+
+ -- Jonathan Carter <jcc@debian.org>  Mon, 29 Apr 2019 09:26:13 +0000
+
 calamares (3.2.5-1~exp1) experimental; urgency=medium
 
   * New upstream release
