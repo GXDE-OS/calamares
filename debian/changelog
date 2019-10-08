@@ -1,3 +1,11 @@
+calamares (3.2.14-1) unstable; urgency=medium
+
+  * New upstream release
+  * Update standards version to 4.5.0
+  * Override lintian false-positive
+
+ -- Jonathan Carter <jcc@debian.org>  Tue, 08 Oct 2019 20:33:58 +0200
+
 calamares (3.2.13-1) unstable; urgency=medium
 
   * New upstream release
@@ -8,7 +16,7 @@ calamares (3.2.13-1) unstable; urgency=medium
 
 calamares (3.2.12-1) unstable; urgency=medium
 
-  * New upstream release 
+  * New upstream release
   * Add lintian override for spelling mistake for something that looks like
     a string, but isn't
   * Remove lintian override that's no longer needed
@@ -24,7 +32,7 @@ calamares (3.2.11-1) unstable; urgency=medium
 
 calamares (3.2.7-1~exp1) experimental; urgency=medium
 
-  * New upstream release 
+  * New upstream release
 
  -- Jonathan Carter <jcc@debian.org>  Mon, 29 Apr 2019 09:26:13 +0000
 
