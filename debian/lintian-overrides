@@ -10,4 +10,4 @@ calamares: package-name-doesnt-match-sonames
 calamares: desktop-command-not-in-package usr/share/applications/calamares.desktop pkexec
 
 # Override false-positive
-calamares: spelling-error-in-binary usr/bin/calamares yau you
+calamares: spelling-error-in-binary usr/bin/calamares WHe When
