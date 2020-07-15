@@ -1,3 +1,23 @@
+calamares (3.2.27-1) unstable; urgency=medium
+
+  * New upstream release
+  * Remove lintian false-positive spelling warning
+    (no longer needed)
+  * debian/rules:
+    - Export buildinfo path to make .buildinfo files reproducible
+  * Remove files no longer shipped from debian/copyright
+
+ -- Jonathan Carter <jcc@debian.org>  Wed, 15 Jul 2020 11:43:33 +0200
+
+calamares (3.2.26.1-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/lintian-overrides:
+    - Fix spelling mistake
+    - Replace spelling false-positive with a new one
+
+ -- Jonathan Carter <jcc@debian.org>  Tue, 30 Jun 2020 19:59:54 +0200
+
 calamares (3.2.26-1) unstable; urgency=medium
 
   * New upstream release
