@@ -1,3 +1,12 @@
+calamares (3.2.32.1-2) unstable; urgency=medium
+
+  * Small changes upload for kpmcore ABI bump (to version 10)
+  * Replace DEB_BUILD_OPTIONS with DEB_BUILD_MAINT_OPTIONS in
+    debian/rules
+  * Use secure copyright format URI
+
+ -- Jonathan Carter <jcc@debian.org>  Sun, 18 Oct 2020 18:31:41 +0200
+
 calamares (3.2.32.1-1) unstable; urgency=medium
 
   * New upstream release
