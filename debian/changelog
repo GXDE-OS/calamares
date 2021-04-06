@@ -1,8 +1,9 @@
-calamares (3.2.36-2) UNRELEASED; urgency=medium
+calamares (3.2.39.2-1) experimental; urgency=medium
 
   * Fix spelling mistake in name in previous changelog entry
+  * New upstream release
 
- -- Jonathan Carter <jcc@debian.org>  Fri, 19 Feb 2021 13:15:56 +0200
+ -- Jonathan Carter <jcc@debian.org>  Tue, 06 Apr 2021 14:22:19 +0200
 
 calamares (3.2.36-1) unstable; urgency=medium
 
