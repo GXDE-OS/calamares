@@ -113,7 +113,7 @@ BrandingLoader::tryLoad( QTranslator* translator )
         }
         else
         {
-            cDebug() << Logger::SubEntry << "Branding using default, system locale not found:" << m_localeName;
+            cDebug() << Logger::SubEntry << "Branding no translation for" << m_localeName << "using default (en)";
             // TODO: this loads something completely different
             return translator->load( m_prefix + "en" );
         }
@@ -211,53 +211,32 @@ loadTranslator( const QLocale& locale, const QString& prefix, QTranslator* trans
     return ::tryLoad( translator, prefix, locale.name() );
 }
 
-Retranslator*
-Retranslator::retranslatorFor( QObject* parent )
-{
-    Retranslator* r = nullptr;
-    for ( QObject* child : parent->children() )
-    {
-        r = qobject_cast< Retranslator* >( child );
-        if ( r )
-        {
-            return r;
-        }
-    }
-
-    return new Retranslator( parent );
-}
-
-void
-Retranslator::attachRetranslator( QObject* parent, std::function< void( void ) > retranslateFunc )
-{
-    retranslatorFor( parent )->m_retranslateFuncList.append( retranslateFunc );
-    retranslateFunc();
-}
-
-
 Retranslator::Retranslator( QObject* parent )
     : QObject( parent )
 {
-    parent->installEventFilter( this );
 }
-
 
 bool
 Retranslator::eventFilter( QObject* obj, QEvent* e )
 {
-    if ( obj == parent() )
+    if ( e->type() == QEvent::LanguageChange )
     {
-        if ( e->type() == QEvent::LanguageChange )
-        {
-            foreach ( std::function< void() > func, m_retranslateFuncList )
-            {
-                func();
-            }
-            emit languageChange();
-        }
+        emit languageChanged();
     }
     // pass the event on to the base
     return QObject::eventFilter( obj, e );
+}
+
+Retranslator* Retranslator::instance()
+{
+    static Retranslator s_instance(nullptr);
+    return &s_instance;
+}
+
+void Retranslator::attach(QObject* o, std::function<void ()> f)
+{
+    connect( instance(), &Retranslator::languageChanged, o, f );
+    f();
 }
 
 void

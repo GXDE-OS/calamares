@@ -1,6 +1,18 @@
+calamares (3.2.41.1-1) unstable; urgency=medium
+
+  * New upstream release
+  * Remove lintian-override about pk-exec
+
+ -- Jonathan Carter <jcc@debian.org>  Wed, 01 Sep 2021 13:47:15 +0200
+
+calamares (3.2.39.3-1) experimental; urgency=medium
+
+  * New upstream release
+
+ -- Jonathan Carter <jcc@debian.org>  Tue, 29 Jun 2021 13:03:41 +0200
+
 calamares (3.2.39.2-1) experimental; urgency=medium
 
-  * Fix spelling mistake in name in previous changelog entry
   * New upstream release
 
  -- Jonathan Carter <jcc@debian.org>  Tue, 06 Apr 2021 14:22:19 +0200

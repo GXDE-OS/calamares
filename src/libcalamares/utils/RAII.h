@@ -14,6 +14,7 @@
 #include <QObject>
 #include <QSignalBlocker>
 
+#include <optional>
 #include <type_traits>
 
 /** @brief Convenience to zero out and deleteLater of any QObject-derived-class
@@ -58,4 +59,53 @@ struct cBoolSetter
 /// @brief Blocks signals on a QObject until destruction
 using cSignalBlocker = QSignalBlocker;
 
+/** @brief Writes a value on destruction to a pointed-to location.
+ *
+ * If the pointer is non-null, write the last-given-value if there
+ * is one to the pointed-to object.
+ */
+template < typename T >
+struct cPointerSetter
+{
+    std::optional< T > m_value;
+    T* m_pointer;
+
+    /** @brief Create a setter with no value set
+     *
+     * Until a value is set via operator=(), this pointer-setter
+     * will do nothing on destruction, leaving the pointed-to
+     * value unchanged.
+     */
+    cPointerSetter( T* p )
+        : m_pointer( p )
+    {
+    }
+    /** @brief Create a setter with a value already set
+     *
+     * This ensures that on destruction, the value @p v will be written;
+     * it is equivalent to assigning @p v immediately. The pointed-to
+     * value is **not** changed (until destruction).
+     */
+    cPointerSetter( T* p, T v )
+        : m_value( v )
+        , m_pointer( p )
+    {
+    }
+    ~cPointerSetter()
+    {
+        if ( m_pointer && m_value.has_value() )
+        {
+            *m_pointer = m_value.value();
+        }
+    }
+
+    const T& operator=( const T& v )
+    {
+        m_value = v;
+        return v;
+    }
+};
+
+template < typename T >
+cPointerSetter( T p )->cPointerSetter< decltype( *p ) >;
 #endif

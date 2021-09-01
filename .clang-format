@@ -8,6 +8,7 @@ AlignEscapedNewlines: DontAlign
 AllowAllParametersOfDeclarationOnNextLine: "false"
 AllowShortFunctionsOnASingleLine: Inline
 AllowShortIfStatementsOnASingleLine: "false"
+AllowShortLambdasOnASingleLine: All
 AllowShortLoopsOnASingleLine: "false"
 AlwaysBreakAfterReturnType: TopLevelDefinitions
 AlwaysBreakTemplateDeclarations: Yes
@@ -28,7 +29,6 @@ ReflowComments: "false"
 SortIncludes: "true"
 SpaceAfterCStyleCast: "false"
 SpacesBeforeTrailingComments: "2"
-# SpaceInEmptyBlock: "true"
 SpacesInAngles: "true"
 SpacesInParentheses: "true"
 SpacesInSquareBrackets: "true"
