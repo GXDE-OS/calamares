@@ -174,7 +174,7 @@ License: CC0-1.0
 Files: src/qml/calamares/slideshow/*qml
 Copyright: 2017, Adriaan de Groot <groot@kde.org>
            2016 The Qt Company Ltd
-	   2012 Digia Plc and/or its subsidiary(-ies)
+           2012 Digia Plc and/or its subsidiary(-ies)
 License: LGPL-2.1
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
