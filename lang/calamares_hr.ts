@@ -689,17 +689,42 @@ Instalacijski program će izaći i sve promjene će biti izgubljene.</translatio
   <context>
     <name>ClearMountsJob</name>
     <message>
-      <location filename="../src/modules/partition/jobs/ClearMountsJob.cpp" line="42"/>
+      <location filename="../src/modules/partition/jobs/ClearMountsJob.cpp" line="259"/>
+      <source>Successfully unmounted %1.</source>
+      <translation>Uspješno demontiran %1. </translation>
+    </message>
+    <message>
+      <location filename="../src/modules/partition/jobs/ClearMountsJob.cpp" line="266"/>
+      <source>Successfully disabled swap %1.</source>
+      <translation>Uspješno onemogućen swap %1.</translation>
+    </message>
+    <message>
+      <location filename="../src/modules/partition/jobs/ClearMountsJob.cpp" line="292"/>
+      <source>Successfully cleared swap %1.</source>
+      <translation>Uspješno obrisan swap %1.</translation>
+    </message>
+    <message>
+      <location filename="../src/modules/partition/jobs/ClearMountsJob.cpp" line="306"/>
+      <source>Successfully closed mapper device %1.</source>
+      <translation>Uspješno zatvoren device mapper %1.</translation>
+    </message>
+    <message>
+      <location filename="../src/modules/partition/jobs/ClearMountsJob.cpp" line="319"/>
+      <source>Successfully disabled volume group %1.</source>
+      <translation>Volume grupa %1 je uspješno onemogućena.</translation>
+    </message>
+    <message>
+      <location filename="../src/modules/partition/jobs/ClearMountsJob.cpp" line="358"/>
       <source>Clear mounts for partitioning operations on %1</source>
       <translation>Ukloni montiranja za operacije s particijama na %1</translation>
     </message>
     <message>
-      <location filename="../src/modules/partition/jobs/ClearMountsJob.cpp" line="49"/>
+      <location filename="../src/modules/partition/jobs/ClearMountsJob.cpp" line="364"/>
       <source>Clearing mounts for partitioning operations on %1.</source>
       <translation>Uklanjam montiranja za operacija s particijama na %1.</translation>
     </message>
     <message>
-      <location filename="../src/modules/partition/jobs/ClearMountsJob.cpp" line="224"/>
+      <location filename="../src/modules/partition/jobs/ClearMountsJob.cpp" line="383"/>
       <source>Cleared all mounts for %1</source>
       <translation>Uklonjena sva montiranja za %1</translation>
     </message>
@@ -951,25 +976,25 @@ Instalacijski program će izaći i sve promjene će biti izgubljene.</translatio
     <message>
       <location filename="../src/modules/packagechooser/Config.cpp" line="177"/>
       <source>Install option: &lt;strong&gt;%1&lt;/strong&gt;</source>
-      <translation type="unfinished"/>
+      <translation>Opcija instalacije: &lt;strong&gt;%1&lt;/strong&gt;</translation>
     </message>
     <message>
       <location filename="../src/modules/packagechooser/Config.cpp" line="177"/>
       <source>None</source>
-      <translation type="unfinished"/>
+      <translation>Nijedan</translation>
     </message>
     <message>
-      <location filename="../src/modules/summary/Config.cpp" line="82"/>
+      <location filename="../src/modules/summary/Config.cpp" line="94"/>
       <source>Summary</source>
       <translation>Sažetak</translation>
     </message>
     <message>
-      <location filename="../src/modules/summary/Config.cpp" line="86"/>
+      <location filename="../src/modules/summary/Config.cpp" line="98"/>
       <source>This is an overview of what will happen once you start the setup procedure.</source>
       <translation>Ovo je prikaz događaja koji će uslijediti jednom kad počne instalacijska procedura.</translation>
     </message>
     <message>
-      <location filename="../src/modules/summary/Config.cpp" line="91"/>
+      <location filename="../src/modules/summary/Config.cpp" line="103"/>
       <source>This is an overview of what will happen once you start the install procedure.</source>
       <translation>Ovo je prikaz događaja koji će uslijediti jednom kad počne instalacijska procedura.</translation>
     </message>
@@ -1252,22 +1277,22 @@ Instalacijski program će izaći i sve promjene će biti izgubljene.</translatio
   <context>
     <name>DeletePartitionJob</name>
     <message>
-      <location filename="../src/modules/partition/jobs/DeletePartitionJob.cpp" line="31"/>
+      <location filename="../src/modules/partition/jobs/DeletePartitionJob.cpp" line="71"/>
       <source>Delete partition %1.</source>
       <translation>Obriši particiju %1.</translation>
     </message>
     <message>
-      <location filename="../src/modules/partition/jobs/DeletePartitionJob.cpp" line="38"/>
+      <location filename="../src/modules/partition/jobs/DeletePartitionJob.cpp" line="78"/>
       <source>Delete partition &lt;strong&gt;%1&lt;/strong&gt;.</source>
       <translation>Obriši particiju &lt;strong&gt;%1&lt;/strong&gt;.</translation>
     </message>
     <message>
-      <location filename="../src/modules/partition/jobs/DeletePartitionJob.cpp" line="45"/>
+      <location filename="../src/modules/partition/jobs/DeletePartitionJob.cpp" line="85"/>
       <source>Deleting partition %1.</source>
       <translation>Brišem particiju %1.</translation>
     </message>
     <message>
-      <location filename="../src/modules/partition/jobs/DeletePartitionJob.cpp" line="56"/>
+      <location filename="../src/modules/partition/jobs/DeletePartitionJob.cpp" line="103"/>
       <source>The installer failed to delete partition %1.</source>
       <translation>Instalacijski program nije uspio izbrisati particiju %1.</translation>
     </message>
@@ -2455,17 +2480,17 @@ te korištenjem tipki +/- ili skrolanjem miša za zumiranje.</translation>
       <translation>Oblik</translation>
     </message>
     <message>
-      <location filename="../src/modules/packagechooser/page_package.ui" line="44"/>
+      <location filename="../src/modules/packagechooser/page_package.ui" line="50"/>
       <source>Product Name</source>
       <translation>Ime proizvoda</translation>
     </message>
     <message>
-      <location filename="../src/modules/packagechooser/page_package.ui" line="57"/>
+      <location filename="../src/modules/packagechooser/page_package.ui" line="63"/>
       <source>TextLabel</source>
       <translation>OznakaTeksta</translation>
     </message>
     <message>
-      <location filename="../src/modules/packagechooser/page_package.ui" line="73"/>
+      <location filename="../src/modules/packagechooser/page_package.ui" line="79"/>
       <source>Long Product Description</source>
       <translation>Dugi opis proizvoda</translation>
     </message>
@@ -2816,65 +2841,65 @@ te korištenjem tipki +/- ili skrolanjem miša za zumiranje.</translation>
     <message>
       <location filename="../src/modules/partition/PartitionViewStep.cpp" line="534"/>
       <source>EFI system partition configured incorrectly</source>
-      <translation type="unfinished"/>
+      <translation>EFI particija nije ispravno konfigurirana</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/PartitionViewStep.cpp" line="539"/>
       <source>An EFI system partition is necessary to start %1.&lt;br/&gt;&lt;br/&gt;To configure an EFI system partition, go back and select or create a suitable filesystem.</source>
-      <translation type="unfinished"/>
+      <translation>Za pokretanje %1 potrebna je EFI particija. &lt;br/&gt;&lt;br/&gt;Za konfiguriranje EFI sistemske particije, vratite se i odaberite ili kreirajte odgovarajući datotečni sustav. </translation>
     </message>
     <message>
       <location filename="../src/modules/partition/PartitionViewStep.cpp" line="550"/>
       <source>The filesystem must be mounted on &lt;strong&gt;%1&lt;/strong&gt;.</source>
-      <translation type="unfinished"/>
+      <translation>Datotečni sustav mora biti montiran na &lt;strong&gt;%1&lt;/strong&gt;.</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/PartitionViewStep.cpp" line="556"/>
       <source>The filesystem must have type FAT32.</source>
-      <translation type="unfinished"/>
+      <translation>Datotečni sustav mora biti FAT32.</translation>
     </message>
     <message>
-      <location filename="../src/modules/partition/PartitionViewStep.cpp" line="562"/>
+      <location filename="../src/modules/partition/PartitionViewStep.cpp" line="564"/>
       <source>The filesystem must be at least %1 MiB in size.</source>
-      <translation type="unfinished"/>
+      <translation>Datotečni sustav mora biti veličine od najmanje %1 MiB.</translation>
     </message>
     <message>
-      <location filename="../src/modules/partition/PartitionViewStep.cpp" line="569"/>
+      <location filename="../src/modules/partition/PartitionViewStep.cpp" line="570"/>
       <source>The filesystem must have flag &lt;strong&gt;%1&lt;/strong&gt; set.</source>
-      <translation type="unfinished"/>
+      <translation>Datotečni sustav mora imati postavljenu oznaku &lt;strong&gt;%1&lt;/strong&gt;.</translation>
     </message>
     <message>
-      <location filename="../src/modules/partition/PartitionViewStep.cpp" line="575"/>
+      <location filename="../src/modules/partition/PartitionViewStep.cpp" line="576"/>
       <source>You can continue without setting up an EFI system partition but your system may fail to start.</source>
-      <translation type="unfinished"/>
+      <translation>Možete nastaviti bez postavljanja EFI particije, ali vaš se sustav možda neće pokrenuti.</translation>
     </message>
     <message>
-      <location filename="../src/modules/partition/PartitionViewStep.cpp" line="592"/>
+      <location filename="../src/modules/partition/PartitionViewStep.cpp" line="593"/>
       <source>Option to use GPT on BIOS</source>
       <translation>Mogućnost korištenja GPT-a na BIOS-u</translation>
     </message>
     <message>
-      <location filename="../src/modules/partition/PartitionViewStep.cpp" line="593"/>
+      <location filename="../src/modules/partition/PartitionViewStep.cpp" line="594"/>
       <source>A GPT partition table is the best option for all systems. This installer supports such a setup for BIOS systems too.&lt;br/&gt;&lt;br/&gt;To configure a GPT partition table on BIOS, (if not done so already) go back and set the partition table to GPT, next create a 8 MB unformatted partition with the &lt;strong&gt;bios_grub&lt;/strong&gt; flag enabled.&lt;br/&gt;&lt;br/&gt;An unformatted 8 MB partition is necessary to start %1 on a BIOS system with GPT.</source>
-      <translation>GPT tablica particija je najbolja opcija za sve sustave. Ovaj instalacijski program podržava takvo postavljanje i za BIOS sustave. &lt;br/&gt;&lt;br/&gt;Da biste konfigurirali GPT particijsku tablicu za BIOS sustave, (ako to već nije učinjeno) vratite se natrag i postavite particijsku tablicu na GPT, a zatim stvorite neformatiranu particiju od 8 MB s omogućenom zastavicom &lt;strong&gt;bios_grub&lt;/strong&gt;. &lt;br/&gt;&lt;br/&gt;Neformirana particija od 8 MB potrebna je za pokretanje %1 na BIOS sustavu s GPT-om.</translation>
+      <translation>GPT tablica particija je najbolja opcija za sve sustave. Ovaj instalacijski program podržava takvo postavljanje i za BIOS sustave. &lt;br/&gt;&lt;br/&gt;Da biste konfigurirali GPT particijsku tablicu za BIOS sustave, (ako to već nije učinjeno) vratite se natrag i postavite particijsku tablicu na GPT, a zatim stvorite neformatiranu particiju od 8 MB s omogućenom oznakom &lt;strong&gt;bios_grub&lt;/strong&gt;. &lt;br/&gt;&lt;br/&gt;Neformirana particija od 8 MB potrebna je za pokretanje %1 na BIOS sustavu s GPT-om.</translation>
     </message>
     <message>
-      <location filename="../src/modules/partition/PartitionViewStep.cpp" line="625"/>
+      <location filename="../src/modules/partition/PartitionViewStep.cpp" line="626"/>
       <source>Boot partition not encrypted</source>
       <translation>Boot particija nije kriptirana</translation>
     </message>
     <message>
-      <location filename="../src/modules/partition/PartitionViewStep.cpp" line="626"/>
+      <location filename="../src/modules/partition/PartitionViewStep.cpp" line="627"/>
       <source>A separate boot partition was set up together with an encrypted root partition, but the boot partition is not encrypted.&lt;br/&gt;&lt;br/&gt;There are security concerns with this kind of setup, because important system files are kept on an unencrypted partition.&lt;br/&gt;You may continue if you wish, but filesystem unlocking will happen later during system startup.&lt;br/&gt;To encrypt the boot partition, go back and recreate it, selecting &lt;strong&gt;Encrypt&lt;/strong&gt; in the partition creation window.</source>
       <translation>Odvojena boot particija je postavljena zajedno s kriptiranom root particijom, ali boot particija nije kriptirana.&lt;br/&gt;&lt;br/&gt;Zabrinuti smo za vašu sigurnost jer su važne datoteke sustava na nekriptiranoj particiji.&lt;br/&gt;Možete nastaviti ako želite, ali datotečni sustav će se otključati kasnije tijekom pokretanja sustava.&lt;br/&gt;Da bi ste kriptirali boot particiju, vratite se natrag i napravite ju, odabirom opcije &lt;strong&gt;Kriptiraj&lt;/strong&gt; u prozoru za stvaranje prarticije.</translation>
     </message>
     <message>
-      <location filename="../src/modules/partition/PartitionViewStep.cpp" line="713"/>
+      <location filename="../src/modules/partition/PartitionViewStep.cpp" line="714"/>
       <source>has at least one disk device available.</source>
       <translation>ima barem jedan disk dostupan.</translation>
     </message>
     <message>
-      <location filename="../src/modules/partition/PartitionViewStep.cpp" line="714"/>
+      <location filename="../src/modules/partition/PartitionViewStep.cpp" line="715"/>
       <source>There are no partitions to install on.</source>
       <translation>Ne postoje particije na koje bi se instalirao sustav.</translation>
     </message>
@@ -3064,12 +3089,12 @@ Izlaz:
       <translation>Ne mogu stvoriti slučajnu datoteku &lt;pre&gt;%1&lt;/pre&gt;.</translation>
     </message>
     <message>
-      <location filename="../src/modules/packagechooser/PackageModel.cpp" line="44"/>
+      <location filename="../src/modules/packagechooser/PackageModel.cpp" line="63"/>
       <source>No product</source>
       <translation>Nema proizvoda</translation>
     </message>
     <message>
-      <location filename="../src/modules/packagechooser/PackageModel.cpp" line="52"/>
+      <location filename="../src/modules/packagechooser/PackageModel.cpp" line="71"/>
       <source>No description provided.</source>
       <translation>Nije naveden opis.</translation>
     </message>
@@ -3176,7 +3201,7 @@ Postavljanje se može nastaviti, ali neke će značajke možda biti onemogućene
     <message>
       <location filename="../src/modules/partition/gui/ReplaceWidget.cpp" line="240"/>
       <source>&lt;strong&gt;%2&lt;/strong&gt;&lt;br/&gt;&lt;br/&gt;An EFI system partition cannot be found anywhere on this system. Please go back and use manual partitioning to set up %1.</source>
-      <translation>&lt;strong&gt;%2&lt;/strong&gt;&lt;br/&gt;&lt;br/&gt;EFI particijane postoji na ovom sustavu. Vratite se natrag i koristite ručno particioniranje za postavljane %1.</translation>
+      <translation>&lt;strong&gt;%2&lt;/strong&gt;&lt;br/&gt;&lt;br/&gt;EFI particija ne postoji na ovom sustavu. Vratite se natrag i koristite ručno particioniranje za postavljane %1.</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/gui/ReplaceWidget.cpp" line="251"/>
@@ -4110,7 +4135,7 @@ Postavke regije utječu na format brojeva i datuma. Trenutne postavke su &lt;str
     <message>
       <location filename="../src/modules/keyboardq/keyboardq.qml" line="60"/>
       <source>To activate keyboard preview, select a layout.</source>
-      <translation type="unfinished"/>
+      <translation>Da biste aktivirali pregled tipkovnice, odaberite raspored iste. </translation>
     </message>
     <message>
       <location filename="../src/modules/keyboardq/keyboardq.qml" line="86"/>
@@ -4157,37 +4182,38 @@ Postavke regije utječu na format brojeva i datuma. Trenutne postavke su &lt;str
       <location filename="../src/modules/packagechooserq/packagechooserq.qml" line="45"/>
       <source>LibreOffice is a powerful and free office suite, used by millions of people around the world. It includes several applications that make it the most versatile Free and Open Source office suite on the market.&lt;br/&gt;
                     Default option.</source>
-      <translation type="unfinished"/>
+      <translation>LibreOffice je moćan i besplatan uredski paket koji koriste milijuni ljudi diljem svijeta. Uključuje nekoliko aplikacija koje ga čine najsvestranijim besplatnim uredskim paketom otvorenog koda na tržištu.&lt;br/&gt;
+                  Zadana opcija.</translation>
     </message>
     <message>
       <location filename="../src/modules/packagechooserq/packagechooserq.qml" line="59"/>
       <source>LibreOffice</source>
-      <translation type="unfinished"/>
+      <translation>LibreOffice</translation>
     </message>
     <message>
       <location filename="../src/modules/packagechooserq/packagechooserq.qml" line="108"/>
       <source>If you don't want to install an office suite, just select No Office Suite. You can always add one (or more) later on your installed system as the need arrives.</source>
-      <translation type="unfinished"/>
+      <translation>Ako ne želite instalirati uredski paket, samo odaberite "bez uredskog paketa". Uvijek možete po potrebi dodati jedan (ili više) njih kasnije na svoj sustav.</translation>
     </message>
     <message>
       <location filename="../src/modules/packagechooserq/packagechooserq.qml" line="121"/>
       <source>No Office Suite</source>
-      <translation type="unfinished"/>
+      <translation>Bez uredskog paketa</translation>
     </message>
     <message>
       <location filename="../src/modules/packagechooserq/packagechooserq.qml" line="172"/>
       <source>Create a minimal Desktop install, remove all extra applications and decide later on what you would like to add to your system. Examples of what won't be on such an install, there will be no Office Suite, no media players, no image viewer or print support.  It will be just a desktop, file browser, package manager, text editor and simple web-browser.</source>
-      <translation type="unfinished"/>
+      <translation>Napravite minimalnu instalaciju na radnoj površini, uklonite sve dodatne aplikacije i kasnije odlučite što želite dodati svom sustavu. Primjeri onoga što neće biti u takvoj instalaciji, neće biti uredskog paketa, nema media playera, nema preglednika slika ili podrške za ispis. Bit će to samo radna površina, preglednik datoteka, upravitelj paketa, uređivač teksta i jednostavan web-preglednik. </translation>
     </message>
     <message>
       <location filename="../src/modules/packagechooserq/packagechooserq.qml" line="185"/>
       <source>Minimal Install</source>
-      <translation type="unfinished"/>
+      <translation>Minimalna instalacija</translation>
     </message>
     <message>
       <location filename="../src/modules/packagechooserq/packagechooserq.qml" line="233"/>
       <source>Please select an option for your install, or use the default: LibreOffice included.</source>
-      <translation type="unfinished"/>
+      <translation>Odaberite opciju za instalaciju ili upotrijebite zadano: LibreOffice uključen.</translation>
     </message>
   </context>
   <context>

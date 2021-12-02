@@ -44,7 +44,7 @@ CRYPTTAB_HEADER = """# /etc/crypttab: mappings for encrypted partitions.
 #
 # See crypttab(5) for the supported syntax.
 #
-# NOTE: Do not list your root (/) partition here, it must be set up
+# NOTE: You need not list your root (/) partition here, but it must be set up
 #       beforehand by the initramfs (/etc/mkinitcpio.conf). The same applies
 #       to encrypted swap, which should be set up with mkinitcpio-openswap
 #       for resume support.
@@ -196,7 +196,7 @@ class FstabGenerator(object):
                         dct = self.generate_fstab_line_info(mount_entry)
                         if dct:
                                 self.print_fstab_line(dct, file=fstab_file)
-                else:
+                elif partition["fs"] != "zfs":  # zfs partitions don't need an entry in fstab
                     dct = self.generate_fstab_line_info(partition)
                     if dct:
                         self.print_fstab_line(dct, file=fstab_file)
