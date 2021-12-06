@@ -1,3 +1,9 @@
+calamares (3.2.48-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Jonathan Carter <jcc@debian.org>  Mon, 06 Dec 2021 10:50:25 +0200
+
 calamares (3.2.47-1) unstable; urgency=medium
 
   [ Debian Janitor ]
