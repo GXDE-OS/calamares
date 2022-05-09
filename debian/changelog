@@ -1,3 +1,10 @@
+calamares (3.2.57-1) unstable; urgency=medium
+
+  * New upstream release
+    - Support for unencrypted /boot partition (Closes: #996007)
+
+ -- Jonathan Carter <jcc@debian.org>  Mon, 09 May 2022 10:18:18 +0200
+
 calamares (3.2.56-1) unstable; urgency=medium
 
   * New upstream release
