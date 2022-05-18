@@ -8,6 +8,35 @@ contributors are listed. Note that Calamares does not have a historical
 changelog -- this log starts with version 3.2.0. The release notes on the
 website will have to do for older versions.
 
+# 3.2.58 (2022-05-18) #
+
+This release contains contributions from (alphabetically by first name):
+ - Anke Boersma
+ - Arjen Balfoort
+ - Enrique Medina Gremaldos
+ - Evan James
+
+## Core ##
+ - Internal improvements to translations-setup means that Catalan (in the
+   Valencian dialect), Occitan (Lenga d'Oc) and Serbian (in Latin script)
+   are all better supported. Thanks Enrique.
+
+## Modules ##
+ - *netinstall* Now displays entries with an empty name slightly differently.
+   An empty name is not generally useful, but in combination with
+   *immutable:true* and *selected:false* can be used to introduce separators
+   or descriptive comments into the list of packages.
+ - *partition* does not offer full-disk encryption when using ZFS. ZFS and the
+   way Calamares sets up FDE don't mix well. (Thanks Evan)
+ - *partition* Various bugs related to LUKS have been fixed. (Thanks Arjen)
+ - *users* module now has a structured *user* key with settings specific
+   to the user (shell, in particular). This maintains backwards compatibility
+   with the *userShell* key.
+ - *users* module now has lists of forbidden login- and host-names, to
+   avoid settings that will mess up the install (e.g. using a login-name
+   that is one of the system's reserved names). #1944
+
+
 # 3.2.57 (2022-05-04) #
 
 This release contains contributions from (alphabetically by first name):

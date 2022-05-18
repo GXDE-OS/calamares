@@ -1,3 +1,10 @@
+calamares (3.2.58-1) unstable; urgency=medium
+
+  * New upstream release
+  * Update standards version to 4.6.1
+
+ -- Jonathan Carter <jcc@debian.org>  Wed, 18 May 2022 17:37:43 +0200
+
 calamares (3.2.57-1) unstable; urgency=medium
 
   * New upstream release
