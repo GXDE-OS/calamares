@@ -16,21 +16,19 @@
 #include "utils/Logger.h"
 #include "utils/Retranslator.h"
 
-#ifndef WITH_KF5DBus
-#include "3rdparty/kdsingleapplicationguard/kdsingleapplicationguard.h"
-#endif
+// From 3rdparty/
+#include "kdsingleapplication.h"
 
 #include <KCoreAddons/KAboutData>
-#ifdef WITH_KF5DBus
-#include <KDBusAddons/KDBusService>
-#endif
-#ifdef WITH_KF5Crash
+#ifdef BUILD_KF5Crash
 #include <KCrash/KCrash>
 #endif
 
 #include <QCommandLineParser>
 #include <QDebug>
 #include <QDir>
+
+#include <memory>
 
 /** @brief Gets debug-level from -D command-line-option
  *
@@ -109,6 +107,7 @@ handle_args( CalamaresApplication& a )
 int
 main( int argc, char* argv[] )
 {
+    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     CalamaresApplication a( argc, argv );
 
     KAboutData aboutData( "calamares",
@@ -123,37 +122,24 @@ main( int argc, char* argv[] )
     KAboutData::setApplicationData( aboutData );
     a.setApplicationDisplayName( QString() );  // To avoid putting an extra "Calamares/" into the log-file
 
-#ifdef WITH_KF5Crash
+#ifdef BUILD_KF5Crash
     KCrash::initialize();
     // KCrash::setCrashHandler();
     KCrash::setDrKonqiEnabled( true );
     KCrash::setFlags( KCrash::SaferDialog | KCrash::AlwaysDirectly );
-    // TODO: umount anything in /tmp/calamares-... as an emergency save function
 #endif
 
-    bool is_debug = handle_args( a );
-
-#ifdef WITH_KF5DBus
-    KDBusService service( is_debug ? KDBusService::Multiple : KDBusService::Unique );
-#else
-    KDSingleApplicationGuard guard( is_debug ? KDSingleApplicationGuard::NoPolicy
-                                             : KDSingleApplicationGuard::AutoKillOtherInstances );
-    if ( !is_debug && !guard.isPrimaryInstance() )
+    std::unique_ptr< KDSingleApplication > possiblyUnique;
+    const bool is_debug = handle_args( a );
+    if ( !is_debug )
     {
-        // Here we have not yet set-up the logger system, so qDebug() is ok
-        auto instancelist = guard.instances();
-        qDebug() << "Calamares is already running, shutting down.";
-        if ( instancelist.count() > 0 )
+        possiblyUnique = std::make_unique< KDSingleApplication >();
+        if ( !possiblyUnique->isPrimaryInstance() )
         {
-            qDebug() << "Other running Calamares instances:";
+            qCritical() << "Calamares is already running.";
+            return 87;  // EUSERS on Linux
         }
-        for ( const auto& i : instancelist )
-        {
-            qDebug() << "  " << i.isValid() << i.pid() << i.arguments();
-        }
-        return 69;  // EX_UNAVAILABLE on FreeBSD
     }
-#endif
 
     Calamares::Settings::init( is_debug );
     if ( !Calamares::Settings::instance() || !Calamares::Settings::instance()->isValid() )

@@ -25,18 +25,14 @@ calamares_add_test(
         ${PartitionModule_SOURCE_DIR}/jobs/DeletePartitionJob.cpp
         ${PartitionModule_SOURCE_DIR}/jobs/PartitionJob.cpp
         ${PartitionModule_SOURCE_DIR}/jobs/ResizePartitionJob.cpp
-    LIBRARIES
-        kpmcore
+    LIBRARIES calamares::kpmcore
     DEFINITIONS ${_partition_defs}
 )
 
 calamares_add_test(
     partitionclearmountsjobtest
-    SOURCES
-        ${PartitionModule_SOURCE_DIR}/jobs/ClearMountsJob.cpp
-        ClearMountsJobTests.cpp
-    LIBRARIES
-        kpmcore
+    SOURCES ${PartitionModule_SOURCE_DIR}/jobs/ClearMountsJob.cpp ClearMountsJobTests.cpp
+    LIBRARIES calamares::kpmcore
     DEFINITIONS ${_partition_defs}
 )
 
@@ -49,26 +45,19 @@ calamares_add_test(
         ${PartitionModule_SOURCE_DIR}/core/PartitionLayout.cpp
         ${PartitionModule_SOURCE_DIR}/core/PartUtils.cpp
         ${PartitionModule_SOURCE_DIR}/core/DeviceModel.cpp
-    LIBRARIES
-        kpmcore
-        Calamares::calamaresui
+    LIBRARIES calamares::kpmcore Calamares::calamaresui
     DEFINITIONS ${_partition_defs}
 )
 
 calamares_add_test(
     partitionautomounttest
-    SOURCES
-        ${PartitionModule_SOURCE_DIR}/jobs/AutoMountManagementJob.cpp
-        AutoMountTests.cpp
+    SOURCES ${PartitionModule_SOURCE_DIR}/jobs/AutoMountManagementJob.cpp AutoMountTests.cpp
     DEFINITIONS ${_partition_defs}
 )
 
 calamares_add_test(
     partitiondevicestest
-    SOURCES
-        DevicesTests.cpp
-        ${PartitionModule_SOURCE_DIR}/core/DeviceList.cpp
-    LIBRARIES
-        kpmcore
+    SOURCES DevicesTests.cpp ${PartitionModule_SOURCE_DIR}/core/DeviceList.cpp
+    LIBRARIES calamares::kpmcore
     DEFINITIONS ${_partition_defs}
 )

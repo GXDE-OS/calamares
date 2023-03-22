@@ -509,12 +509,12 @@ Instalacijski program će izaći i sve promjene će biti izgubljene.</translatio
   <context>
     <name>CalamaresWindow</name>
     <message>
-      <location filename="../src/calamares/CalamaresWindow.cpp" line="396"/>
+      <location filename="../src/calamares/CalamaresWindow.cpp" line="392"/>
       <source>%1 Setup Program</source>
       <translation>%1 instalacijski program</translation>
     </message>
     <message>
-      <location filename="../src/calamares/CalamaresWindow.cpp" line="397"/>
+      <location filename="../src/calamares/CalamaresWindow.cpp" line="393"/>
       <source>%1 Installer</source>
       <translation>%1 Instalacijski program</translation>
     </message>
@@ -783,27 +783,27 @@ Instalacijski program će izaći i sve promjene će biti izgubljene.</translatio
   <context>
     <name>Config</name>
     <message>
-      <location filename="../src/modules/keyboard/Config.cpp" line="361"/>
+      <location filename="../src/modules/keyboard/Config.cpp" line="360"/>
       <source>Set keyboard model to %1.&lt;br/&gt;</source>
       <translation>Postavi model tipkovnice na %1.&lt;br/&gt;</translation>
     </message>
     <message>
-      <location filename="../src/modules/keyboard/Config.cpp" line="368"/>
+      <location filename="../src/modules/keyboard/Config.cpp" line="367"/>
       <source>Set keyboard layout to %1/%2.</source>
       <translation>Postavi raspored tipkovnice na %1%2.</translation>
     </message>
     <message>
-      <location filename="../src/modules/locale/Config.cpp" line="373"/>
+      <location filename="../src/modules/locale/Config.cpp" line="359"/>
       <source>Set timezone to %1/%2.</source>
       <translation>Postavi vremesku zonu na %1%2.</translation>
     </message>
     <message>
-      <location filename="../src/modules/locale/Config.cpp" line="411"/>
+      <location filename="../src/modules/locale/Config.cpp" line="397"/>
       <source>The system language will be set to %1.</source>
       <translation>Jezik sustava će se postaviti na %1.</translation>
     </message>
     <message>
-      <location filename="../src/modules/locale/Config.cpp" line="418"/>
+      <location filename="../src/modules/locale/Config.cpp" line="404"/>
       <source>The numbers and dates locale will be set to %1.</source>
       <translation>Regionalne postavke brojeva i datuma će se postaviti na %1.</translation>
     </message>
@@ -3116,7 +3116,7 @@ Izlaz:
   <context>
     <name>QObject</name>
     <message>
-      <location filename="../src/libcalamares/locale/Translation.cpp" line="151"/>
+      <location filename="../src/libcalamares/locale/Translation.cpp" line="145"/>
       <source>%1 (%2)</source>
       <translation>%1 (%2)</translation>
     </message>
@@ -4151,25 +4151,13 @@ Postavljanje se može nastaviti, ali neke će značajke možda biti onemogućene
     <name>calamares-sidebar</name>
     <message>
       <location filename="../src/calamares/calamares-sidebar.qml" line="89"/>
-      <location filename="../src/calamares/CalamaresWindow.cpp" line="148"/>
       <source>About</source>
       <translation>O programu</translation>
     </message>
     <message>
       <location filename="../src/calamares/calamares-sidebar.qml" line="115"/>
-      <location filename="../src/calamares/CalamaresWindow.cpp" line="163"/>
       <source>Debug</source>
       <translation>Uklanjanje grešaka</translation>
-    </message>
-    <message>
-      <location filename="../src/calamares/CalamaresWindow.cpp" line="149"/>
-      <source>Show information about Calamares</source>
-      <translation>Prikaži informacije o Calamares instalacijskom programu</translation>
-    </message>
-    <message>
-      <location filename="../src/calamares/CalamaresWindow.cpp" line="165"/>
-      <source>Show debug information</source>
-      <translation>Prikaži debug informaciju</translation>
     </message>
   </context>
   <context>

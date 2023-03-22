@@ -30,8 +30,11 @@ class QListView;
 
 namespace Calamares
 {
+namespace Widgets
+{
 class PrettyRadioButton;
-}
+}  // namespace Widgets
+}  // namespace Calamares
 
 class Config;
 class DeviceInfoWidget;
@@ -108,7 +111,12 @@ private:
     void updateNextEnabled();
     void setupChoices();
     void checkInstallChoiceRadioButton( Config::InstallChoice choice );  ///< Sets the chosen button to "on"
-    QComboBox* createBootloaderComboBox( QWidget* parentButton );
+    /** @brief Create a panel with "boot loader location:"
+     *
+     * Panel + dropdown and handling for model updates. Returns a pointer
+     * to the panel's widget.
+     */
+    QWidget* createBootloaderPanel();
     Device* selectedDevice();
 
     /* Change the UI depending on the device selected. */
@@ -118,6 +126,7 @@ private:
 
     void updateDeviceStatePreview();
     void updateActionChoicePreview( Config::InstallChoice choice );
+    bool shouldShowEncryptWidget( Config::InstallChoice choice ) const;
     void setupActions();
     OsproberEntryList getOsproberEntriesForDevice( Device* device ) const;
     void doAlongsideApply();
@@ -137,10 +146,10 @@ private:
     QComboBox* m_drivesCombo;
 
     QButtonGroup* m_grp;
-    Calamares::PrettyRadioButton* m_alongsideButton;
-    Calamares::PrettyRadioButton* m_eraseButton;
-    Calamares::PrettyRadioButton* m_replaceButton;
-    Calamares::PrettyRadioButton* m_somethingElseButton;
+    Calamares::Widgets::PrettyRadioButton* m_alongsideButton;
+    Calamares::Widgets::PrettyRadioButton* m_eraseButton;
+    Calamares::Widgets::PrettyRadioButton* m_replaceButton;
+    Calamares::Widgets::PrettyRadioButton* m_somethingElseButton;
     QComboBox* m_eraseSwapChoiceComboBox = nullptr;  // UI, see also Config's swap choice
     QComboBox* m_eraseFsTypesChoiceComboBox = nullptr;  // UI, see also Config's erase-mode FS
 
@@ -159,7 +168,7 @@ private:
     int m_lastSelectedDeviceIndex = -1;
     int m_lastSelectedActionIndex = -1;
 
-    bool m_enableEncryptionWidget;
+    bool m_enableEncryptionWidget = false;
 
     QMutex m_coreMutex;
 };

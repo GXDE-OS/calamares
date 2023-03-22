@@ -179,12 +179,12 @@
     <message>
       <location filename="../src/libcalamares/JobExample.cpp" line="29"/>
       <source>Job failed (%1)</source>
-      <translation>Zadanie nie powiodło się (%1)</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/libcalamares/JobExample.cpp" line="30"/>
       <source>Programmed job failure was explicitly requested.</source>
-      <translation>Wyraźnie zażądano zaprogramowanej awarii zadania.</translation>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -200,7 +200,7 @@
     <message>
       <location filename="../src/libcalamares/JobExample.cpp" line="17"/>
       <source>Example job (%1)</source>
-      <translation>Przykładowe zadanie (%1)</translation>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -292,17 +292,17 @@
     <message numerus="yes">
       <location filename="../src/libcalamares/modulesystem/RequirementsChecker.cpp" line="119"/>
       <source>(%n second(s))</source>
-      <translation>
-        <numerusform>(%n sekunda)</numerusform>
-        <numerusform>(%n sekundy)</numerusform>
-        <numerusform>(%n sekund)</numerusform>
-        <numerusform>(%n sekund)</numerusform>
+      <translation type="unfinished">
+        <numerusform/>
+        <numerusform/>
+        <numerusform/>
+        <numerusform/>
       </translation>
     </message>
     <message>
       <location filename="../src/libcalamares/modulesystem/RequirementsChecker.cpp" line="124"/>
       <source>System-requirements checking is complete.</source>
-      <translation>Sprawdzanie wymagań systemowych zostało zakończone.</translation>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -384,7 +384,7 @@ Link copied to clipboard</source>
     <message>
       <location filename="../src/libcalamaresui/ViewManager.cpp" line="312"/>
       <source>The %1 setup program is about to make changes to your disk in order to set up %2.&lt;br/&gt;&lt;strong&gt;You will not be able to undo these changes.&lt;/strong&gt;</source>
-      <translation>Program instalacyjny %1 dokona zmian na dysku, aby skonfigurować %2.&lt;br/&gt;&lt;strong&gt;Nie będzie można cofnąć tych zmian.&lt;/strong&gt;</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/libcalamaresui/ViewManager.cpp" line="315"/>
@@ -394,7 +394,7 @@ Link copied to clipboard</source>
     <message>
       <location filename="../src/libcalamaresui/ViewManager.cpp" line="318"/>
       <source>&amp;Set up now</source>
-      <translation>U&amp;staw teraz</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/libcalamaresui/ViewManager.cpp" line="318"/>
@@ -409,7 +409,7 @@ Link copied to clipboard</source>
     <message>
       <location filename="../src/libcalamaresui/ViewManager.cpp" line="376"/>
       <source>&amp;Set up</source>
-      <translation>U&amp;staw</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/libcalamaresui/ViewManager.cpp" line="376"/>
@@ -419,7 +419,7 @@ Link copied to clipboard</source>
     <message>
       <location filename="../src/libcalamaresui/ViewManager.cpp" line="378"/>
       <source>Setup is complete. Close the setup program.</source>
-      <translation>Konfiguracja jest zakończona. Zamknij program instalacyjny.</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/libcalamaresui/ViewManager.cpp" line="379"/>
@@ -429,7 +429,7 @@ Link copied to clipboard</source>
     <message>
       <location filename="../src/libcalamaresui/ViewManager.cpp" line="381"/>
       <source>Cancel setup without changing the system.</source>
-      <translation>Anuluj konfigurację bez zmiany w systemie.</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/libcalamaresui/ViewManager.cpp" line="382"/>
@@ -470,8 +470,7 @@ Link copied to clipboard</source>
       <location filename="../src/libcalamaresui/ViewManager.cpp" line="496"/>
       <source>Do you really want to cancel the current setup process?
 The setup program will quit and all changes will be lost.</source>
-      <translation>Czy naprawdę chcesz anulować bieżący proces konfiguracji?
-Program instalacyjny zostanie zamknięty, a wszystkie zmiany zostaną utracone.</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/libcalamaresui/ViewManager.cpp" line="498"/>
@@ -507,12 +506,12 @@ Instalator zostanie zamknięty i wszystkie zmiany zostaną utracone.</translatio
   <context>
     <name>CalamaresWindow</name>
     <message>
-      <location filename="../src/calamares/CalamaresWindow.cpp" line="396"/>
+      <location filename="../src/calamares/CalamaresWindow.cpp" line="392"/>
       <source>%1 Setup Program</source>
-      <translation>%1 Program instalacyjny</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location filename="../src/calamares/CalamaresWindow.cpp" line="397"/>
+      <location filename="../src/calamares/CalamaresWindow.cpp" line="393"/>
       <source>%1 Installer</source>
       <translation>Instalator %1</translation>
     </message>
@@ -781,27 +780,27 @@ Instalator zostanie zamknięty i wszystkie zmiany zostaną utracone.</translatio
   <context>
     <name>Config</name>
     <message>
-      <location filename="../src/modules/keyboard/Config.cpp" line="361"/>
+      <location filename="../src/modules/keyboard/Config.cpp" line="360"/>
       <source>Set keyboard model to %1.&lt;br/&gt;</source>
       <translation>Ustaw model klawiatury na %1.&lt;br/&gt;</translation>
     </message>
     <message>
-      <location filename="../src/modules/keyboard/Config.cpp" line="368"/>
+      <location filename="../src/modules/keyboard/Config.cpp" line="367"/>
       <source>Set keyboard layout to %1/%2.</source>
       <translation>Ustaw model klawiatury na %1/%2.</translation>
     </message>
     <message>
-      <location filename="../src/modules/locale/Config.cpp" line="373"/>
+      <location filename="../src/modules/locale/Config.cpp" line="359"/>
       <source>Set timezone to %1/%2.</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location filename="../src/modules/locale/Config.cpp" line="411"/>
+      <location filename="../src/modules/locale/Config.cpp" line="397"/>
       <source>The system language will be set to %1.</source>
       <translation>Język systemu zostanie ustawiony na %1.</translation>
     </message>
     <message>
-      <location filename="../src/modules/locale/Config.cpp" line="418"/>
+      <location filename="../src/modules/locale/Config.cpp" line="404"/>
       <source>The numbers and dates locale will be set to %1.</source>
       <translation>Format liczb i daty zostanie ustawiony na %1.</translation>
     </message>
@@ -1246,7 +1245,7 @@ Instalator zostanie zamknięty i wszystkie zmiany zostaną utracone.</translatio
     <message>
       <location filename="../src/modules/partition/gui/CreateVolumeGroupDialog.cpp" line="28"/>
       <source>Create Volume Group</source>
-      <translation>Utwórz grupę woluminów</translation>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -1581,12 +1580,12 @@ Instalator zostanie zamknięty i wszystkie zmiany zostaną utracone.</translatio
     <message>
       <location filename="../src/modules/finished/FinishedPage.cpp" line="75"/>
       <source>&lt;h1&gt;All done.&lt;/h1&gt;&lt;br/&gt;%1 has been set up on your computer.&lt;br/&gt;You may now start using your new system.</source>
-      <translation>&lt;h1&gt;Wszystko gotowe.&lt;/h1&gt;&lt;br/&gt;%1 został skonfigurowany na twoim komputerze.&lt;br/&gt;Możesz teraz zacząć używać swojego nowego systemu.</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/modules/finished/FinishedPage.cpp" line="79"/>
       <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When this box is checked, your system will restart immediately when you click on &lt;span style="font-style:italic;"&gt;Done&lt;/span&gt; or close the setup program.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gdy to pole jest zaznaczone, system będzie uruchamiany ponownie natychmiast po kliknięciu na &lt;span style="font-style:italic;"&gt;Ukończone&lt;/span&gt; lub zamknięciu programu instalacyjnego.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/modules/finished/FinishedPage.cpp" line="87"/>
@@ -1596,12 +1595,12 @@ Instalator zostanie zamknięty i wszystkie zmiany zostaną utracone.</translatio
     <message>
       <location filename="../src/modules/finished/FinishedPage.cpp" line="92"/>
       <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When this box is checked, your system will restart immediately when you click on &lt;span style="font-style:italic;"&gt;Done&lt;/span&gt; or close the installer.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gdy to pole jest zaznaczone, system będzie uruchamiany ponownie natychmiast po kliknięciu na &lt;span style="font-style:italic;"&gt;Ukończone&lt;/span&gt; lub zamknięciu programu instalacyjnego.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/modules/finished/FinishedPage.cpp" line="105"/>
       <source>&lt;h1&gt;Setup Failed&lt;/h1&gt;&lt;br/&gt;%1 has not been set up on your computer.&lt;br/&gt;The error message was: %2.</source>
-      <translation>&lt;h1&gt;Instalacja nie powiodła się&lt;/h1&gt;&lt;br/&gt;%1 nie został zainstalowany na twoim komputerze.&lt;br/&gt;Komunikat o błędzie: %2.</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/modules/finished/FinishedPage.cpp" line="113"/>
@@ -1664,12 +1663,12 @@ Instalator zostanie zamknięty i wszystkie zmiany zostaną utracone.</translatio
     <message>
       <location filename="../src/modules/welcome/checker/GeneralRequirements.cpp" line="158"/>
       <source>There is not enough drive space. At least %1 GiB is required.</source>
-      <translation>Nie ma wystarczającej ilości miejsca na dysku. Wymagane jest przynajmniej %1 GiB.</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/modules/welcome/checker/GeneralRequirements.cpp" line="166"/>
       <source>has at least %1 GiB working memory</source>
-      <translation>ma przynajmniej %1 GiB pamięci roboczej</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/modules/welcome/checker/GeneralRequirements.cpp" line="168"/>
@@ -1704,7 +1703,7 @@ Instalator zostanie zamknięty i wszystkie zmiany zostaną utracone.</translatio
     <message>
       <location filename="../src/modules/welcome/checker/GeneralRequirements.cpp" line="197"/>
       <source>The setup program is not running with administrator rights.</source>
-      <translation>Program instalacyjny nie jest uruchomiony z prawami administratora.</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/modules/welcome/checker/GeneralRequirements.cpp" line="198"/>
@@ -1719,7 +1718,7 @@ Instalator zostanie zamknięty i wszystkie zmiany zostaną utracone.</translatio
     <message>
       <location filename="../src/modules/welcome/checker/GeneralRequirements.cpp" line="210"/>
       <source>The screen is too small to display the setup program.</source>
-      <translation>Ekran jest zbyt mały, aby wyświetlić program konfiguracyjny.</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/modules/welcome/checker/GeneralRequirements.cpp" line="211"/>
@@ -1748,17 +1747,17 @@ Instalator zostanie zamknięty i wszystkie zmiany zostaną utracone.</translatio
     <message>
       <location filename="../src/modules/oemid/IDJob.cpp" line="40"/>
       <source>Could not create directories &lt;code&gt;%1&lt;/code&gt;.</source>
-      <translation>Nie można utworzyć katalogów &lt;code&gt;%1&lt;/code&gt;.</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/modules/oemid/IDJob.cpp" line="53"/>
       <source>Could not open file &lt;code&gt;%1&lt;/code&gt;.</source>
-      <translation>Nie można otworzyć pliku  &lt;code&gt;%1&lt;/code&gt;.</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/modules/oemid/IDJob.cpp" line="60"/>
       <source>Could not write to file &lt;code&gt;%1&lt;/code&gt;.</source>
-      <translation>Nie można zapisać do pliku  &lt;code&gt;%1&lt;/code&gt;.</translation>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -1963,7 +1962,7 @@ Instalator zostanie zamknięty i wszystkie zmiany zostaną utracone.</translatio
     <message>
       <location filename="../src/modules/license/LicenseWidget.cpp" line="186"/>
       <source>Hide license text</source>
-      <translation>Ukryj tekst licencji</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/modules/license/LicenseWidget.cpp" line="186"/>
@@ -2211,12 +2210,12 @@ Instalator zostanie zamknięty i wszystkie zmiany zostaną utracone.</translatio
     <message>
       <location filename="../src/modules/oemid/OEMPage.ui" line="32"/>
       <source>Ba&amp;tch:</source>
-      <translation>Par&amp;tia:</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/modules/oemid/OEMPage.ui" line="42"/>
       <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter a batch-identifier here. This will be stored in the target system.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wprowadź tutaj identyfikator partii. Zostanie on zapisany w systemie docelowym.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/modules/oemid/OEMPage.ui" line="52"/>
@@ -2570,7 +2569,7 @@ Instalator zostanie zamknięty i wszystkie zmiany zostaną utracone.</translatio
     <message>
       <location filename="../src/modules/packagechooser/page_package.ui" line="50"/>
       <source>Product Name</source>
-      <translation>Nazwa produktu</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/modules/packagechooser/page_package.ui" line="63"/>
@@ -2983,7 +2982,7 @@ Instalator zostanie zamknięty i wszystkie zmiany zostaną utracone.</translatio
     <message>
       <location filename="../src/modules/partition/PartitionViewStep.cpp" line="718"/>
       <source>has at least one disk device available.</source>
-      <translation>jest dostępne co najmniej jedno urządzenie dyskowe.</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/modules/partition/PartitionViewStep.cpp" line="719"/>
@@ -3015,7 +3014,7 @@ Instalator zostanie zamknięty i wszystkie zmiany zostaną utracone.</translatio
     <message>
       <location filename="../src/modules/plasmalnf/PlasmaLnfPage.cpp" line="79"/>
       <source>Please choose a look-and-feel for the KDE Plasma Desktop. You can also skip this step and configure the look-and-feel once the system is set up. Clicking on a look-and-feel selection will give you a live preview of that look-and-feel.</source>
-      <translation>Proszę wybrać wygląd i styl dla pulpitu KDE Plazma. Możesz również pominąć ten krok i skonfigurować je po zainstalowaniu systemu. Kliknięcie na wybranym wyglądzie i stylu spowoduje wyświetlenie ich podglądu na żywo.</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/modules/plasmalnf/PlasmaLnfPage.cpp" line="84"/>
@@ -3121,7 +3120,7 @@ Wyjście:
   <context>
     <name>QObject</name>
     <message>
-      <location filename="../src/libcalamares/locale/Translation.cpp" line="151"/>
+      <location filename="../src/libcalamares/locale/Translation.cpp" line="145"/>
       <source>%1 (%2)</source>
       <translation>%1 (%2)</translation>
     </message>
@@ -3178,7 +3177,7 @@ Wyjście:
     <message>
       <location filename="../src/modules/packagechooser/PackageModel.cpp" line="74"/>
       <source>No product</source>
-      <translation>Brak produktu</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/modules/packagechooser/PackageModel.cpp" line="82"/>
@@ -3929,12 +3928,12 @@ i nie uruchomi się</translation>
     <message>
       <location filename="../src/modules/users/UsersPage.cpp" line="190"/>
       <source>&lt;small&gt;If more than one person will use this computer, you can create multiple accounts after setup.&lt;/small&gt;</source>
-      <translation>&lt;small&gt;Jeśli z tego komputera będzie korzystać więcej niż jedna osoba, po skonfigurowaniu można utworzyć wiele kont.&lt;/small&gt;</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/modules/users/UsersPage.cpp" line="196"/>
       <source>&lt;small&gt;If more than one person will use this computer, you can create multiple accounts after installation.&lt;/small&gt;</source>
-      <translation>&lt;small&gt;Jeśli z tego komputera będzie korzystać więcej niż jedna osoba, po instalacji można utworzyć wiele kont.&lt;/small&gt;</translation>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -3973,7 +3972,7 @@ i nie uruchomi się</translation>
     <message>
       <location filename="../src/modules/partition/gui/VolumeGroupBaseDialog.ui" line="18"/>
       <source>Create Volume Group</source>
-      <translation>Utwórz grupę woluminów</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/modules/partition/gui/VolumeGroupBaseDialog.ui" line="24"/>
@@ -4082,7 +4081,7 @@ i nie uruchomi się</translation>
     <message>
       <location filename="../src/calamares/DebugWindow.cpp" line="319"/>
       <source>About %1 setup</source>
-      <translation>Informacje o konfiguracji %1 </translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../src/calamares/DebugWindow.cpp" line="320"/>
@@ -4154,25 +4153,13 @@ i nie uruchomi się</translation>
     <name>calamares-sidebar</name>
     <message>
       <location filename="../src/calamares/calamares-sidebar.qml" line="89"/>
-      <location filename="../src/calamares/CalamaresWindow.cpp" line="148"/>
       <source>About</source>
       <translation>O nas</translation>
     </message>
     <message>
       <location filename="../src/calamares/calamares-sidebar.qml" line="115"/>
-      <location filename="../src/calamares/CalamaresWindow.cpp" line="163"/>
       <source>Debug</source>
       <translation>Debug</translation>
-    </message>
-    <message>
-      <location filename="../src/calamares/CalamaresWindow.cpp" line="149"/>
-      <source>Show information about Calamares</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location filename="../src/calamares/CalamaresWindow.cpp" line="165"/>
-      <source>Show debug information</source>
-      <translation>Pokaż informacje debugowania</translation>
     </message>
   </context>
   <context>

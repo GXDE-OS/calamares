@@ -21,7 +21,7 @@ calamares_add_plugin(welcome
     SOURCES
         checker/CheckerContainer.cpp
         checker/GeneralRequirements.cpp
-        checker/ResultWidget.cpp
+        checker/ResultDelegate.cpp
         checker/ResultsListWidget.cpp
         ${PARTMAN_SRC}
         WelcomeViewStep.cpp
@@ -41,15 +41,6 @@ calamares_add_plugin(welcome
 
 calamares_add_test(
     welcometest
-    SOURCES
-        checker/GeneralRequirements.cpp
-        ${PARTMAN_SRC}
-        Config.cpp
-        Tests.cpp
-    LIBRARIES
-        ${PARTMAN_LIB}
-        Qt5::DBus
-        Qt5::Network
-        Qt5::Widgets
-        Calamares::calamaresui
+    SOURCES checker/GeneralRequirements.cpp ${PARTMAN_SRC} Config.cpp Tests.cpp
+    LIBRARIES ${PARTMAN_LIB} Qt5::DBus Qt5::Network Qt5::Widgets Calamares::calamaresui
 )

@@ -17,19 +17,9 @@ if(DEBUG_TIMEZONES)
 endif()
 
 find_package(Qt5Location CONFIG)
-set_package_properties(
-    Qt5Location
-    PROPERTIES
-    DESCRIPTION "Used for rendering the map"
-    TYPE RUNTIME
-)
+set_package_properties(Qt5Location PROPERTIES DESCRIPTION "Used for rendering the map" TYPE RUNTIME)
 find_package(Qt5Positioning CONFIG)
-set_package_properties(
-    Qt5Positioning
-    PROPERTIES
-    DESCRIPTION "Used for GeoLocation and GeoCoding"
-    TYPE RUNTIME
-)
+set_package_properties(Qt5Positioning PROPERTIES DESCRIPTION "Used for GeoLocation and GeoCoding" TYPE RUNTIME)
 
 # Because we're sharing sources with the regular locale module
 set(_locale ${CMAKE_CURRENT_SOURCE_DIR}/../locale)

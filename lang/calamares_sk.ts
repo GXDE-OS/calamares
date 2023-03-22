@@ -507,12 +507,12 @@ Inštalátor sa ukončí a všetky zmeny budú stratené.</translation>
   <context>
     <name>CalamaresWindow</name>
     <message>
-      <location filename="../src/calamares/CalamaresWindow.cpp" line="396"/>
+      <location filename="../src/calamares/CalamaresWindow.cpp" line="392"/>
       <source>%1 Setup Program</source>
       <translation>Inštalačný program distribúcie %1</translation>
     </message>
     <message>
-      <location filename="../src/calamares/CalamaresWindow.cpp" line="397"/>
+      <location filename="../src/calamares/CalamaresWindow.cpp" line="393"/>
       <source>%1 Installer</source>
       <translation>Inštalátor distribúcie %1</translation>
     </message>
@@ -782,27 +782,27 @@ Inštalátor sa ukončí a všetky zmeny budú stratené.</translation>
   <context>
     <name>Config</name>
     <message>
-      <location filename="../src/modules/keyboard/Config.cpp" line="361"/>
+      <location filename="../src/modules/keyboard/Config.cpp" line="360"/>
       <source>Set keyboard model to %1.&lt;br/&gt;</source>
       <translation>Nastavenie modelu klávesnice na %1.&lt;br/&gt;</translation>
     </message>
     <message>
-      <location filename="../src/modules/keyboard/Config.cpp" line="368"/>
+      <location filename="../src/modules/keyboard/Config.cpp" line="367"/>
       <source>Set keyboard layout to %1/%2.</source>
       <translation>Nastavenie rozloženia klávesnice na %1/%2.</translation>
     </message>
     <message>
-      <location filename="../src/modules/locale/Config.cpp" line="373"/>
+      <location filename="../src/modules/locale/Config.cpp" line="359"/>
       <source>Set timezone to %1/%2.</source>
       <translation>Nastavenie časovej zóny na %1/%2.</translation>
     </message>
     <message>
-      <location filename="../src/modules/locale/Config.cpp" line="411"/>
+      <location filename="../src/modules/locale/Config.cpp" line="397"/>
       <source>The system language will be set to %1.</source>
       <translation>Jazyk systému bude nastavený na %1.</translation>
     </message>
     <message>
-      <location filename="../src/modules/locale/Config.cpp" line="418"/>
+      <location filename="../src/modules/locale/Config.cpp" line="404"/>
       <source>The numbers and dates locale will be set to %1.</source>
       <translation>Miestne nastavenie čísel a dátumov bude nastavené na %1.</translation>
     </message>
@@ -3123,7 +3123,7 @@ Výstup:
   <context>
     <name>QObject</name>
     <message>
-      <location filename="../src/libcalamares/locale/Translation.cpp" line="151"/>
+      <location filename="../src/libcalamares/locale/Translation.cpp" line="145"/>
       <source>%1 (%2)</source>
       <translation>%1 (%2)</translation>
     </message>
@@ -4158,25 +4158,13 @@ Výstup:
     <name>calamares-sidebar</name>
     <message>
       <location filename="../src/calamares/calamares-sidebar.qml" line="89"/>
-      <location filename="../src/calamares/CalamaresWindow.cpp" line="148"/>
       <source>About</source>
       <translation>O inštalátore</translation>
     </message>
     <message>
       <location filename="../src/calamares/calamares-sidebar.qml" line="115"/>
-      <location filename="../src/calamares/CalamaresWindow.cpp" line="163"/>
       <source>Debug</source>
       <translation>Ladiť</translation>
-    </message>
-    <message>
-      <location filename="../src/calamares/CalamaresWindow.cpp" line="149"/>
-      <source>Show information about Calamares</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location filename="../src/calamares/CalamaresWindow.cpp" line="165"/>
-      <source>Show debug information</source>
-      <translation>Zobraziť ladiace informácie</translation>
     </message>
   </context>
   <context>

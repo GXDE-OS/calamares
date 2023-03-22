@@ -18,9 +18,8 @@
 #include "JobQueue.h"
 #include "utils/Logger.h"
 #include "utils/String.h"
+#include "utils/StringExpander.h"
 #include "utils/Variant.h"
-
-#include <KMacroExpander>
 
 #include <QCoreApplication>
 #include <QFile>
@@ -415,20 +414,20 @@ invalidEmpty( const QString& s )
 STATICTEST QString
 makeHostnameSuggestion( const QString& templateString, const QStringList& fullNameParts, const QString& loginName )
 {
-    QHash< QString, QString > replace;
+    Calamares::String::DictionaryExpander d;
     // User data
-    replace.insert( QStringLiteral( "first" ),
-                    invalidEmpty( fullNameParts.isEmpty() ? QString() : cleanupForHostname( fullNameParts.first() ) ) );
-    replace.insert( QStringLiteral( "name" ), invalidEmpty( cleanupForHostname( fullNameParts.join( QString() ) ) ) );
-    replace.insert( QStringLiteral( "login" ), invalidEmpty( cleanupForHostname( loginName ) ) );
-    // Hardware data
-    replace.insert( QStringLiteral( "product" ), guessProductName() );
-    replace.insert( QStringLiteral( "product2" ), cleanupForHostname( QSysInfo::prettyProductName() ) );
-    replace.insert( QStringLiteral( "cpu" ), cleanupForHostname( QSysInfo::currentCpuArchitecture() ) );
-    // Hostname data
-    replace.insert( QStringLiteral( "host" ), invalidEmpty( cleanupForHostname( QSysInfo::machineHostName() ) ) );
+    d.add( QStringLiteral( "first" ),
+           invalidEmpty( fullNameParts.isEmpty() ? QString() : cleanupForHostname( fullNameParts.first() ) ) )
+        .add( QStringLiteral( "name" ), invalidEmpty( cleanupForHostname( fullNameParts.join( QString() ) ) ) )
+        .add( QStringLiteral( "login" ), invalidEmpty( cleanupForHostname( loginName ) ) )
+        // Hardware data
+        .add( QStringLiteral( "product" ), guessProductName() )
+        .add( QStringLiteral( "product2" ), cleanupForHostname( QSysInfo::prettyProductName() ) )
+        .add( QStringLiteral( "cpu" ), cleanupForHostname( QSysInfo::currentCpuArchitecture() ) )
+        // Hostname data
+        .add( QStringLiteral( "host" ), invalidEmpty( cleanupForHostname( QSysInfo::machineHostName() ) ) );
 
-    QString hostnameSuggestion = KMacroExpander::expandMacros( templateString, replace, '$' );
+    QString hostnameSuggestion = d.expand( templateString );
 
     // RegExp for valid hostnames; if the suggestion produces a valid name, return it
     static const QRegExp HOSTNAME_RX( "^[a-zA-Z0-9][-a-zA-Z0-9_]*$" );
@@ -471,7 +470,7 @@ Config::setFullName( const QString& name )
         // Build login and hostname, if needed
         static QRegExp rx( "[^a-zA-Z0-9 ]", Qt::CaseInsensitive );
 
-        const QString cleanName = CalamaresUtils::removeDiacritics( transliterate( name ) )
+        const QString cleanName = Calamares::String::removeDiacritics( transliterate( name ) )
                                       .replace( QRegExp( "[-']" ), "" )
                                       .replace( rx, " " )
                                       .toLower()
@@ -874,25 +873,6 @@ either( T ( *f )( const QVariantMap&, const QString&, U ),
     }
 }
 
-// TODO:3.3: Remove
-static void
-copyLegacy( const QVariantMap& source, const QString& sourceKey, QVariantMap& target, const QString& targetKey )
-{
-    if ( source.contains( sourceKey ) )
-    {
-        if ( target.contains( targetKey ) )
-        {
-            cWarning() << "Legacy *users* key" << sourceKey << "ignored.";
-        }
-        else
-        {
-            const QVariant legacyValue = source.value( sourceKey );
-            cWarning() << "Legacy *users* key" << sourceKey << "overrides hostname-settings.";
-            target.insert( targetKey, legacyValue );
-        }
-    }
-}
-
 /** @brief Tidy up a list of names
  *
  * Remove duplicates, apply lowercase, sort.
@@ -912,9 +892,6 @@ Config::setConfigurationMap( const QVariantMap& configurationMap )
     {
         bool ok = false;  // Ignored
         QVariantMap userSettings = CalamaresUtils::getSubMap( configurationMap, "user", ok );
-
-        // TODO:3.3: Remove calls to copyLegacy
-        copyLegacy( configurationMap, "userShell", userSettings, "shell" );
 
         QString shell( QLatin1String( "/bin/bash" ) );  // as if it's not set at all
         if ( userSettings.contains( "shell" ) )
@@ -941,9 +918,6 @@ Config::setConfigurationMap( const QVariantMap& configurationMap )
         bool ok = false;  // Ignored
         QVariantMap hostnameSettings = CalamaresUtils::getSubMap( configurationMap, "hostname", ok );
 
-        // TODO:3.3: Remove calls to copyLegacy
-        copyLegacy( configurationMap, "setHostname", hostnameSettings, "location" );
-        copyLegacy( configurationMap, "writeHostsFile", hostnameSettings, "writeHostsFile" );
         m_hostnameAction = getHostNameAction( hostnameSettings );
         m_writeEtcHosts = CalamaresUtils::getBool( hostnameSettings, "writeHostsFile", true );
         m_hostnameTemplate
@@ -998,7 +972,7 @@ Config::finalizeGlobalStorage() const
     {
         gs->insert( "reuseRootPassword", reuseUserPasswordForRoot() );
     }
-    gs->insert( "password", CalamaresUtils::obscure( userPassword() ) );
+    gs->insert( "password", Calamares::String::obscure( userPassword() ) );
 }
 
 Calamares::JobList

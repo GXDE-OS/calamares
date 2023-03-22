@@ -5,7 +5,7 @@
 #   SPDX-License-Identifier: BSD-2-Clause
 #
 if(NOT WITH_QML)
-    calamares_skip_module("packagechooserq (QML is not supported in this build)")
+    calamares_skip_module( "packagechooserq (QML is not supported in this build)" )
     return()
 endif()
 
@@ -22,11 +22,7 @@ include_directories(${_packagechooser})
 #
 #
 # TODO:3.3:WITH->BUILD (this doesn't affect the ABI offered by Calamares)
-option(
-    WITH_APPDATA
-    "Support appdata: items in PackageChooser (requires QtXml)"
-    ON
-)
+option(WITH_APPDATA "Support appdata: items in PackageChooser (requires QtXml)" ON)
 if(WITH_APPDATA)
     find_package(Qt5 COMPONENTS Xml)
     if(Qt5Xml_FOUND)
@@ -39,11 +35,7 @@ endif()
 ### OPTIONAL AppStream support in PackageModel
 #
 #
-option(
-    WITH_APPSTREAM
-    "Support appstream: items in PackageChooser (requires libappstream-qt)"
-    ON
-)
+option(WITH_APPSTREAM "Support appstream: items in PackageChooser (requires libappstream-qt)" ON)
 if(WITH_APPSTREAM)
     find_package(AppStreamQt)
     set_package_properties(

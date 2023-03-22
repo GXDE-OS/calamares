@@ -21,11 +21,4 @@ calamares_add_plugin(keyboard
     SHARED_LIB
 )
 
-calamares_add_test(
-    keyboardtest
-    SOURCES
-        Tests.cpp
-        SetKeyboardLayoutJob.cpp
-    RESOURCES
-        keyboard.qrc
-)
+calamares_add_test(keyboardtest SOURCES Tests.cpp SetKeyboardLayoutJob.cpp RESOURCES keyboard.qrc)

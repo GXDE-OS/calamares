@@ -10,11 +10,7 @@ find_package(Crypt REQUIRED)
 set(USER_EXTRA_LIB)
 
 find_package(LibPWQuality)
-set_package_properties(
-    LibPWQuality
-    PROPERTIES
-    PURPOSE "Extra checks of password quality"
-)
+set_package_properties(LibPWQuality PROPERTIES PURPOSE "Extra checks of password quality")
 
 if(LibPWQuality_FOUND)
     list(APPEND USER_EXTRA_LIB ${LibPWQuality_LIBRARIES})
@@ -23,11 +19,7 @@ if(LibPWQuality_FOUND)
 endif()
 
 find_package(ICU COMPONENTS uc i18n)
-set_package_properties(
-    ICU
-    PROPERTIES
-    PURPOSE "Transliteration support for full name to username conversion"
-)
+set_package_properties(ICU PROPERTIES PURPOSE "Transliteration support for full name to username conversion")
 
 if(ICU_FOUND)
     list(APPEND USER_EXTRA_LIB ICU::uc ICU::i18n)
@@ -48,6 +40,7 @@ set(_users_src
     Config.cpp
 )
 
+# This part of the code is shared with the usersq module
 calamares_add_library(
     users_internal
     EXPORT_MACRO PLUGINDLLEXPORT_PRO
@@ -57,6 +50,7 @@ calamares_add_library(
     SOURCES
         ${_users_src}
     LINK_LIBRARIES
+        KF5::CoreAddons
         Qt5::DBus
         ${CRYPT_LIBRARIES}
 )
@@ -78,42 +72,35 @@ calamares_add_plugin(users
     SHARED_LIB
 )
 
-calamares_add_test(
-    userspasswordtest
-    SOURCES
-        TestPasswordJob.cpp
-        SetPasswordJob.cpp
-    LIBRARIES
-        ${CRYPT_LIBRARIES}
-)
+calamares_add_test(userspasswordtest SOURCES TestPasswordJob.cpp SetPasswordJob.cpp LIBRARIES ${CRYPT_LIBRARIES})
 
 calamares_add_test(
     usersgroupstest
     SOURCES
         TestGroupInformation.cpp
-        ${_users_src}  # Build again with test-visibility
+        ${_users_src} # Build again with test-visibility
     LIBRARIES
-        Qt5::DBus  # HostName job can use DBus to systemd
-        ${CRYPT_LIBRARIES}  # SetPassword job uses crypt()
+        KF5::CoreAddons
+        Qt5::DBus # HostName job can use DBus to systemd
+        ${CRYPT_LIBRARIES} # SetPassword job uses crypt()
         ${USER_EXTRA_LIB}
 )
 
 calamares_add_test(
     usershostnametest
-    SOURCES
-        TestSetHostNameJob.cpp
-        SetHostNameJob.cpp
+    SOURCES TestSetHostNameJob.cpp SetHostNameJob.cpp
     LIBRARIES
-        Qt5::DBus  # HostName job can use DBus to systemd
+        Qt5::DBus # HostName job can use DBus to systemd
 )
 
 calamares_add_test(
     userstest
     SOURCES
         Tests.cpp
-        ${_users_src}  # Build again with test-visibility
+        ${_users_src} # Build again with test-visibility
     LIBRARIES
-        Qt5::DBus  # HostName job can use DBus to systemd
-        ${CRYPT_LIBRARIES}  # SetPassword job uses crypt()
+        KF5::CoreAddons
+        Qt5::DBus # HostName job can use DBus to systemd
+        ${CRYPT_LIBRARIES} # SetPassword job uses crypt()
         ${USER_EXTRA_LIB}
 )

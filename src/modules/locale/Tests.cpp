@@ -12,7 +12,6 @@
 #include "LocaleNames.h"
 #include "timezonewidget/TimeZoneImage.h"
 
-#include "CalamaresVersion.h"
 #include "Settings.h"
 #include "locale/TimeZone.h"
 #include "locale/TranslationsModel.h"
@@ -65,7 +64,6 @@ private Q_SLOTS:
 private:
     QStringList m_KDEneonLocales;
     QStringList m_FreeBSDLocales;
-    QStringList m_availableLanguages;
 };
 
 QTEST_MAIN( LocaleTests )
@@ -84,7 +82,6 @@ LocaleTests::initTestCase()
     {
         (void)new Calamares::Settings( true );
     }
-    m_availableLanguages = QString( CALAMARES_TRANSLATION_LANGUAGES ).split( ';' );
 }
 
 void
@@ -476,7 +473,7 @@ LocaleTests::testLanguageMappingNeon()
     QFETCH( QString, KDEneonLanguage );
     QFETCH( QString, FreeBSDLanguage );
 
-    QVERIFY( m_availableLanguages.contains( selectedLanguage ) );
+    QVERIFY( Calamares::Locale::availableLanguages().contains( selectedLanguage ) );
 
     const auto neon = LocaleConfiguration::fromLanguageAndLocation(
         ( selectedLanguage ), m_KDEneonLocales, QStringLiteral( "NL" ) );
@@ -493,7 +490,7 @@ LocaleTests::testLanguageMappingFreeBSD()
     QFETCH( QString, KDEneonLanguage );
     QFETCH( QString, FreeBSDLanguage );
 
-    QVERIFY( m_availableLanguages.contains( selectedLanguage ) );
+    QVERIFY( Calamares::Locale::availableLanguages().contains( selectedLanguage ) );
 
     const auto bsd = LocaleConfiguration::fromLanguageAndLocation(
         ( selectedLanguage ), m_FreeBSDLocales, QStringLiteral( "NL" ) );

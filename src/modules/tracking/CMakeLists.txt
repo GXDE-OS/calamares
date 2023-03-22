@@ -16,11 +16,8 @@ calamares_add_plugin(tracking
     RESOURCES
         page_trackingstep.qrc
     SHARED_LIB
+    LINK_LIBRARIES
+        KF5::CoreAddons
 )
 
-calamares_add_test(
-    trackingtest
-    SOURCES
-        Tests.cpp
-        Config.cpp
-)
+calamares_add_test(trackingtest SOURCES Tests.cpp Config.cpp)

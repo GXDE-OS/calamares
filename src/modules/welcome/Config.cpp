@@ -26,7 +26,7 @@
 
 Config::Config( QObject* parent )
     : QObject( parent )
-    , m_languages( CalamaresUtils::Locale::availableTranslations() )
+    , m_languages( Calamares::Locale::availableTranslations() )
     , m_filtermodel( std::make_unique< QSortFilterProxyModel >() )
     , m_requirementsChecker( std::make_unique< GeneralRequirements >( this ) )
 {
@@ -55,12 +55,10 @@ Config::retranslate()
         {
             message = setup ? tr( "This computer does not satisfy the minimum "
                                   "requirements for setting up %1.<br/>"
-                                  "Setup cannot continue. "
-                                  "<a href=\"#details\">Details...</a>" )
+                                  "Setup cannot continue." )
                             : tr( "This computer does not satisfy the minimum "
                                   "requirements for installing %1.<br/>"
-                                  "Installation cannot continue. "
-                                  "<a href=\"#details\">Details...</a>" );
+                                  "Installation cannot continue." );
         }
         else
         {
@@ -86,7 +84,7 @@ Config::retranslate()
     emit warningMessageChanged( m_warningMessage );
 }
 
-CalamaresUtils::Locale::TranslationsModel*
+Calamares::Locale::TranslationsModel*
 Config::languagesModel() const
 {
     return m_languages;
@@ -122,7 +120,7 @@ void
 Config::initLanguages()
 {
     // Find the best initial translation
-    CalamaresUtils::Locale::Translation defaultTranslation;
+    Calamares::Locale::Translation defaultTranslation;
 
     cDebug() << "Trying to match locale" << defaultTranslation.id();
     int matchedLocaleIndex = m_languages->find( defaultTranslation.id() );
@@ -130,7 +128,6 @@ Config::initLanguages()
     // Need to match by some other means than the exact translation Id
     if ( matchedLocaleIndex < 0 )
     {
-
         QLocale defaultLocale = defaultTranslation.locale();
 
         cDebug() << "Trying to match locale" << defaultLocale;
@@ -175,7 +172,7 @@ void
 Config::setCountryCode( const QString& countryCode )
 {
     m_countryCode = countryCode;
-    setLocaleIndex( CalamaresUtils::Locale::availableTranslations()->find( m_countryCode ) );
+    setLocaleIndex( Calamares::Locale::availableTranslations()->find( m_countryCode ) );
 
     emit countryCodeChanged( m_countryCode );
 }
@@ -189,7 +186,7 @@ Config::setLanguageIcon( const QString& languageIcon )
 void
 Config::setLocaleIndex( int index )
 {
-    if ( index == m_localeIndex || index > CalamaresUtils::Locale::availableTranslations()->rowCount( QModelIndex() )
+    if ( index == m_localeIndex || index > Calamares::Locale::availableTranslations()->rowCount( QModelIndex() )
          || index < 0 )
     {
         return;
@@ -350,7 +347,7 @@ setCountry( Config* config, const QString& countryCode, CalamaresUtils::GeoIP::H
         return;
     }
 
-    auto c_l = CalamaresUtils::Locale::countryData( countryCode );
+    auto c_l = Calamares::Locale::countryData( countryCode );
     if ( c_l.first == QLocale::Country::AnyCountry )
     {
         cDebug() << "Unusable country code" << countryCode;
@@ -359,7 +356,7 @@ setCountry( Config* config, const QString& countryCode, CalamaresUtils::GeoIP::H
     }
     else
     {
-        int r = CalamaresUtils::Locale::availableTranslations()->find( countryCode );
+        int r = Calamares::Locale::availableTranslations()->find( countryCode );
         if ( r < 0 )
         {
             cDebug() << "Unusable country code" << countryCode << "(no suitable translation)";
