@@ -1,3 +1,10 @@
+calamares (3.3.0~alpha5-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+  * Remove dependency on libboost-python-dev (no longer needed)
+
+ -- Jonathan Carter <jcc@debian.org>  Wed, 15 Nov 2023 11:17:59 +0200
+
 calamares (3.3.0~alpha2-1) unstable; urgency=medium
 
   * Upload to unstable 
