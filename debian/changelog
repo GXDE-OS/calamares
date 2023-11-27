@@ -1,3 +1,10 @@
+calamares (3.3.0~alpha6-2) unstable; urgency=medium
+
+  * Re-add libboost-python-dev (Closes: #1056713)
+    (undoing previous commit, seems we still need it)
+
+ -- Jonathan Carter <jcc@debian.org>  Mon, 27 Nov 2023 09:38:52 +0200
+
 calamares (3.3.0~alpha6-1) unstable; urgency=medium
 
   * New upstream release
