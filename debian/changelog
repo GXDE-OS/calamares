@@ -1,3 +1,9 @@
+calamares (3.3.0-1) unstable; urgency=medium
+
+  * New upstream release 
+
+ -- Jonathan Carter <jcc@debian.org>  Thu, 14 Dec 2023 14:43:04 +0200
+
 calamares (3.3.0~alpha6-2) unstable; urgency=medium
 
   * Re-add libboost-python-dev (Closes: #1056713)
