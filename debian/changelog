@@ -1,3 +1,9 @@
+calamares (3.3.5-1) unstable; urgency=medium
+
+  * New upstream release 
+
+ -- Jonathan Carter <jcc@debian.org>  Mon, 04 Mar 2024 18:43:38 +0200
+
 calamares (3.3.4-1) unstable; urgency=medium
 
   * New upstream release
