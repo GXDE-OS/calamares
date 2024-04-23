@@ -1,3 +1,10 @@
+calamares (3.3.6-1) unstable; urgency=medium
+
+  * New upstream release
+  * Kickstart transition for #1061330
+
+ -- Jonathan Carter <jcc@debian.org>  Tue, 23 Apr 2024 14:13:41 +0200
+
 calamares (3.3.5-1) unstable; urgency=medium
 
   * New upstream release 
