@@ -1,3 +1,21 @@
+calamares (3.3.13-1) unstable; urgency=medium
+
+  * Add previous git commit and changes that weren't committed
+  * Update standards version to 4.7.0
+  * New upstream release
+  * Qt 6 migration
+  * New build-dependency: libkf6crash-dev
+
+ -- Jonathan Carter <jcc@debian.org>  Wed, 01 Jan 2025 20:02:50 +0200
+
+calamares (3.3.12-1.1) unstable; urgency=medium
+
+  * Non-maintainer-upload
+  * Add Breaks/Replaces against older versions of calamares-extensions.
+    (Closes: #1087059)
+
+ -- Aaron Rainbolt <arraybolt@ubuntu.com>  Wed, 18 Dec 2024 17:48:25 -0600
+
 calamares (3.3.12-1) unstable; urgency=medium
 
   * New upstream release
