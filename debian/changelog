@@ -1,3 +1,9 @@
+calamares (3.3.14-1) unstable; urgency=medium
+
+  * New upstream release 
+
+ -- Jonathan Carter <jcc@debian.org>  Wed, 05 Mar 2025 11:54:07 +0200
+
 calamares (3.3.13-1) unstable; urgency=medium
 
   * Add previous git commit and changes that weren't committed
