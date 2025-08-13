@@ -1,3 +1,10 @@
+calamares (3.3.14-2) unstable; urgency=medium
+
+  * Add libcrypt-dev as a build-dependency
+    (Closes: #1107002)
+
+ -- Jonathan Carter <jcc@debian.org>  Wed, 13 Aug 2025 21:43:18 +0200
+
 calamares (3.3.14-1) unstable; urgency=medium
 
   * New upstream release 
