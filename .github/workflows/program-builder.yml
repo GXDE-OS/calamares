@@ -11,3 +11,15 @@ jobs:
   call:
     uses: GXDE-OS/GXDE/.github/workflows/building-deb-hetao.yml@master
     secrets: inherit
+
+  call-riscv64-zhuangzhuang:
+    uses: GXDE-OS/GXDE/.github/workflows/building-deb-base.yml@master
+    secrets: inherit
+    with:
+      display-name: riscv64-zhuangzhuang
+      arch: riscv64
+      rootfs-codename: trixie
+      rootfs-source: https://deb.debian.org/debian/
+      gxde-codename: lizhi
+      gxde-codename-upload: zhuangzhuang
+
