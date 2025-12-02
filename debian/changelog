@@ -1,3 +1,9 @@
+calamares (3.3.14-5) unstable; urgency=medium
+
+  * Restore debian/rules 
+
+ -- Jonathan Carter <jcc@debian.org>  Tue, 02 Dec 2025 16:05:13 +0200
+
 calamares (3.3.14-4) unstable; urgency=medium
 
   * Ignore gcs warnings on arm64 (Closes: #1110449)
