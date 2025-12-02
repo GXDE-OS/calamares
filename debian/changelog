@@ -1,3 +1,10 @@
+calamares (3.3.14-4) unstable; urgency=medium
+
+  * Ignore gcs warnings on arm64 (Closes: #1110449)
+  * Set maintainer to Debian Qt/KDE Maintainers (Closes: #1111784)
+
+ -- Jonathan Carter <jcc@debian.org>  Tue, 02 Dec 2025 13:19:45 +0200
+
 calamares (3.3.14-3) unstable; urgency=medium
 
   * No change upload 
