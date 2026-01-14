@@ -6,10 +6,6 @@ export DEB_BUILD_MAINT_OPTIONS=hardening=+all
 # Help makes build paths reproducible
 export DEB_BUILD_MAINT_OPTIONS=buildinfo=+path
 
-ifeq ($(DEB_TARGET_ARCH),arm64)
-DEB_LDFLAGS_MAINT_APPEND=-Wl,-z,gcs-report-dynamic=none
-endif
-
 %:
 	dh $@ --with kf6
 
