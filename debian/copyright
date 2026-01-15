@@ -171,7 +171,10 @@ License: CC0-1.0
     party to this document and has no duty or obligation with respect to
     this CC0 or use of the Work.
 
-Files: src/qml/calamares/slideshow/*qml
+Files: src/qml/calamares-qt5/slideshow/Presentation.qml
+       src/qml/calamares-qt5/slideshow/Slide.qml
+       src/qml/calamares-qt6/slideshow/Presentation.qml
+       src/qml/calamares-qt6/slideshow/Slide.qml
 Copyright: 2017, Adriaan de Groot <groot@kde.org>
            2016 The Qt Company Ltd
            2012 Digia Plc and/or its subsidiary(-ies)
