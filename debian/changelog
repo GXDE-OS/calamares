@@ -3,6 +3,7 @@ calamares (3.3.14-6) UNRELEASED; urgency=medium
   [ Aurélien COUDERC ]
   * Switch from transitional pkg-config to pkgconf build dependency.
   * Bump Standards-Version to 4.7.3, no change required.
+  * Switch to debian/watch format version 5.
 
  -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Thu, 15 Jan 2026 07:44:43 +0100
 
