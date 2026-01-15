@@ -35,7 +35,7 @@ Build-Depends: cmake,
                qml-module-qtquick-window2,
                qml-module-qtquick2,
                qt6-base-dev
-Standards-Version: 4.7.0
+Standards-Version: 4.7.3
 Rules-Requires-Root: no
 Homepage: https://github.com/calamares/calamares
 Vcs-Browser: https://salsa.debian.org/qt-kde-team/extras/calamares
