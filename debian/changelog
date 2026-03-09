@@ -1,3 +1,9 @@
+calamares (3.4.0-2) unstable; urgency=medium
+
+  * Move qml6-module-qtquick-window from build-depends to recommends 
+
+ -- Jonathan Carter <jcc@debian.org>  Mon, 09 Mar 2026 15:30:15 +0200
+
 calamares (3.4.0-1) unstable; urgency=medium
 
   * New upstream release

@@ -33,7 +33,6 @@ Build-Depends: cmake,
                qml-module-qtquick-layouts,
                qml-module-qtquick-privatewidgets,
                qml-module-qtquick-window2,
-               qml6-module-qtquick-window,
                qml-module-qtquick2,
                qt6-base-dev
 Standards-Version: 4.7.3
@@ -45,7 +44,7 @@ Vcs-Git: https://salsa.debian.org/qt-kde-team/extras/calamares.git
 Package: calamares
 Architecture: linux-any
 Depends: os-prober, ${misc:Depends}, ${shlibs:Depends}
-Recommends: btrfs-progs, squashfs-tools
+Recommends: btrfs-progs, squashfs-tools, qml6-module-qtquick-window
 Replaces: calamares-extensions (<< 3.3.12-1)
 Breaks: calamares-extensions (<<3.3.12-1)
 Description: distribution-independent installer framework
