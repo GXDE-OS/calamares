@@ -1,5 +1,5 @@
 ---
-Bug-Database: https://github.com/calamares/calamares/issues
-Bug-Submit: https://github.com/calamares/calamares/issues/new
-Repository: https://github.com/calamares/calamares.git
-Repository-Browse: https://github.com/calamares/calamares
+Bug-Database: https://codeberg.org/Calamares/calamares/issues 
+Bug-Submit: https://codeberg.org/Calamares/calamares/issues/new/choose
+Repository: https://codeberg.org/Calamares/calamares.git
+Repository-Browse: https://codeberg.org/Calamares/calamares

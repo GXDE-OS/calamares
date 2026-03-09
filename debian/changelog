@@ -1,3 +1,14 @@
+calamares (3.4.0-1) unstable; urgency=medium
+
+  * New upstream release
+  * New upstream location at Codeberg:
+    - Update copyright file
+    - Update debian/upstream/metadata
+  * Add qml6-module-qtquick-window as a dependency
+    (Closes: #1128938)
+
+ -- Jonathan Carter <jcc@debian.org>  Mon, 09 Mar 2026 14:33:22 +0200
+
 calamares (3.3.14-6) unstable; urgency=medium
 
   * Team upload.

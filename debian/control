@@ -33,6 +33,7 @@ Build-Depends: cmake,
                qml-module-qtquick-layouts,
                qml-module-qtquick-privatewidgets,
                qml-module-qtquick-window2,
+               qml6-module-qtquick-window,
                qml-module-qtquick2,
                qt6-base-dev
 Standards-Version: 4.7.3

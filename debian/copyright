@@ -1,6 +1,6 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: calamares
-Source: https://github.com/calamares/calamares
+Source: https://calamares.codeberg.page/ 
 
 Files: *
 Copyright: 2017-2021, Adriaan de Groot <groot@kde.org>
