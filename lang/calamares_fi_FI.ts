@@ -49,7 +49,7 @@
     <message>
       <location filename="../src/modules/partition/gui/BootInfoWidget.cpp" line="60"/>
       <source>The &lt;strong&gt;boot environment&lt;/strong&gt; of this system.&lt;br&gt;&lt;br&gt;Older x86 systems only support &lt;strong&gt;BIOS&lt;/strong&gt;.&lt;br&gt;Modern systems usually use &lt;strong&gt;EFI&lt;/strong&gt;, but may also show up as BIOS if started in compatibility mode.</source>
-      <translation>Järjestelmän &lt;strong&gt;käynnistys&lt;/strong&gt; tässä tietokoneessa.&lt;br&gt;&lt;br&gt;Vanhempi x86 tukee &lt;strong&gt;BIOS&lt;/strong&gt; käynnistystapaa.&lt;br&gt;Uudet tietokoneet tukee &lt;strong&gt;EFI&lt;/strong&gt; käynnistystä, mutta voi toimia BIOS-moodissa, jos käynnistetään yhteensopivuustilassa.</translation>
+      <translation>Järjestelmän &lt;strong&gt;käynnistys&lt;/strong&gt; tässä tietokoneessa.&lt;br&gt;&lt;br&gt;Vanhempi x86 tukee &lt;strong&gt;BIOS&lt;/strong&gt; käynnistystapaa.&lt;br&gt;Uudet tietokoneet tukee &lt;strong&gt;EFI&lt;/strong&gt; käynnistystä, mutta BIOS-moodia voi käyttää, jos käynnistää yhteensopivuustilassa.</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/gui/BootInfoWidget.cpp" line="70"/>
@@ -59,7 +59,7 @@
     <message>
       <location filename="../src/modules/partition/gui/BootInfoWidget.cpp" line="82"/>
       <source>This system was started with a &lt;strong&gt;BIOS&lt;/strong&gt; boot environment.&lt;br&gt;&lt;br&gt;To configure startup from a BIOS environment, this installer must install a boot loader, like &lt;strong&gt;GRUB&lt;/strong&gt;, either at the beginning of a partition or on the &lt;strong&gt;Master Boot Record&lt;/strong&gt; near the beginning of the partition table (preferred). This is automatic, unless you choose manual partitioning, in which case you must set it up on your own.</source>
-      <translation>Tietokone käynnistettiin &lt;strong&gt;BIOS&lt;/strong&gt; käynnistyksellä. &lt;br&gt;&lt;br&gt;Jos haluat määrittää BIOS:n on asennettava käynnistyslatain, kuten &lt;strong&gt;GRUB&lt;/strong&gt;, joko osion alkuun tai &lt;strong&gt;Master Boot Record&lt;/strong&gt;, joka sijaitsee osiotaulun alussa (suositus). Kaikki on oletuksena, mutta jos valitset manuaalisen osioinnin, sinun on valittava nämä asetukset.</translation>
+      <translation>Tietokone käynnistettiin &lt;strong&gt;BIOS&lt;/strong&gt; käynnistyksellä. &lt;br&gt;&lt;br&gt;Jos haluat määrittää BIOS:n on asennettava käynnistyslatain, kuten &lt;strong&gt;GRUB&lt;/strong&gt;, joko osion alkuun tai &lt;strong&gt;Master Boot Record&lt;/strong&gt;, joka sijaitsee osiotaulun alussa (suositus). Oletuksena nämä on valittuna, mutta jos valitset manuaalisen osioinnin, sinun on valittava nämä asetukset erikseen.</translation>
     </message>
   </context>
   <context>
@@ -396,7 +396,7 @@
       <location filename="../src/libcalamares/modulesystem/RequirementsChecker.cpp" line="130"/>
       <source>System-requirements checking is complete.</source>
       <comment>@info</comment>
-      <translation>Järjestelmän vaatimusten tarkistus on valmis.</translation>
+      <translation>Tietokoneen vaatimusten tarkistus on valmis.</translation>
     </message>
   </context>
   <context>
@@ -650,13 +650,13 @@ Asennusohjelma lopetetaan ja kaikki muutokset menetetään.</translation>
       <location filename="../src/modules/partition/jobs/ChangeFilesystemLabelJob.cpp" line="34"/>
       <source>Set filesystem label on %1</source>
       <comment>@title</comment>
-      <translation>Aseta tiedostojärjestelmän nimeksi %1</translation>
+      <translation>Tiedostojärjestelmän nimeksi %1</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/jobs/ChangeFilesystemLabelJob.cpp" line="41"/>
       <source>Set filesystem label &lt;strong&gt;%1&lt;/strong&gt; to partition &lt;strong&gt;%2&lt;/strong&gt;</source>
       <comment>@info</comment>
-      <translation>Aseta tiedostojärjestelmän nimeksi &lt;strong&gt;%1&lt;/strong&gt; osioon &lt;strong&gt;%2&lt;/strong&gt;</translation>
+      <translation>Tiedostojärjestelmän nimeksi &lt;strong&gt;%1&lt;/strong&gt; osioon &lt;strong&gt;%2&lt;/strong&gt;</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/jobs/ChangeFilesystemLabelJob.cpp" line="50"/>
@@ -695,19 +695,19 @@ Asennusohjelma lopetetaan ja kaikki muutokset menetetään.</translation>
       <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="1153"/>
       <source>Current:</source>
       <comment>@label</comment>
-      <translation>Nyt:</translation>
+      <translation>Nykyinen kiinolevy:</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="139"/>
       <source>After:</source>
       <comment>@label</comment>
-      <translation>Jälkeen:</translation>
+      <translation>Asennuksen jälkeen:</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="897"/>
       <source>Reuse %1 as home partition for %2</source>
       <comment>@label</comment>
-      <translation>Käytä uudelleen %1 kotiosiona %2</translation>
+      <translation>Käytä uudelleen %1 kotiosiona %2:lle</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="1041"/>
@@ -736,13 +736,13 @@ Asennusohjelma lopetetaan ja kaikki muutokset menetetään.</translation>
       <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="1213"/>
       <source>The EFI system partition at %1 will be used for starting %2.</source>
       <comment>@info, %1 is partition path, %2 is product name</comment>
-      <translation>EFI-osiota %1 käytetään %2 käynnistämiseen.</translation>
+      <translation>EFI-järjestelmän %1 osiota käytetään %2 käynnistämiseen.</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="1222"/>
       <source>EFI system partition:</source>
       <comment>@label</comment>
-      <translation>EFI-osio:</translation>
+      <translation>EFI-järjestelmän osio:</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="1712"/>
@@ -781,7 +781,7 @@ Asennusohjelma lopetetaan ja kaikki muutokset menetetään.</translation>
     <message>
       <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="1755"/>
       <source>This storage device already has an operating system on it. What would you like to do?&lt;br/&gt;You will be able to review and confirm your choices before any change is made to the storage device.</source>
-      <translation>Tämä kiintolevy sisältää jo käyttöjärjestelmän. Mitä haluat tehdä?&lt;br/&gt;Voit tarkistaa valintasi, ennen kuin kiintolevylle tehdään muutoksia.</translation>
+      <translation>Kiintolevyllä on jo käyttöjärjestelmä. Mitä haluat tehdä?&lt;br/&gt;Tarkista valintasi, ennen kuin kiintolevylle tehdään muutoksia.</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="1777"/>
@@ -809,31 +809,31 @@ Asennusohjelma lopetetaan ja kaikki muutokset menetetään.</translation>
       <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="1570"/>
       <source>No swap</source>
       <comment>@label</comment>
-      <translation>Ei swappia</translation>
+      <translation>Swap (pois käytöstä)</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="1579"/>
       <source>Reuse swap</source>
       <comment>@label</comment>
-      <translation>Käytä swap uudellen</translation>
+      <translation>Swap (käytä uudelleen)</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="1582"/>
       <source>Swap (no Hibernate)</source>
       <comment>@label</comment>
-      <translation>Swap (ei lepotilaa)</translation>
+      <translation>Swap (ei horrostilaa)</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="1585"/>
       <source>Swap (with Hibernate)</source>
       <comment>@label</comment>
-      <translation>Swap (lepotilan kanssa)</translation>
+      <translation>Swap (horrostilalla)</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="1588"/>
       <source>Swap to file</source>
       <comment>@label</comment>
-      <translation>Swap tiedostona</translation>
+      <translation>Swap (tiedostona)</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="1601"/>
@@ -857,12 +857,12 @@ Asennusohjelma lopetetaan ja kaikki muutokset menetetään.</translation>
     <message>
       <location filename="../src/modules/partition/jobs/ClearMountsJob.cpp" line="274"/>
       <source>Successfully disabled swap %1.</source>
-      <translation>Poistettu käytöstä swap %1.</translation>
+      <translation>Swap %1 poistettiin käytöstä.</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/jobs/ClearMountsJob.cpp" line="300"/>
       <source>Successfully cleared swap %1.</source>
-      <translation>Tyhjennetty swap %1.</translation>
+      <translation>Swap %1 tyhjennettiin.</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/jobs/ClearMountsJob.cpp" line="314"/>
@@ -986,7 +986,7 @@ Asennusohjelma lopetetaan ja kaikki muutokset menetetään.</translation>
       <location filename="../src/modules/locale/Config.cpp" line="381"/>
       <source>Set timezone to %1.</source>
       <comment>@action</comment>
-      <translation>Aseta aikavyöhyke %1.</translation>
+      <translation>Aikavyöhykkeeksi %1.</translation>
     </message>
     <message>
       <location filename="../src/modules/locale/Config.cpp" line="418"/>
@@ -998,7 +998,7 @@ Asennusohjelma lopetetaan ja kaikki muutokset menetetään.</translation>
       <location filename="../src/modules/locale/Config.cpp" line="425"/>
       <source>The numbers and dates locale will be set to %1.</source>
       <comment>@info</comment>
-      <translation>Numerot ja päivämäärät, paikallinen asetus on %1.</translation>
+      <translation>Numerot ja päivämäärä on %1.</translation>
     </message>
     <message>
       <location filename="../src/modules/netinstall/Config.cpp" line="53"/>
@@ -1059,17 +1059,17 @@ Asennusohjelma lopetetaan ja kaikki muutokset menetetään.</translation>
       <location filename="../src/modules/summary/Config.cpp" line="35"/>
       <source>Summary</source>
       <comment>@label</comment>
-      <translation>Yhteenveto</translation>
+      <translation>Kooste</translation>
     </message>
     <message>
       <location filename="../src/modules/summary/Config.cpp" line="39"/>
       <source>This is an overview of what will happen once you start the setup procedure.</source>
-      <translation>Tämä on katsaus siitä, mitä tapahtuu, kun aloitat määrityksen.</translation>
+      <translation>Yleiskatsaus mitä tapahtuu kun aloitat asennuksen.</translation>
     </message>
     <message>
       <location filename="../src/modules/summary/Config.cpp" line="44"/>
       <source>This is an overview of what will happen once you start the install procedure.</source>
-      <translation>Tämä on katsaus siitä, mitä tapahtuu, kun aloitat asennuksen.</translation>
+      <translation>Yleiskatsaus mitä tapahtuu kun aloitat asennuksen.</translation>
     </message>
     <message>
       <location filename="../src/modules/users/Config.cpp" line="237"/>
@@ -1144,7 +1144,7 @@ Asennusohjelma lopetetaan ja kaikki muutokset menetetään.</translation>
     <message>
       <location filename="../src/modules/welcome/Config.cpp" line="80"/>
       <source>This program will ask you some questions and set up %2 on your computer.</source>
-      <translation>Tämä ohjelma kysyy sinulta kysymyksiä ja määrittää %2 tietokoneellesi.</translation>
+      <translation>Ohjelma kysyy kysymyksiä ja määrittää %2 tietokoneellesi.</translation>
     </message>
     <message>
       <location filename="../src/modules/welcome/Config.cpp" line="264"/>
@@ -1491,7 +1491,7 @@ Asennusohjelma lopetetaan ja kaikki muutokset menetetään.</translation>
     <message>
       <location filename="../src/modules/partition/gui/DeviceInfoWidget.cpp" line="78"/>
       <source>&lt;br&gt;&lt;br&gt;This partition table type is only advisable on older systems which start from a &lt;strong&gt;BIOS&lt;/strong&gt; boot environment. GPT is recommended in most other cases.&lt;br&gt;&lt;br&gt;&lt;strong&gt;Warning:&lt;/strong&gt; the MBR partition table is an obsolete MS-DOS era standard.&lt;br&gt;Only 4 &lt;em&gt;primary&lt;/em&gt; partitions may be created, and of those 4, one can be an &lt;em&gt;extended&lt;/em&gt; partition, which may in turn contain many &lt;em&gt;logical&lt;/em&gt; partitions.</source>
-      <translation>&lt;br&gt;&lt;br&gt;Tämä osiotaulun tyyppi on suositeltu vain vanhemmille tietokoneille, jotka käyttää  &lt;strong&gt;BIOS&lt;/strong&gt; käynnistystä. Muissa tapauksissa suositellaan GPT:n käyttöä.&lt;br&gt;&lt;br&gt;&lt;strong&gt;Varoitus:&lt;/strong&gt;MBR-taulu on vanhentunut MS-DOS-standardi.&lt;br&gt;Vain 4 &lt;em&gt;ensisijaisia&lt;/em&gt; osioita voidaan luoda ja yksi niistä voi olla &lt;em&gt;laajennettu&lt;/em&gt; osio, joka voi puolestaan sisältää monia &lt;em&gt;loogisia&lt;/em&gt; osioita.</translation>
+      <translation>&lt;br&gt;&lt;br&gt;Tämä osiotaulu on suositeltu vain vanhemmille tietokoneille, jotka käyttää  &lt;strong&gt;BIOS&lt;/strong&gt; käynnistystä. Muissa tapauksissa suositus on GPT.&lt;br&gt;&lt;br&gt;&lt;strong&gt;Varoitus:&lt;/strong&gt;MBR-taulu on vanhentunut MS-DOS standardi.&lt;br&gt;Vain 4 &lt;em&gt;ensisijaisia&lt;/em&gt; osioita voidaan luoda ja yksi niistä voi olla &lt;em&gt;laajennettu&lt;/em&gt;, joka puolestaan sisältää monia &lt;em&gt;loogisia&lt;/em&gt; osioita.</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/gui/DeviceInfoWidget.cpp" line="89"/>
@@ -1516,7 +1516,7 @@ Asennusohjelma lopetetaan ja kaikki muutokset menetetään.</translation>
     <message>
       <location filename="../src/modules/partition/gui/DeviceInfoWidget.cpp" line="147"/>
       <source>The type of &lt;strong&gt;partition table&lt;/strong&gt; on the selected storage device.&lt;br&gt;&lt;br&gt;The only way to change the partition table type is to erase and recreate the partition table from scratch, which destroys all data on the storage device.&lt;br&gt;This installer will keep the current partition table unless you explicitly choose otherwise.&lt;br&gt;If unsure, on modern systems GPT is preferred.</source>
-      <translation>Valitun kiintolevyn &lt;strong&gt;osiotaulu&lt;/strong&gt; on tyyppiä. &lt;br&gt;&lt;br&gt;Ainoa tapa muuttaa osiotaulun tyyppiä on poistaa ja luoda osiot alusta uudelleen, mikä poistaa kaikki kiintolevyn sisältämät tiedostot. &lt;br&gt;Asentaja säilyttää nykyisen osiotaulun, ellet nimenomaisesti valitse muuta. &lt;br&gt;Jos olet epävarma, nykyaikaisissa tietokoneissa GPT on parempi.</translation>
+      <translation>Valitun kiintolevyn &lt;strong&gt;osiotaulu&lt;/strong&gt; on tyyppiä. &lt;br&gt;&lt;br&gt;Ainoa tapa muuttaa osioinnin tapaa on poistaa ja luoda osiot alusta uudelleen, mikä poistaa myös kaikki kiintolevyn tiedostot. &lt;br&gt;Asennusohjelma säilyttää nykyisen osiotaulun, ellet nimenomaan valitse muuta. &lt;br&gt;Jos olet epävarma niin nykyaikaisissa tietokoneissa GPT on hyvä valinta.</translation>
     </message>
   </context>
   <context>
@@ -1775,7 +1775,7 @@ Asennusohjelma lopetetaan ja kaikki muutokset menetetään.</translation>
       <location filename="../src/modules/partition/jobs/FillGlobalStorageJob.cpp" line="296"/>
       <source>Install boot loader on &lt;strong&gt;%1&lt;/strong&gt;…</source>
       <comment>@info</comment>
-      <translation>Asenna käynnistyslatain kohteeseen &lt;strong&gt;% 1&lt;/strong&gt;…</translation>
+      <translation>Asenna latain &lt;strong&gt;%1&lt;/strong&gt;…</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/jobs/FillGlobalStorageJob.cpp" line="305"/>
@@ -1795,7 +1795,7 @@ Asennusohjelma lopetetaan ja kaikki muutokset menetetään.</translation>
       <location filename="../src/modules/finished/FinishedPage.cpp" line="75"/>
       <source>&lt;h1&gt;All done.&lt;/h1&gt;&lt;br/&gt;%1 has been set up on your computer.&lt;br/&gt;You may now start using your new system.</source>
       <comment>@info</comment>
-      <translation>&lt;h1&gt;Valmista.&lt;/h1&gt;&lt;br/&gt;%1 on määritetty tietokoneelle.&lt;br/&gt;Voit aloittaa uuden järjestelmän käytön.</translation>
+      <translation>&lt;h1&gt;Valmista.&lt;/h1&gt;&lt;br/&gt;%1 on määritetty tietokoneelle.&lt;br/&gt;Voit aloittaa järjestelmän käytön.</translation>
     </message>
     <message>
       <location filename="../src/modules/finished/FinishedPage.cpp" line="80"/>
@@ -1807,7 +1807,7 @@ Asennusohjelma lopetetaan ja kaikki muutokset menetetään.</translation>
       <location filename="../src/modules/finished/FinishedPage.cpp" line="89"/>
       <source>&lt;h1&gt;All done.&lt;/h1&gt;&lt;br/&gt;%1 has been installed on your computer.&lt;br/&gt;You may now restart into your new system, or continue using the %2 Live environment.</source>
       <comment>@info</comment>
-      <translation>&lt;h1&gt;Valmista.&lt;/h1&gt;&lt;br/&gt; %1 on asennettu tietokoneellesi. &lt;br/&gt;Voit käynnistää tietokoneen, tai voit jatkaa %2 live-ympäristön käyttöä.</translation>
+      <translation>&lt;h1&gt;Valmista.&lt;/h1&gt;&lt;br/&gt; %1 on asennettu tietokoneellesi. &lt;br/&gt;Voit käynnistää tietokoneen tai jatkaa %2 live-ympäristön käyttöä.</translation>
     </message>
     <message>
       <location filename="../src/modules/finished/FinishedPage.cpp" line="95"/>
@@ -1928,7 +1928,7 @@ Asennusohjelma lopetetaan ja kaikki muutokset menetetään.</translation>
     <message>
       <location filename="../src/modules/welcome/checker/GeneralRequirements.cpp" line="200"/>
       <source>is running the installer as an administrator (root)</source>
-      <translation>ajaa asennusohjelmaa järjestelmänvalvojana (root)</translation>
+      <translation>suorittaa asennusohjelman (root) oikeuksilla</translation>
     </message>
     <message>
       <location filename="../src/modules/welcome/checker/GeneralRequirements.cpp" line="204"/>
@@ -2140,7 +2140,7 @@ Asennusohjelma lopetetaan ja kaikki muutokset menetetään.</translation>
     <message>
       <location filename="../src/modules/luksopenswaphookcfg/LOSHJob.cpp" line="35"/>
       <source>Configuring encrypted swap.</source>
-      <translation>Salatun swapin määrittäminen.</translation>
+      <translation>Määritetään salattu swap.</translation>
     </message>
     <message>
       <location filename="../src/modules/luksopenswaphookcfg/LOSHJob.cpp" line="87"/>
@@ -2410,8 +2410,8 @@ Asennusohjelma lopetetaan ja kaikki muutokset menetetään.</translation>
             and timezone settings for you. You can fine-tune the suggested settings below. Search the map by dragging
             to move and using the +/- buttons to zoom in/out or use mouse scrolling for zooming.</source>
       <comment>@info</comment>
-      <translation>Valitse sinun sijaintisi kartalla, jotta asentaja voi ehdottaa sinulle maa
-ja aikavyöhykkeen asetuksia. Voit hienosäätää asetuksia. Etsi kartalta vetämällä tai painamalla +/- painikkeita.Voit myös käyttää hiiren rullaa skaalaamiseen.</translation>
+      <translation>Valitse sijaintisi kartalla ja asentaja ehdottaa sinulle maa-asetuksia.
+Voit myös hienosäätää asetuksia. Etsi kartalta vetämällä tai painamalla +/- painikkeita. Voit käyttää hiiren rullaa ja skaalata.</translation>
     </message>
   </context>
   <context>
@@ -2428,9 +2428,8 @@ ja aikavyöhykkeen asetuksia. Voit hienosäätää asetuksia. Etsi kartalta vet�
             and timezone settings for you. You can fine-tune the suggested settings below. Search the map by dragging
             to move and using the +/- buttons to zoom in/out or use mouse scrolling for zooming.</source>
       <comment>@label</comment>
-      <translation>Valitse sinun sijaintisi kartalla, jotta asentaja voi ehdottaa sinulle maa
-ja aikavyöhykkeen asetuksia. Voit hienosäätää asetuksia.
-Etsi kartalta vetämällä tai painamalla +/- painikkeita. Voit myös käyttää hiiren rullaa skaalaamiseen.</translation>
+      <translation>Valitse sijaintisi kartalla ja asentaja ehdottaa sinulle maa-asetuksia.
+Voit myös hienosäätää asetuksia. Etsi kartalta vetämällä tai painamalla +/- painikkeita. Voit käyttää hiiren rullaa ja skaalata.</translation>
     </message>
   </context>
   <context>
@@ -3275,7 +3274,7 @@ Etsi kartalta vetämällä tai painamalla +/- painikkeita. Voit myös käyttää
       <location filename="../src/modules/partition/PartitionViewStep.cpp" line="56"/>
       <source>Gathering system information…</source>
       <comment>@status</comment>
-      <translation>Kerätään järjestelmän tietoja...</translation>
+      <translation>Kerätään tietokoneen tietoja...</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/PartitionViewStep.cpp" line="107"/>
@@ -3428,17 +3427,17 @@ Etsi kartalta vetämällä tai painamalla +/- painikkeita. Voit myös käyttää
     <message>
       <location filename="../src/modules/partition/PartitionViewStep.cpp" line="627"/>
       <source>EFI system partition recommendation</source>
-      <translation>EFI-järjestelmän osiointisuositus</translation>
+      <translation>EFI osiointisuositus</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/PartitionViewStep.cpp" line="646"/>
       <source>Option to use GPT on BIOS</source>
-      <translation>BIOS:ssa mahdollisuus käyttää GPT:tä</translation>
+      <translation>Vaihtoehto käyttää GPT-BIOS:lla</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/PartitionViewStep.cpp" line="647"/>
       <source>A GPT partition table is the best option for all systems. This installer supports such a setup for BIOS systems too.&lt;br/&gt;&lt;br/&gt;To configure a GPT partition table on BIOS, (if not done so already) go back and set the partition table to GPT, next create a 8 MB unformatted partition with the &lt;strong&gt;%2&lt;/strong&gt; flag enabled.&lt;br/&gt;&lt;br/&gt;An unformatted 8 MB partition is necessary to start %1 on a BIOS system with GPT.</source>
-      <translation>GPT-osiotaulu on paras vaihtoehto kaikille järjestelmille. Kuitenkin asennusohjelma tukee myös BIOS-järjestelmää.&lt;br/&gt;&lt;br/&gt;Jos haluat määrittää GPT-osiotaulun BIOS:lle (jos et ole jo tehnyt) niin palaa takaisin ja aseta osiotauluksi GPT. Luo seuraavaksi 8 Mb alustamaton osio &lt;strong&gt;%2&lt;/strong&gt; lipulla käyttöön.&lt;br/&gt;&lt;br/&gt;Alustamaton 8 Mb tarvitaan %1  käynnistämiseen BIOS-järjestelmässä, jossa on GPT.</translation>
+      <translation>GPT-osio on hyvä vaihtoehto asennukselle. Asennusohjelma tukee myös BIOS-menetelmää.&lt;br/&gt;&lt;br/&gt;Jos haluat määrittää GPT-osion BIOS:lle (jos et ole vielä tehnyt). Palaa takaisin ja aseta osiovalinnaksi GPT. Luo sitten 8 Mb alustamaton osio käyttöön&lt;strong&gt;%2&lt;/strong&gt; lipulla.&lt;br/&gt;&lt;br/&gt;8 Mb alustamaton osio tarvitaan %1  käynnistämiseksi BIOS-alaisuudessa, jossa on GPT.</translation>
     </message>
     <message>
       <location filename="../src/modules/partition/PartitionViewStep.cpp" line="669"/>
@@ -3481,12 +3480,12 @@ Etsi kartalta vetämällä tai painamalla +/- painikkeita. Voit myös käyttää
     <message>
       <location filename="../src/modules/plasmalnf/PlasmaLnfPage.cpp" line="80"/>
       <source>Please choose a look-and-feel for the KDE Plasma Desktop. You can also skip this step and configure the look-and-feel once the system is set up. Clicking on a look-and-feel selection will give you a live preview of that look-and-feel.</source>
-      <translation>Valitse ulkoasu KDE-plasma -työpöydälle. Voit myös ohittaa tämän vaiheen ja määrittää ulkoasun, kun järjestelmä on asetettu. Klikkaamalla ulkoasun valintaa saat suoran esikatselun tästä ulkoasusta.</translation>
+      <translation>Valitse ulkoasu KDE Plasma:lle. Voit ohittaa tämän vaiheen ja määrittää ulkoasun kun tietokone on asetettu. Painamalla ulkoasua saat esikatselun ulkoasusta.</translation>
     </message>
     <message>
       <location filename="../src/modules/plasmalnf/PlasmaLnfPage.cpp" line="87"/>
       <source>Please choose a look-and-feel for the KDE Plasma Desktop. You can also skip this step and configure the look-and-feel once the system is installed. Clicking on a look-and-feel selection will give you a live preview of that look-and-feel.</source>
-      <translation>Valitse KDE Plasma -työpöydän ulkoasu. Voit myös ohittaa tämän vaiheen ja määrittää ulkoasun, kun järjestelmä on asennettu. Napsauttamalla ulkoasun valintaa saat suoran esikatselun tästä ulkoasusta.</translation>
+      <translation>Valitse ulkoasu KDE Plasma:lle. Voit ohittaa tämän vaiheen ja määrittää ulkoasun kun tietokone on asetettu. Painamalla ulkoasua saat esikatselun ulkoasusta.</translation>
     </message>
   </context>
   <context>
@@ -3732,7 +3731,7 @@ Asennus voi jatkua, mutta jotkin toiminnot saattavat olla pois käytöstä.&lt;/
       <location filename="../src/modules/fsresizer/ResizeFSJob.cpp" line="43"/>
       <source>Performing file system resize…</source>
       <comment>@status</comment>
-      <translation>Suoritetaan tiedostojärjestelmän koon muutosta…</translation>
+      <translation>Tiedostojärjestelmän kokoa muutetaan…</translation>
     </message>
     <message>
       <location filename="../src/modules/fsresizer/ResizeFSJob.cpp" line="162"/>
@@ -3803,7 +3802,7 @@ Asennus voi jatkua, mutta jotkin toiminnot saattavat olla pois käytöstä.&lt;/
       <location filename="../src/modules/fsresizer/ResizeFSJob.cpp" line="216"/>
       <source>The file system %1 must be resized, but cannot.</source>
       <comment>@info</comment>
-      <translation>Tiedostojärjestelmän %1 kokoa olisi muutettava, mutta sitä ei voida tehdä.</translation>
+      <translation>Tiedostojärjestelmän %1 kokoa olisi muutettava, mutta sitä ei voi tehdä.</translation>
     </message>
     <message>
       <location filename="../src/modules/fsresizer/ResizeFSJob.cpp" line="217"/>
@@ -4565,7 +4564,7 @@ Asennus voi jatkua, mutta jotkin toiminnot saattavat olla pois käytöstä.&lt;/
       <location filename="../src/modules/welcome/WelcomePage.ui" line="79"/>
       <location filename="../src/modules/welcome/WelcomePage.ui" line="98"/>
       <source>Select application and system language</source>
-      <translation>Valitse sovellusten ja järjestelmän kieli</translation>
+      <translation>Valitse sovellusten kieli</translation>
     </message>
     <message>
       <location filename="../src/modules/welcome/WelcomePage.ui" line="140"/>
@@ -4738,7 +4737,7 @@ Asennus voi jatkua, mutta jotkin toiminnot saattavat olla pois käytöstä.&lt;/
       <source>%1 has been installed on your computer.&lt;br/&gt;
             You may now restart into your new system, or continue using the Live environment.</source>
       <translation>%1 on asennettu tietokoneellesi. &lt;br/&gt;
-Käynnistää tietokoneen uudelleen tai jatka Live-ympäristön käyttöä.</translation>
+Käynnistä tietokone tai jatka Live-ympäristön käyttöä.</translation>
     </message>
     <message>
       <location filename="../src/modules/finishedq/finishedq.qml" line="65"/>
@@ -4754,8 +4753,8 @@ Käynnistää tietokoneen uudelleen tai jatka Live-ympäristön käyttöä.</tra
       <location filename="../src/modules/finishedq/finishedq.qml" line="89"/>
       <source>&lt;p&gt;A full log of the install is available as installation.log in the home directory of the Live user.&lt;br/&gt;
             This log is copied to /var/log/installation.log of the target system.&lt;/p&gt;</source>
-      <translation>&lt;p&gt;Asennuksen installation.log löytyy asennusmedialta live-käyttäjän kotihakemistosta.&lt;br/&gt;
-Loki kopioidaan myös /var/log/installation.log kansioon.</translation>
+      <translation>&lt;p&gt;Asennusloki installation.log löytyy asennusmedialta live-käyttäjän kotihakemistosta.&lt;br/&gt;
+Se kopioidaan myös /var/log/installation.log kansioon.&lt;/p&gt;</translation>
     </message>
   </context>
   <context>
@@ -4772,7 +4771,7 @@ Loki kopioidaan myös /var/log/installation.log kansioon.</translation>
             You may now restart into your new system, or continue using the Live environment.</source>
       <comment>@info, %1 is the product name</comment>
       <translation>%1 on asennettu tietokoneellesi. &lt;br/&gt;
-Käynnistää tietokoneen uudelleen tai jatka Live-ympäristön käyttöä.</translation>
+Käynnistä tietokone tai jatka Live-ympäristön käyttöä.</translation>
     </message>
     <message>
       <location filename="../src/modules/finishedq/finishedq-qt6.qml" line="65"/>
@@ -4791,8 +4790,8 @@ Käynnistää tietokoneen uudelleen tai jatka Live-ympäristön käyttöä.</tra
       <source>&lt;p&gt;A full log of the install is available as installation.log in the home directory of the Live user.&lt;br/&gt;
             This log is copied to /var/log/installation.log of the target system.&lt;/p&gt;</source>
       <comment>@info</comment>
-      <translation>&lt;p&gt;Asennuksen installation.log löytyy asennusmedialta live-käyttäjän kotihakemistosta.&lt;br/&gt;
-Loki kopioidaan myös /var/log/installation.log kansioon.</translation>
+      <translation>&lt;p&gt;Asennusloki installation.log löytyy asennusmedialta live-käyttäjän kotihakemistosta.&lt;br/&gt;
+Se kopioidaan myös /var/log/installation.log kansioon.&lt;/p&gt;</translation>
     </message>
   </context>
   <context>
@@ -5062,9 +5061,9 @@ ls -l /home
 
 The vertical scrollbar is adjustable, current width set to 10.</source>
       <translation>### %1
-Tämä on esimerkki QML-tiedostosta, joka näyttää Markdownin vaihtoehdot flickerable-sisällöllä.
+Esimerkki QML-tiedostosta. Markdownin vaihtoehdot flickerable-sisällöllä.
 
-RichTextin QML voi käyttää HTML-tageja, Markdown käyttää yksinkertaista Markdown-syntaksia. Flickable-sisältö on hyödyllistä kosketusnäytölle.
+RichTextin QML voi käyttää HTML-tageja, Markdown käyttää Markdown-syntaksia. Flickable on hyödyllistä kosketusnäytölle.
 
 **Tämä on lihavoitu teksti**
 
@@ -5085,7 +5084,7 @@ ls -l /home
 * Intel-suorittimet
 * AMD-suorittimet
 
-Pystyvierityspalkki on säädettävissä, leveys on nyt asetettu arvoon 10.</translation>
+Vierityspalkki on säädettävissä, leveys on nyt arvossa 10.</translation>
     </message>
     <message>
       <location filename="../src/modules/welcomeq/release_notes.qml" line="80"/>
@@ -5138,7 +5137,7 @@ Pystyvierityspalkki on säädettävissä, leveys on nyt asetettu arvoon 10.</tra
     <message>
       <location filename="../src/modules/usersq/usersq.qml" line="147"/>
       <source>What is the name of this computer?</source>
-      <translation>Mikä on tämän tietokoneen nimi?</translation>
+      <translation>Mikä tulee tietokoneen nimeksi?</translation>
     </message>
     <message>
       <location filename="../src/modules/usersq/usersq.qml" line="153"/>
@@ -5183,7 +5182,7 @@ Pystyvierityspalkki on säädettävissä, leveys on nyt asetettu arvoon 10.</tra
     <message>
       <location filename="../src/modules/usersq/usersq.qml" line="297"/>
       <source>Reuse user password as root password</source>
-      <translation>Käytä käyttäjän salasanaa myös root-salasanana</translation>
+      <translation>Käytä salasanaa myös root-salasanana</translation>
     </message>
     <message>
       <location filename="../src/modules/usersq/usersq.qml" line="305"/>
@@ -5223,7 +5222,7 @@ Pystyvierityspalkki on säädettävissä, leveys on nyt asetettu arvoon 10.</tra
     <message>
       <location filename="../src/modules/usersq/usersq.qml" line="420"/>
       <source>When this box is checked, password-strength checking is done and you will not be able to use a weak password.</source>
-      <translation>Kun tämä valintaruutu on valittu, salasanan vahvuus tarkistetaan, etkä voi käyttää heikkoa salasanaa.</translation>
+      <translation>Kun ruutu on valittuna, salasanan vahvuus tarkistetaan, etkä voi käyttää heikkoa salasanaa.</translation>
     </message>
   </context>
   <context>
@@ -5266,12 +5265,12 @@ Pystyvierityspalkki on säädettävissä, leveys on nyt asetettu arvoon 10.</tra
     <message>
       <location filename="../src/modules/usersq/usersq-qt6.qml" line="137"/>
       <source>root is not allowed as username.</source>
-      <translation>root ei ole sallittu käyttäjänimeksi.</translation>
+      <translation>root ei ole sallittu käyttäjänimi.</translation>
     </message>
     <message>
       <location filename="../src/modules/usersq/usersq-qt6.qml" line="146"/>
       <source>What is the name of this computer?</source>
-      <translation>Mikä on tämän tietokoneen nimi?</translation>
+      <translation>Mikä tulee tietokoneen nimeksi?</translation>
     </message>
     <message>
       <location filename="../src/modules/usersq/usersq-qt6.qml" line="152"/>
@@ -5316,7 +5315,7 @@ Pystyvierityspalkki on säädettävissä, leveys on nyt asetettu arvoon 10.</tra
     <message>
       <location filename="../src/modules/usersq/usersq-qt6.qml" line="296"/>
       <source>Reuse user password as root password</source>
-      <translation>Käytä käyttäjän salasanaa myös root-salasanana</translation>
+      <translation>Käytä salasanaa myös root-salasanana</translation>
     </message>
     <message>
       <location filename="../src/modules/usersq/usersq-qt6.qml" line="304"/>
@@ -5356,7 +5355,7 @@ Pystyvierityspalkki on säädettävissä, leveys on nyt asetettu arvoon 10.</tra
     <message>
       <location filename="../src/modules/usersq/usersq-qt6.qml" line="419"/>
       <source>When this box is checked, password-strength checking is done and you will not be able to use a weak password.</source>
-      <translation>Kun tämä valintaruutu on valittu, salasanan vahvuus tarkistetaan, etkä voi käyttää heikkoa salasanaa.</translation>
+      <translation>Kun ruutu on valittuna, salasanan vahvuus tarkistetaan, etkä voi käyttää heikkoa salasanaa.</translation>
     </message>
   </context>
   <context>

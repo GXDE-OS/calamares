@@ -1,3 +1,14 @@
+calamares (3.4.2-1) unstable; urgency=medium
+
+  * New upstream release
+  * Merge MR!8 (thanks jbicha)
+    - Update upstream metadata
+    - Add upstream signing key
+  * Remove debian/patches:
+    - Calamares no longer builds with fatal-warnings
+
+ -- Jonathan Carter <jcc@debian.org>  Tue, 10 Mar 2026 18:56:09 +0200
+
 calamares (3.4.0-2) unstable; urgency=medium
 
   * Move qml6-module-qtquick-window from build-depends to recommends 

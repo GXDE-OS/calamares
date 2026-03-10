@@ -10,12 +10,12 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-11-29 13:55+0100\n"
 "PO-Revision-Date: 2017-08-09 10:34+0000\n"
-"Language-Team: Luri (Bakhtiari) (https://app.transifex.com/calamares/teams/20061/bqi/)\n"
+"Language-Team: French (Canada) (https://app.transifex.com/calamares/teams/20061/fr_CA/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: bqi\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: fr_CA\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: src/modules/bootloader/main.py:46
 msgid "Install bootloader."
@@ -221,6 +221,7 @@ msgid "Installing one package."
 msgid_plural "Installing %(num)d packages."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: src/modules/packages/main.py:71
 #, python-format
@@ -228,6 +229,7 @@ msgid "Removing one package."
 msgid_plural "Removing %(num)d packages."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: src/modules/packages/main.py:775 src/modules/packages/main.py:787
 #: src/modules/packages/main.py:815

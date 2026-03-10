@@ -38,17 +38,20 @@
 #                       - TESTING (standard CMake option)
 #   DEBUG_<foo>     : special developer flags for debugging.
 #   PYTHONLIBS_VERSION : if set on the command-line, use a specific Python version
+#   BOOSTPYTHON_COMPONENT : if set on the command-line, use a specific Boost Python component
+#                          (e.g., python313 for Python 3.13, default is "python")
 #
 # Example usage:
 #
 #   cmake . -DSKIP_MODULES="partition luksbootkeycfg"
+#   cmake . -DWITH_PYBIND11=OFF -DBOOSTPYTHON_COMPONENT=python313
 #
 # To obtain the version number of calamares, run CMake in script mode, e.g.
 #   cmake -P CMakeLists.txt
 
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
-set(CALAMARES_VERSION 3.4.0)
+set(CALAMARES_VERSION 3.4.2)
 set(CALAMARES_RELEASE_MODE ON) # Set to ON during a release
 
 if(CMAKE_SCRIPT_MODE_FILE)
@@ -165,15 +168,15 @@ set(CALAMARES_DESCRIPTION_SUMMARY "The distribution-independent installer framew
 # NOTE: update these lines by running `txstats.py`, or for full automation
 #       `txstats.py -e`. See also
 #
-# Total 80 languages
-set( _tx_complete de en es_AR fi_FI hr hu ja lt tr_TR uk zh_TW )
-set( _tx_good az az_AZ be bg ca cs_CZ es fr fur he hi is it_IT ko
-    pl pt_BR pt_PT ru si sq sv zh_CN )
-set( _tx_ok ar as ast bn ca@valencia da el en_GB eo es_MX et eu fa
-    gl id ka ml mr nb nl oc ro sk sl sr sr@latin tg th vi )
-set( _tx_incomplete bqi es_PR gu ie ja-Hira kk kn lo lv mk ne_NP
-    ro_RO ta_IN te ur uz zh zh_HK )
-# Total 80 languages
+# Total 82 languages
+set( _tx_complete ar az ca cs_CZ de en es es_AR fi_FI fr he hu id
+    ja kk ko lg nb pl pt_BR ru sv tg tr_TR uk zh_CN zh_TW )  # 27 languages
+set( _tx_good az_AZ bg fur hr is it_IT ka lt pt_PT sk sq uz )  # 12 languages
+set( _tx_ok as ast be bn ca@valencia da el en_GB eo es_MX et eu fa
+    gl hi ia ml mr nl oc ro si sl sr sr@latin th vi )  # 27 languages
+set( _tx_incomplete bs es_PR fr_CA gu ie ja-Hira kn lo lv mk ne_NP
+    ta_IN te ur zh zh_HK )  # 16 languages
+# Total 82 languages
 
 ### Required versions
 #
@@ -204,6 +207,10 @@ else()
 endif()
 
 set(BOOSTPYTHON_VERSION 1.72.0)
+if(NOT DEFINED BOOSTPYTHON_COMPONENT)
+    set(BOOSTPYTHON_COMPONENT "python")
+endif()
+
 if(DEFINED PYTHONLIBS_VERSION)
     set(PYTHONLIBS_EXTRA "EXACT")
 else()
@@ -226,6 +233,9 @@ list(APPEND CMAKE_AUTOMOC_MACRO_NAMES
         "K_EXPORT_PLASMA_DATAENGINE_WITH_JSON"
         "K_EXPORT_PLASMA_RUNNER"
 )
+if(POLICY CMP0167)
+    cmake_policy(SET CMP0167 NEW)
+endif()
 if(POLICY CMP0171)
     cmake_policy(SET CMP0177 NEW)
 endif()
@@ -256,7 +266,7 @@ set(CMAKE_C_FLAGS_MINSIZEREL "-Os -DNDEBUG")
 set(CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG")
 set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O2 -g")
 
-set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined -Wl,--fatal-warnings ${CMAKE_SHARED_LINKER_FLAGS}")
+set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined ${CMAKE_SHARED_LINKER_FLAGS}")
 
 # If no build type is set, pick a reasonable one
 if(DEBUG_SANITIZERS)
@@ -479,16 +489,34 @@ endif()
 
 if(WITH_PYTHON AND NOT WITH_PYBIND11)
     set(WITH_BOOST_PYTHON ON)
-    find_package(boost_python)
-    if(NOT TARGET Boost::python)
-        find_package(Boost ${BOOSTPYTHON_VERSION} COMPONENTS python)
+    if(NOT "${BOOSTPYTHON_COMPONENT}" STREQUAL "python")
+        message(STATUS "Using explicitly specified Boost Python component: ${BOOSTPYTHON_COMPONENT}")
+        find_package(Boost ${BOOSTPYTHON_VERSION} CONFIG COMPONENTS ${BOOSTPYTHON_COMPONENT})
         set_package_properties(Boost PROPERTIES
             PURPOSE "Boost.Python is used for Python job modules (because WITH_PYBIND11 is OFF)."
             TYPE REQUIRED
         )
+        if(TARGET Boost::${BOOSTPYTHON_COMPONENT})
+            add_library(Boost::python ALIAS Boost::${BOOSTPYTHON_COMPONENT})
+            set(Boost_FOUND ON)
+        endif()
     else()
-        message(STATUS "Found boost_python with target Boost::python")
-        set(Boost_FOUND ON)
+        find_package(boost_python)
+        if(NOT TARGET Boost::python)
+            message(STATUS "Using Boost Python component: ${BOOSTPYTHON_COMPONENT}")
+            find_package(Boost ${BOOSTPYTHON_VERSION} CONFIG COMPONENTS ${BOOSTPYTHON_COMPONENT})
+            set_package_properties(Boost PROPERTIES
+                PURPOSE "Boost.Python is used for Python job modules (because WITH_PYBIND11 is OFF)."
+                TYPE REQUIRED
+            )
+            set_package_properties(boost_python PROPERTIES
+                PURPOSE "Boost.Python is used for Python job modules (because WITH_PYBIND11 is OFF)."
+                TYPE REQUIRED
+            )
+        else()
+            message(STATUS "Found boost_python with target Boost::python")
+            set(Boost_FOUND ON)
+        endif()
     endif()
 endif()
 add_feature_info(python WITH_PYTHON "Enable Python-modules")
@@ -503,6 +531,14 @@ set(Calamares_WITH_PYBIND11 ${WITH_PYBIND11})
 set(Calamares_WITH_BOOST_PYTHON ${WITH_BOOST_PYTHON})
 set(Calamares_WITH_QML ${WITH_QML})
 set(Calamares_WITH_QT6 ${WITH_QT6})
+
+# Bail out if we are missing something important
+feature_summary(
+    WHAT REQUIRED_PACKAGES_NOT_FOUND
+    FATAL_ON_MISSING_REQUIRED_PACKAGES
+    DESCRIPTION "The following REQUIRED packages were not found:"
+    QUIET_ON_EMPTY
+)
 
 ### Transifex Translation status
 #
