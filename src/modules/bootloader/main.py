@@ -634,6 +634,13 @@ def run_grub_install(fw_type, partitions, efi_directory, install_hybrid_grub):
             "--bootloader-id=" + efi_bootloader_id,
             "--force"]
 
+        if efi_target == "arm64-efi":
+            # Many ARM64 boards ship incomplete UEFI firmware without
+            # writable NVRAM or usable EFI variables.  Installing to the
+            # removable-media path (EFI/BOOT/BOOTAA64.EFI) avoids creating
+            # an NVRAM boot entry, which would otherwise fail.
+            grubinstall_command.insert(-1, "--removable")
+
         if is_zfs:
             # Needs environment to be set for GRUB, so go via the shell
             check_target_env_call(["sh", "-c", "ZPOOL_VDEV_NAME_PATH=1 " + " ".join(grubinstall_command)])
@@ -728,13 +735,19 @@ def install_grub(efi_directory, fw_type, install_hybrid_grub):
         fallback = "installEFIFallback"
         libcalamares.utils.debug("UEFI Fallback: " + str(libcalamares.job.configuration.get(fallback, "<unset>")))
         if libcalamares.job.configuration.get(fallback, True):
-            libcalamares.utils.debug("  .. installing '{!s}' fallback firmware".format(efi_boot_file))
-            efi_file_source = os.path.join(install_efi_directory_firmware,
-                                           efi_bootloader_id,
-                                           efi_grub_file)
-            efi_file_target = os.path.join(install_efi_boot_directory, efi_boot_file)
+            if efi_target == "arm64-efi":
+                # grub-install --removable has already put the loader in
+                # EFI/BOOT/BOOTAA64.EFI, so there is nothing left to copy.
+                libcalamares.utils.debug(
+                    "  .. grub-install --removable already installed '{!s}' fallback firmware".format(efi_boot_file))
+            else:
+                libcalamares.utils.debug("  .. installing '{!s}' fallback firmware".format(efi_boot_file))
+                efi_file_source = os.path.join(install_efi_directory_firmware,
+                                               efi_bootloader_id,
+                                               efi_grub_file)
+                efi_file_target = os.path.join(install_efi_boot_directory, efi_boot_file)
 
-            shutil.copy2(efi_file_source, efi_file_target)
+                shutil.copy2(efi_file_source, efi_file_target)
     if fw_type == "bios" or install_hybrid_grub:
         libcalamares.utils.debug("Bootloader: grub (bios)")
         run_grub_install("bios", partitions, efi_directory, install_hybrid_grub)

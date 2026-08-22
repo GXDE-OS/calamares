@@ -1,3 +1,13 @@
+calamares (3.4.2-2) unstable; urgency=medium
+
+  * bootloader: use grub-install --removable on arm64-efi to work
+    around ARM64 boards whose UEFI firmware lacks writable NVRAM or
+    usable EFI variables; GRUB is installed directly to
+    EFI/BOOT/BOOTAA64.EFI and the redundant EFI fallback copy is
+    skipped.
+
+ -- shenmo <shenmo@spark-app.store>  Sat, 22 Aug 2026 09:58:54 +0800
+
 calamares (3.4.2-1) unstable; urgency=medium
 
   * New upstream release
