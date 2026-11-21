@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>images/invalid.png</file>
         <file>images/valid.png</file>
+        <file>images/default-avatar.svg</file>
     </qresource>
 </RCC>

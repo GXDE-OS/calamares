@@ -29,11 +29,17 @@
 #include "utils/String.h"
 
 #include <QBoxLayout>
+#include <QDialog>
+#include <QDialogButtonBox>
 #include <QFile>
 #include <QLabel>
 #include <QBoxLayout>
 #include <QLayoutItem>
 #include <QLineEdit>
+#include <QListWidget>
+#include <QPainter>
+#include <QPainterPath>
+#include <QToolButton>
 
 /** @brief Add an error message and pixmap to a label. */
 static inline void
@@ -86,36 +92,134 @@ UsersPage::UsersPage( Config* config, QWidget* parent )
 {
     ui->setupUi( this );
 
-    // deepin-installer style: longer line edits and a centered form.
-    // Each row of the .ui layout is centered and the edits get a
-    // uniform, wider width than the default.
+    // ----- deepin-installer style form -----
+    // Rebuild the .ui layout as a centered single column: every label is
+    // centered above its line edit, all edits share one column width, the
+    // password and its confirmation stack vertically, and an avatar button
+    // sits on top of the form.
     const int fieldWidth = qBound( 300, Calamares::defaultFontHeight() * 22, 420 );
-    for ( auto* edit : { ui->textBoxFullName,
-                         ui->textBoxLoginName,
-                         ui->textBoxHostname,
-                         ui->textBoxUserPassword,
-                         ui->textBoxUserVerifiedPassword,
-                         ui->textBoxRootPassword,
-                         ui->textBoxVerifiedRootPassword } )
+
+    m_avatarButton = new QToolButton( this );
+    m_avatarButton->setObjectName( "userAvatarButton" );
+    m_avatarButton->setFixedSize( 88, 88 );
+    m_avatarButton->setIconSize( QSize( 84, 84 ) );
+    m_avatarButton->setCursor( Qt::PointingHandCursor );
+    updateAvatarIcon();
+    connect( m_avatarButton, &QToolButton::clicked, this, &UsersPage::pickAvatar );
+    connect( config, &Config::userAvatarChanged, this, &UsersPage::updateAvatarIcon );
+
+    // Detach all items from the .ui layout; the widgets are re-used below.
+    // The Active Directory group is kept as a whole.
+    QLayout* adLayout = nullptr;
+    while ( ui->verticalLayout_12->count() > 0 )
     {
+        QLayoutItem* item = ui->verticalLayout_12->takeAt( 0 );
+        if ( item->layout() == ui->verticalLayout )
+        {
+            // Keep the Active Directory group for re-use (deleting the item
+            // would delete the layout object itself)
+            adLayout = ui->verticalLayout;
+            continue;
+        }
+        if ( auto* row = item->layout() )
+        {
+            while ( row->count() > 0 )
+            {
+                delete row->takeAt( 0 );  // widgets stay alive, re-added below
+            }
+        }
+        delete item;
+    }
+
+    // A field = centered label on top, the edit with its status icon in a
+    // centered row, and the error text centered underneath.
+    auto addField = [ this, fieldWidth ]( QLabel* label, QLineEdit* edit, QLabel* iconLabel, QLabel* errorLabel )
+    {
+        auto* column = new QVBoxLayout;
+        column->setSpacing( 6 );
+        label->setAlignment( Qt::AlignHCenter );
+        column->addWidget( label );
+
+        auto* editRow = new QHBoxLayout;
+        editRow->setSpacing( 8 );
+        editRow->addStretch();
+        editRow->addWidget( edit );
+        editRow->addWidget( iconLabel );
+        editRow->addStretch();
+        column->addLayout( editRow );
+
+        errorLabel->setAlignment( Qt::AlignHCenter );
+        column->addWidget( errorLabel );
+
         edit->setMinimumWidth( fieldWidth );
         edit->setMaximumWidth( fieldWidth );
-    }
-    // Center the whole form: each row of the layout gets leading and
-    // trailing stretches so it shrinks to its content and centers;
-    // standalone widgets (labels, checkboxes) are centered directly.
-    for ( int i = 0; i < ui->verticalLayout_12->count(); ++i )
+        ui->verticalLayout_12->addLayout( column );
+    };
+
+    // Like addField, but with two edits stacked vertically (password and
+    // its confirmation) sharing the same column.
+    auto addStackedField = [ this, fieldWidth ]( QLabel* label,
+                                                 QLineEdit* first,
+                                                 QLineEdit* second,
+                                                 QLabel* iconLabel,
+                                                 QLabel* errorLabel )
     {
-        QLayoutItem* item = ui->verticalLayout_12->itemAt( i );
-        if ( auto* rowLayout = qobject_cast< QBoxLayout* >( item->layout() ) )
+        auto* column = new QVBoxLayout;
+        column->setSpacing( 6 );
+        label->setAlignment( Qt::AlignHCenter );
+        column->addWidget( label );
+
+        auto* edits = new QVBoxLayout;
+        edits->setSpacing( 15 );
+        edits->addWidget( first );
+        edits->addWidget( second );
+
+        auto* editRow = new QHBoxLayout;
+        editRow->setSpacing( 8 );
+        editRow->addStretch();
+        editRow->addLayout( edits );
+        editRow->addWidget( iconLabel );
+        editRow->addStretch();
+        column->addLayout( editRow );
+
+        errorLabel->setAlignment( Qt::AlignHCenter );
+        column->addWidget( errorLabel );
+
+        for ( auto* edit : { first, second } )
         {
-            rowLayout->insertStretch( 0, 1 );
-            rowLayout->addStretch( 1 );
+            edit->setMinimumWidth( fieldWidth );
+            edit->setMaximumWidth( fieldWidth );
         }
-        else if ( auto* widget = item->widget() )
-        {
-            ui->verticalLayout_12->setAlignment( widget, Qt::AlignHCenter );
-        }
+        ui->verticalLayout_12->addLayout( column );
+    };
+
+    ui->verticalLayout_12->addWidget( m_avatarButton, 0, Qt::AlignHCenter );
+    addField( ui->labelWhatIsYourName, ui->textBoxFullName, ui->labelFullName, ui->labelFullNameError );
+    addField( ui->username_label_2, ui->textBoxLoginName, ui->labelUsername, ui->labelUsernameError );
+    addField( ui->hostnameLabel, ui->textBoxHostname, ui->labelHostname, ui->labelHostnameError );
+    addStackedField( ui->password_label_2,
+                     ui->textBoxUserPassword,
+                     ui->textBoxUserVerifiedPassword,
+                     ui->labelUserPassword,
+                     ui->labelUserPasswordError );
+    addStackedField( ui->labelChooseRootPassword,
+                     ui->textBoxRootPassword,
+                     ui->textBoxVerifiedRootPassword,
+                     ui->labelRootPassword,
+                     ui->labelRootPasswordError );
+
+    for ( auto* w : { ui->checkBoxRequireStrongPassword, ui->checkBoxDoAutoLogin, ui->checkBoxReusePassword } )
+    {
+        ui->verticalLayout_12->addWidget( w, 0, Qt::AlignHCenter );
+    }
+    if ( adLayout )
+    {
+        // Wrap the Active Directory group in a centered container
+        auto* adContainer = new QWidget( this );
+        auto* adOuter = new QVBoxLayout( adContainer );
+        adOuter->setContentsMargins( 0, 0, 0, 0 );
+        adOuter->addLayout( adLayout );
+        ui->verticalLayout_12->addWidget( adContainer, 0, Qt::AlignHCenter );
     }
 
     // Connect signals and slots
@@ -231,6 +335,7 @@ void
 UsersPage::retranslate()
 {
     ui->retranslateUi( this );
+    m_avatarButton->setToolTip( tr( "Select an avatar for your account", "@tooltip" ) );
     if ( Calamares::Settings::instance()->isSetupMode() )
     {
         ui->textBoxLoginName->setToolTip( tr( "<small>If more than one person will "
@@ -344,4 +449,129 @@ UsersPage::onActiveDirectoryToggled( bool checked )
     ui->ipAddressLabel->setVisible( checked );
 
     m_config->setActiveDirectoryUsed( checked );
+}
+
+QPixmap
+UsersPage::roundedAvatar( const QPixmap& source, int size ) const
+{
+    QPixmap scaled = source.scaled( size, size, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation );
+    const QRect crop( ( scaled.width() - size ) / 2, ( scaled.height() - size ) / 2, size, size );
+
+    QPixmap result( size, size );
+    result.fill( Qt::transparent );
+    QPainter p( &result );
+    p.setRenderHint( QPainter::Antialiasing );
+    QPainterPath path;
+    path.addEllipse( 0, 0, size, size );
+    p.setClipPath( path );
+    p.drawPixmap( 0, 0, scaled.copy( crop ) );
+    return result;
+}
+
+namespace
+{
+///@brief The embedded default avatar (neutral user silhouette)
+QPixmap
+defaultAvatarPixmap( int size )
+{
+    return QPixmap( QStringLiteral( ":/images/default-avatar.svg" ) ).scaled( size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation );
+}
+}  // namespace
+
+void
+UsersPage::updateAvatarIcon()
+{
+    QPixmap pm;
+    const QString path = m_config->userAvatar();
+    if ( !path.isEmpty() && QFile::exists( path ) )
+    {
+        pm = QPixmap( path );
+    }
+    if ( pm.isNull() )
+    {
+        // Fall back to a system icon, then to the first candidate
+        QIcon themeIcon = QIcon::fromTheme( QStringLiteral( "avatar-default" ) );
+        if ( themeIcon.isNull() )
+        {
+            themeIcon = QIcon::fromTheme( QStringLiteral( "user" ) );
+        }
+        if ( !themeIcon.isNull() )
+        {
+            pm = themeIcon.pixmap( 96, 96 );
+        }
+        else
+        {
+            const QStringList candidates = Config::userAvatarCandidates();
+            if ( !candidates.isEmpty() )
+            {
+                pm = QPixmap( candidates.first() );
+            }
+        }
+    }
+    if ( pm.isNull() )
+    {
+        pm = defaultAvatarPixmap( 96 );
+    }
+    if ( !pm.isNull() )
+    {
+        m_avatarButton->setIcon( roundedAvatar( pm, m_avatarButton->iconSize().width() ) );
+    }
+}
+
+void
+UsersPage::pickAvatar()
+{
+    const QStringList candidates = Config::userAvatarCandidates();
+
+    QDialog dialog( this );
+    dialog.setWindowTitle( tr( "Select an avatar", "@title" ) );
+    auto* list = new QListWidget( &dialog );
+    list->setIconSize( QSize( 72, 72 ) );
+    list->setViewMode( QListView::IconMode );
+    list->setResizeMode( QListView::Adjust );
+    list->setMovement( QListView::Static );
+    list->setGridSize( QSize( 96, 112 ) );
+    list->setUniformItemSizes( true );
+    list->setWordWrap( false );
+
+    // The "no avatar" option falls back to the default look
+    QIcon defaultIcon = QIcon::fromTheme( QStringLiteral( "avatar-default" ) );
+    if ( defaultIcon.isNull() )
+    {
+        defaultIcon = QIcon( defaultAvatarPixmap( 72 ) );
+    }
+    auto* defaultItem = new QListWidgetItem( defaultIcon, tr( "Default", "@option" ), list );
+    defaultItem->setData( Qt::UserRole, QString() );
+    if ( m_config->userAvatar().isEmpty() )
+    {
+        list->setCurrentItem( defaultItem );
+    }
+
+    for ( const QString& path : candidates )
+    {
+        auto* item = new QListWidgetItem( QIcon( path ), QString(), list );
+        item->setData( Qt::UserRole, path );
+        item->setToolTip( path );
+        if ( path == m_config->userAvatar() )
+        {
+            list->setCurrentItem( item );
+        }
+    }
+
+    auto* buttons = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dialog );
+    connect( buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept );
+    connect( buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject );
+
+    auto* layout = new QVBoxLayout( &dialog );
+    layout->addWidget( list );
+    layout->addWidget( buttons );
+    dialog.resize( 480, 400 );
+
+    // A single click picks the avatar
+    connect( list, &QListWidget::itemClicked, &dialog, &QDialog::accept );
+
+    if ( dialog.exec() == QDialog::Accepted && list->currentItem() )
+    {
+        m_config->setUserAvatar( list->currentItem()->data( Qt::UserRole ).toString() );
+    }
 }

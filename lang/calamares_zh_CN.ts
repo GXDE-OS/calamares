@@ -4491,6 +4491,21 @@ Output:
       <source>&lt;small&gt;If more than one person will use this computer, you can create multiple accounts after installation.&lt;/small&gt;</source>
       <translation>&lt;small&gt;如果有多人要使用此计算机，您可以在安装后创建多个账户。&lt;/small&gt;</translation>
     </message>
+    <message>
+      <source>Select an avatar for your account</source>
+      <comment>@tooltip</comment>
+      <translation>为您的帐户选择一个头像</translation>
+    </message>
+    <message>
+      <source>Select an avatar</source>
+      <comment>@title</comment>
+      <translation>选择头像</translation>
+    </message>
+    <message>
+      <source>Default</source>
+      <comment>@option</comment>
+      <translation>默认</translation>
+    </message>
   </context>
   <context>
     <name>UsersQmlViewStep</name>

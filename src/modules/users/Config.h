@@ -311,7 +311,22 @@ public Q_SLOTS:
     void setActiveDirectoryDomain( const QString& );
     void setActiveDirectoryIP( const QString& );
 
+    /** @brief The avatar selected for the new user (path on the live system)
+     *
+     * deepin-installer-style user avatar; empty means "no avatar chosen",
+     * in which case nothing is written to the target system.
+     */
+    QString userAvatar() const { return m_userAvatar; }
+    void setUserAvatar( const QString& path );
+
+    /** @brief List of avatars offered for selection (paths)
+     *
+     * Scans the system avatar directories (dde-account-faces and friends).
+     */
+    static QStringList userAvatarCandidates();
+
 signals:
+    void userAvatarChanged( const QString& );
     void userShellChanged( const QString& );
     void autoLoginGroupChanged( const QString& );
     void sudoersGroupChanged( const QString& );
@@ -349,6 +364,8 @@ private:
     QString m_userPasswordSecondary;  // enter again to be sure
     QString m_rootPassword;
     QString m_rootPasswordSecondary;
+
+    QString m_userAvatar;
 
     bool m_displayAutoLogin = false;
     bool m_doAutoLogin = false;

@@ -25,7 +25,9 @@
 #include "utils/Variant.h"
 
 #include <QCoreApplication>
+#include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QMetaProperty>
 #include <QRegularExpression>
 #include <QTimer>
@@ -532,6 +534,47 @@ Config::setAutoLogin( bool b )
         updateGSAutoLogin( b, loginName() );
         emit autoLoginChanged( b );
     }
+}
+
+void
+Config::setUserAvatar( const QString& path )
+{
+    if ( path != m_userAvatar )
+    {
+        m_userAvatar = path;
+        emit userAvatarChanged( path );
+    }
+}
+
+QStringList
+Config::userAvatarCandidates()
+{
+    // deepin-installer-style avatar sources: system account-face
+    // directories (the first one that exists wins)
+    static const QStringList avatarDirs {
+        "/usr/share/dde-account-faces",
+        "/usr/share/gxde-account-faces",
+        "/usr/share/deepin-account-faces",
+    };
+    for ( const QString& dir : avatarDirs )
+    {
+        QDir d( dir );
+        if ( !d.exists() )
+        {
+            continue;
+        }
+        QStringList files;
+        for ( const QFileInfo& info :
+              d.entryInfoList( { "*.png", "*.jpg", "*.jpeg", "*.svg" }, QDir::Files, QDir::Name ) )
+        {
+            files << info.absoluteFilePath();
+        }
+        if ( !files.isEmpty() )
+        {
+            return files;
+        }
+    }
+    return {};
 }
 
 void

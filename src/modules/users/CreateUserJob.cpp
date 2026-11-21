@@ -168,5 +168,39 @@ CreateUserJob::exec()
         return commandResult.explainProcess( "chown", std::chrono::seconds( 10 ) /* bogus timeout */ );
     }
 
+    // deepin-installer style: write the chosen avatar into AccountsService
+    // in the target system, so the desktop picks it up for the new user.
+    const QString avatarPath = m_config->userAvatar();
+    if ( !avatarPath.isEmpty() && QFile::exists( avatarPath ) )
+    {
+        const QString accountsIcons = destDir.absolutePath() + "/var/lib/AccountsService/icons";
+        const QString accountsUsers = destDir.absolutePath() + "/var/lib/AccountsService/users";
+        QDir().mkpath( accountsIcons );
+        QDir().mkpath( accountsUsers );
+
+        const QString targetIcon = accountsIcons + '/' + m_config->loginName();
+        QFile::remove( targetIcon );
+        if ( QFile::copy( avatarPath, targetIcon ) )
+        {
+            QFile::setPermissions( targetIcon,
+                                   QFile::ReadOwner | QFile::WriteOwner | QFile::ReadGroup | QFile::ReadOther );
+
+            QFile accountsFile( accountsUsers + '/' + m_config->loginName() );
+            if ( accountsFile.open( QIODevice::WriteOnly | QIODevice::Truncate ) )
+            {
+                accountsFile.write( QString( "[User]\nIcon=/var/lib/AccountsService/icons/%1\n" )
+                                        .arg( m_config->loginName() )
+                                        .toUtf8() );
+                accountsFile.close();
+                QFile::setPermissions( accountsFile.fileName(), QFile::ReadOwner | QFile::WriteOwner );
+            }
+            cDebug() << "[CREATEUSER]: avatar written to" << targetIcon;
+        }
+        else
+        {
+            cWarning() << "[CREATEUSER]: could not copy avatar" << avatarPath << "to the target system";
+        }
+    }
+
     return Calamares::JobResult::ok();
 }

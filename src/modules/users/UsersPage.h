@@ -21,6 +21,8 @@
 class Config;
 
 class QLabel;
+class QPixmap;
+class QToolButton;
 
 namespace Ui
 {
@@ -46,11 +48,20 @@ protected slots:
 
     void onActiveDirectoryToggled( bool checked );
 
+    /** @brief Show the avatar picker and store the chosen avatar */
+    void pickAvatar();
+    ///@brief Refresh the avatar button's icon from the config
+    void updateAvatarIcon();
+
 private:
     void retranslate();
+    ///@brief Draw @p source as a round avatar of the given size
+    QPixmap roundedAvatar( const QPixmap& source, int size ) const;
 
     Ui::Page_UserSetup* ui;
     Config* m_config;
+
+    QToolButton* m_avatarButton = nullptr;
 };
 
 #endif  // USERSPAGE_H
