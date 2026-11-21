@@ -27,9 +27,12 @@ if(Crypt_FOUND)
 endif()
 
 # Add optional libraries here
+# Qt::Gui is needed by the tests as well, which re-build CreateUserJob
+# (it writes the user avatar into the target system).
 set(USER_EXTRA_LIB
     ${kfname}::CoreAddons
     ${qtname}::DBus
+    ${qtname}::Gui
     crypt::crypt
 )
 
