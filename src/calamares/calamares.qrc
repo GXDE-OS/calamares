@@ -7,4 +7,21 @@
         <file alias="calamares-sidebar.qml">calamares-sidebar.qml</file>
         <file alias="calamares-navigation.qml">calamares-navigation.qml</file>
     </qresource>
+    <!-- Deepin-installer style assets (GPL-3.0+, from deepin-installer-reborn) -->
+    <qresource prefix="deepin">
+        <file alias="close_normal.svg">deepin-images/close_normal.svg</file>
+        <file alias="close_hover.svg">deepin-images/close_hover.svg</file>
+        <file alias="close_press.svg">deepin-images/close_press.svg</file>
+        <file alias="indicator_active.svg">deepin-images/indicator_active.svg</file>
+        <file alias="indicator_inactive.svg">deepin-images/indicator_inactive.svg</file>
+        <file alias="checkbox_checked.svg">deepin-images/checkbox_checked.svg</file>
+        <file alias="checkbox_checked_hover.svg">deepin-images/checkbox_checked_hover.svg</file>
+        <file alias="checkbox_checked_pressed.svg">deepin-images/checkbox_checked_pressed.svg</file>
+        <file alias="checkbox_unchecked.svg">deepin-images/checkbox_unchecked.svg</file>
+        <file alias="checkbox_unchecked_hover.svg">deepin-images/checkbox_unchecked_hover.svg</file>
+        <file alias="checkbox_unchecked_pressed.svg">deepin-images/checkbox_unchecked_pressed.svg</file>
+        <file alias="select.svg">deepin-images/select.svg</file>
+        <file alias="down_arrow.svg">deepin-images/down_arrow.svg</file>
+        <file alias="default_wallpaper.jpg">deepin-images/default_wallpaper.jpg</file>
+    </qresource>
 </RCC>
