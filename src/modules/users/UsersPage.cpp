@@ -29,7 +29,11 @@
 #include "utils/Retranslator.h"
 #include "utils/String.h"
 
+#include <QAction>
 #include <QBoxLayout>
+#include <QGraphicsDropShadowEffect>
+#include <QIcon>
+#include <QStyle>
 #include <QDir>
 #include <QFile>
 #include <QLabel>
@@ -43,96 +47,6 @@
 #include <QPushButton>
 #include <QPainterPath>
 #include <QToolButton>
-
-/** @brief Add an error message and pixmap to a label. */
-static inline void
-labelError( QLabel* pix, QLabel* label, Calamares::ImageType icon, const QString& message )
-{
-    label->setText( message );
-    pix->setPixmap( Calamares::defaultPixmap( icon, Calamares::Original, pix->size() ) );
-    // Hide when there is nothing to say, to keep the form compact
-    const bool show = !message.isEmpty();
-    pix->setVisible( show );
-    label->setVisible( show );
-}
-
-/** @brief Clear error, set happy pixmap on a label to indicate "ok". */
-static inline void
-labelOk( QLabel* pix, QLabel* label )
-{
-    label->clear();
-    pix->setPixmap( Calamares::defaultPixmap( Calamares::StatusOk, Calamares::Original, pix->size() ) );
-    pix->setVisible( true );
-    label->setVisible( false );
-}
-
-/** @brief Sets error or ok on a label depending on @p status and @p value
- *
- * - An **empty** @p value gets no message and no icon.
- * - A non-empty @p value, with an **empty** @p status gets an "ok".
- * - A non-empty @p value with a non-empty @p status gets an error indicator.
- */
-static inline void
-labelStatus( QLabel* pix, QLabel* label, const QString& value, const QString& status )
-{
-    if ( status.isEmpty() )
-    {
-        if ( value.isEmpty() )
-        {
-            // This is different from labelOK() because no checkmark is shown
-            label->clear();
-            pix->clear();
-            pix->setVisible( false );
-            label->setVisible( false );
-        }
-        else
-        {
-            labelOk( pix, label );
-        }
-    }
-    else
-    {
-        labelError( pix, label, Calamares::ImageType::StatusError, status );
-    }
-}
-
-namespace
-{
-/** @brief Full-screen overlay that re-paints the branding wallpaper,
- *
- * so picking an avatar looks like a dedicated page (deepin-installer
- * style) instead of a translucent layer on top of the form.
- */
-class AvatarPickerOverlay : public QWidget
-{
-public:
-    using QWidget::QWidget;
-
-protected:
-    void paintEvent( QPaintEvent* ) override
-    {
-        QPainter p( this );
-        QString path = Calamares::Branding::instance()->imagePath( Calamares::Branding::ImageEntry::ProductWallpaper );
-        if ( !path.isEmpty() )
-        {
-            path = QDir( Calamares::Branding::instance()->componentDirectory() ).absoluteFilePath( path );
-        }
-        QPixmap pixmap;
-        if ( !path.isEmpty() && QFile::exists( path ) )
-        {
-            pixmap = QPixmap( path ).scaled( size(), Qt::KeepAspectRatioByExpanding );
-        }
-        if ( !pixmap.isNull() )
-        {
-            p.drawPixmap( ( width() - pixmap.width() ) / 2, ( height() - pixmap.height() ) / 2, pixmap );
-        }
-        else
-        {
-            p.fillRect( rect(), QColor( 40, 40, 40 ) );
-        }
-    }
-};
-}  // namespace
 
 UsersPage::UsersPage( Config* config, QWidget* parent )
     : QWidget( parent )
@@ -180,62 +94,37 @@ UsersPage::UsersPage( Config* config, QWidget* parent )
         delete item;
     }
 
-    // A field = the edit centered (labels are hidden, placeholders carry
-    // the meaning, deepin-installer style) and a compact status row
-    // (icon + error) that hides itself when empty.
-    auto addField = [ this, fieldWidth ]( QLabel* label, QLineEdit* edit, QLabel* iconLabel, QLabel* errorLabel )
+    // A field = a single line edit, centered, with a leading icon that
+    // identifies it (user / computer / lock), a trailing status icon
+    // (tick / cross) and a colored glow around the border when the
+    // value is ok or erroneous, deepin-installer style.
+    auto addField = [ this, fieldWidth ]( QLineEdit* edit, const QString& leadingIcon )
     {
-        Q_UNUSED( label )
+        edit->setMinimumHeight( 36 );
         edit->setMinimumWidth( fieldWidth );
         edit->setMaximumWidth( fieldWidth );
+
+        QIcon icon = QIcon::fromTheme( leadingIcon );
+        if ( !icon.isNull() )
+        {
+            edit->addAction( icon, QLineEdit::LeadingPosition );
+        }
+        QAction* statusAction = edit->addAction( QIcon(), QLineEdit::TrailingPosition );
+        statusAction->setVisible( false );
+
+        auto* glow = new QGraphicsDropShadowEffect( edit );
+        glow->setOffset( 0, 0 );
+        glow->setBlurRadius( 14 );
+        glow->setColor( QColor( 0, 0, 0, 0 ) );
+        edit->setGraphicsEffect( glow );
+
+        m_fields.insert( edit, { glow, statusAction } );
+
         auto* editRow = new QHBoxLayout;
         editRow->addStretch();
         editRow->addWidget( edit );
         editRow->addStretch();
         ui->verticalLayout_12->addLayout( editRow );
-
-        iconLabel->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
-        errorLabel->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Preferred );
-        errorLabel->setMaximumWidth( 480 );
-        auto* statusRow = new QHBoxLayout;
-        statusRow->setSpacing( 6 );
-        statusRow->addStretch();
-        statusRow->addWidget( iconLabel );
-        statusRow->addWidget( errorLabel );
-        statusRow->addStretch();
-        ui->verticalLayout_12->addLayout( statusRow );
-    };
-
-    // Like addField, but with two edits stacked vertically (password and
-    // its confirmation) sharing the same column.
-    auto addStackedField = [ this, fieldWidth ]( QLabel* label,
-                                                 QLineEdit* first,
-                                                 QLineEdit* second,
-                                                 QLabel* iconLabel,
-                                                 QLabel* errorLabel )
-    {
-        Q_UNUSED( label )
-        for ( auto* edit : { first, second } )
-        {
-            edit->setMinimumWidth( fieldWidth );
-            edit->setMaximumWidth( fieldWidth );
-            auto* editRow = new QHBoxLayout;
-            editRow->addStretch();
-            editRow->addWidget( edit );
-            editRow->addStretch();
-            ui->verticalLayout_12->addLayout( editRow );
-        }
-
-        iconLabel->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
-        errorLabel->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Preferred );
-        errorLabel->setMaximumWidth( 480 );
-        auto* statusRow = new QHBoxLayout;
-        statusRow->setSpacing( 6 );
-        statusRow->addStretch();
-        statusRow->addWidget( iconLabel );
-        statusRow->addWidget( errorLabel );
-        statusRow->addStretch();
-        ui->verticalLayout_12->addLayout( statusRow );
     };
 
     ui->verticalLayout_12->setSpacing( 10 );
@@ -245,7 +134,7 @@ UsersPage::UsersPage( Config* config, QWidget* parent )
     // deepin-installer merges the full name and the login name into a
     // single field: hide the separate full-name field and mirror the
     // login name into the full name. Labels are hidden as well; the
-    // line-edit placeholders carry the meaning.
+    // line-edit placeholders and leading icons carry the meaning.
     ui->labelWhatIsYourName->hide();
     ui->textBoxFullName->hide();
     ui->labelFullName->hide();
@@ -254,18 +143,12 @@ UsersPage::UsersPage( Config* config, QWidget* parent )
     ui->hostnameLabel->hide();
     ui->password_label_2->hide();
     ui->labelChooseRootPassword->hide();
-    addField( ui->username_label_2, ui->textBoxLoginName, ui->labelUsername, ui->labelUsernameError );
-    addField( ui->hostnameLabel, ui->textBoxHostname, ui->labelHostname, ui->labelHostnameError );
-    addStackedField( ui->password_label_2,
-                     ui->textBoxUserPassword,
-                     ui->textBoxUserVerifiedPassword,
-                     ui->labelUserPassword,
-                     ui->labelUserPasswordError );
-    addStackedField( ui->labelChooseRootPassword,
-                     ui->textBoxRootPassword,
-                     ui->textBoxVerifiedRootPassword,
-                     ui->labelRootPassword,
-                     ui->labelRootPasswordError );
+    addField( ui->textBoxLoginName, QStringLiteral( "user" ) );
+    addField( ui->textBoxHostname, QStringLiteral( "computer" ) );
+    addField( ui->textBoxUserPassword, QStringLiteral( "system-lock-screen" ) );
+    addField( ui->textBoxUserVerifiedPassword, QStringLiteral( "system-lock-screen" ) );
+    addField( ui->textBoxRootPassword, QStringLiteral( "system-lock-screen" ) );
+    addField( ui->textBoxVerifiedRootPassword, QStringLiteral( "system-lock-screen" ) );
 
     for ( auto* w : { ui->checkBoxRequireStrongPassword, ui->checkBoxDoAutoLogin, ui->checkBoxReusePassword } )
     {
@@ -447,37 +330,26 @@ UsersPage::onActivate()
 void
 UsersPage::onFullNameTextEdited( const QString& fullName )
 {
-    labelStatus( ui->labelFullName, ui->labelFullNameError, fullName, QString() );
+    Q_UNUSED( fullName )
 }
 
 void
 UsersPage::reportLoginNameStatus( const QString& status )
 {
-    labelStatus( ui->labelUsername, ui->labelUsernameError, m_config->loginName(), status );
+    // An empty field shows no decoration at all
+    const FieldState state = ui->textBoxLoginName->text().isEmpty()
+        ? FieldState::None
+        : ( status.isEmpty() ? FieldState::Ok : FieldState::Error );
+    setFieldStatus( ui->textBoxLoginName, state, status );
 }
 
 void
 UsersPage::reportHostNameStatus( const QString& status )
 {
-    labelStatus( ui->labelHostname, ui->labelHostnameError, m_config->hostname(), status );
-}
-
-static inline void
-passwordStatus( QLabel* iconLabel, QLabel* messageLabel, int validity, const QString& message )
-{
-    switch ( validity )
-    {
-    case Config::PasswordValidity::Valid:
-        labelOk( iconLabel, messageLabel );
-        break;
-    case Config::PasswordValidity::Weak:
-        labelError( iconLabel, messageLabel, Calamares::StatusWarning, message );
-        break;
-    case Config::PasswordValidity::Invalid:
-    default:
-        labelError( iconLabel, messageLabel, Calamares::StatusError, message );
-        break;
-    }
+    const FieldState state = ui->textBoxHostname->text().isEmpty()
+        ? FieldState::None
+        : ( status.isEmpty() ? FieldState::Ok : FieldState::Error );
+    setFieldStatus( ui->textBoxHostname, state, status );
 }
 
 void
@@ -485,20 +357,95 @@ UsersPage::reportRootPasswordStatus( int validity, const QString& message )
 {
     // When the root password fields are hidden (setRootPassword: false,
     // or "reuse" is checked), do not show any status for them either.
-    const bool rootFieldsVisible = ui->textBoxRootPassword->isVisible();
-    if ( !rootFieldsVisible )
+    if ( !ui->textBoxRootPassword->isVisible() )
     {
-        ui->labelRootPassword->hide();
-        ui->labelRootPasswordError->hide();
+        setFieldStatus( ui->textBoxRootPassword, FieldState::None, QString() );
+        setFieldStatus( ui->textBoxVerifiedRootPassword, FieldState::None, QString() );
         return;
     }
-    passwordStatus( ui->labelRootPassword, ui->labelRootPasswordError, validity, message );
+    const bool empty = ui->textBoxRootPassword->text().isEmpty();
+    const FieldState state = empty
+        ? FieldState::None
+        : ( validity == Config::PasswordValidity::Valid ? FieldState::Ok : FieldState::Error );
+    setFieldStatus( ui->textBoxRootPassword, state, message );
+    setFieldStatus( ui->textBoxVerifiedRootPassword, state, message );
 }
 
 void
 UsersPage::reportUserPasswordStatus( int validity, const QString& message )
 {
-    passwordStatus( ui->labelUserPassword, ui->labelUserPasswordError, validity, message );
+    const bool empty = ui->textBoxUserPassword->text().isEmpty();
+    const FieldState state = empty
+        ? FieldState::None
+        : ( validity == Config::PasswordValidity::Valid ? FieldState::Ok : FieldState::Error );
+    setFieldStatus( ui->textBoxUserPassword, state, message );
+    setFieldStatus( ui->textBoxUserVerifiedPassword, state, message );
+}
+
+QIcon
+UsersPage::statusIcon( bool ok ) const
+{
+    const int size = 24;
+    QPixmap pm( size, size );
+    pm.fill( Qt::transparent );
+    QPainter p( &pm );
+    p.setRenderHint( QPainter::Antialiasing );
+    // translucent white disc, deepin-installer style
+    p.setPen( Qt::NoPen );
+    p.setBrush( QColor( 255, 255, 255, 70 ) );
+    p.drawEllipse( 0, 0, size, size );
+    // white tick or cross
+    QPen pen( Qt::white, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
+    p.setPen( pen );
+    if ( ok )
+    {
+        QPainterPath path;
+        path.moveTo( 7, 12.5 );
+        path.lineTo( 10.5, 16 );
+        path.lineTo( 17, 8.5 );
+        p.drawPath( path );
+    }
+    else
+    {
+        p.drawLine( 8, 8, 16, 16 );
+        p.drawLine( 16, 8, 8, 16 );
+    }
+    return QIcon( pm );
+}
+
+void
+UsersPage::setFieldStatus( QLineEdit* edit, FieldState state, const QString& message )
+{
+    const FieldUi field = m_fields.value( edit );
+    if ( !field.glow || !field.statusAction )
+    {
+        return;
+    }
+    switch ( state )
+    {
+    case FieldState::Ok:
+        field.glow->setColor( QColor( 76, 175, 80, 170 ) );  // green glow
+        field.statusAction->setIcon( statusIcon( true ) );
+        field.statusAction->setVisible( true );
+        edit->setProperty( "state", QStringLiteral( "ok" ) );
+        break;
+    case FieldState::Error:
+        field.glow->setColor( QColor( 230, 67, 64, 190 ) );  // red glow
+        field.statusAction->setIcon( statusIcon( false ) );
+        field.statusAction->setVisible( true );
+        edit->setProperty( "state", QStringLiteral( "error" ) );
+        break;
+    case FieldState::None:
+    default:
+        field.glow->setColor( QColor( 0, 0, 0, 0 ) );
+        field.statusAction->setVisible( false );
+        edit->setProperty( "state", QString() );
+        break;
+    }
+    edit->setToolTip( state == FieldState::Error ? message : QString() );
+    // Re-evaluate the property-dependent style sheet rules
+    edit->style()->unpolish( edit );
+    edit->style()->polish( edit );
 }
 
 void
@@ -559,6 +506,41 @@ UsersPage::roundedAvatar( const QPixmap& source, int size ) const
 
 namespace
 {
+/** @brief Full-screen overlay that re-paints the branding wallpaper,
+ *
+ * so picking an avatar looks like a dedicated page (deepin-installer
+ * style) instead of a translucent layer on top of the form.
+ */
+class AvatarPickerOverlay : public QWidget
+{
+public:
+    using QWidget::QWidget;
+
+protected:
+    void paintEvent( QPaintEvent* ) override
+    {
+        QPainter p( this );
+        QString path = Calamares::Branding::instance()->imagePath( Calamares::Branding::ImageEntry::ProductWallpaper );
+        if ( !path.isEmpty() )
+        {
+            path = QDir( Calamares::Branding::instance()->componentDirectory() ).absoluteFilePath( path );
+        }
+        QPixmap pixmap;
+        if ( !path.isEmpty() && QFile::exists( path ) )
+        {
+            pixmap = QPixmap( path ).scaled( size(), Qt::KeepAspectRatioByExpanding );
+        }
+        if ( !pixmap.isNull() )
+        {
+            p.drawPixmap( ( width() - pixmap.width() ) / 2, ( height() - pixmap.height() ) / 2, pixmap );
+        }
+        else
+        {
+            p.fillRect( rect(), QColor( 40, 40, 40 ) );
+        }
+    }
+};
+
 ///@brief The embedded default avatar (neutral user silhouette)
 QPixmap
 defaultAvatarPixmap( int size )

@@ -44,6 +44,7 @@
 #include <QQuickItem>
 #include <QQuickWidget>
 #endif
+#include <QProcess>
 #include <QRegularExpression>
 #include <QTreeView>
 
@@ -747,14 +748,29 @@ CalamaresWindow::initFullscreenUI()
     QObject::connect( m_viewManager, &Calamares::ViewManager::nextLabelChanged, m_nextButton, [ = ]( QString t )
                       { m_nextButton->setText( stripButtonMnemonic( t ) ); } );
 
-    // "Restart now" button, shown on the final page like deepin-installer's
-    // install-success page; quitting triggers the finished module's restart
+    // Final-page buttons, like deepin-installer's install-success page:
+    // "Restart now" reboots the machine, "Continue without rebooting"
+    // just quits into the live session.
     m_restartButton = new QPushButton( this );
     m_restartButton->setObjectName( "deepinNavButton" );
     m_restartButton->setFixedSize( navButtonSize );
     m_restartButton->setText( tr( "Restart now", "@button" ) );
     m_restartButton->hide();
-    QObject::connect( m_restartButton, &QPushButton::clicked, m_viewManager, &Calamares::ViewManager::quit );
+    QObject::connect( m_restartButton, &QPushButton::clicked, m_viewManager, [ this ]()
+                      {
+                          // Reboot the machine, then exit the installer; the
+                          // finished module's quit path does not reboot.
+                          QProcess::startDetached( QStringLiteral( "systemctl" ),
+                                                   { QStringLiteral( "-i" ), QStringLiteral( "reboot" ) } );
+                          m_viewManager->quit();
+                      } );
+
+    m_continueButton = new QPushButton( this );
+    m_continueButton->setObjectName( "deepinNavButton" );
+    m_continueButton->setFixedSize( navButtonSize );
+    m_continueButton->setText( tr( "Continue without rebooting", "@button" ) );
+    m_continueButton->hide();
+    QObject::connect( m_continueButton, &QPushButton::clicked, m_viewManager, &Calamares::ViewManager::quit );
 
     // Stacked vertically and centered, like deepin-installer 15
     QVBoxLayout* navLayout = new QVBoxLayout();
@@ -762,6 +778,7 @@ CalamaresWindow::initFullscreenUI()
     navLayout->setSpacing( 15 );
     navLayout->addWidget( m_backButton, 0, Qt::AlignHCenter );
     navLayout->addWidget( m_nextButton, 0, Qt::AlignHCenter );
+    navLayout->addWidget( m_continueButton, 0, Qt::AlignHCenter );
     navLayout->addWidget( m_restartButton, 0, Qt::AlignHCenter );
     m_navRow = new QWidget( this );
     m_navRow->setLayout( navLayout );
@@ -858,6 +875,7 @@ CalamaresWindow::updateFullscreenPage()
     m_indicatorWrapper->setVisible( !last );
     m_backButton->setVisible( !executing && !last );
     m_nextButton->setVisible( !executing && !last );
+    m_continueButton->setVisible( last );
     m_restartButton->setVisible( last );
     m_navRow->setVisible( !executing );
 }

@@ -667,6 +667,11 @@ The installer will quit and all changes will be lost.</source>
       <comment>@button</comment>
       <translation>立即重启</translation>
     </message>
+    <message>
+      <source>Continue without rebooting</source>
+      <comment>@button</comment>
+      <translation>不重启继续试用</translation>
+    </message>
   </context>
   <context>
     <name>ChangeFilesystemLabelJob</name>

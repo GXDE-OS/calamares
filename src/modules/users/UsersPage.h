@@ -16,11 +16,14 @@
 #ifndef USERSPAGE_H
 #define USERSPAGE_H
 
+#include <QHash>
 #include <QWidget>
 
+class QAction;
 class Config;
-
+class QGraphicsDropShadowEffect;
 class QLabel;
+class QLineEdit;
 class QPixmap;
 class QToolButton;
 class QWidget;
@@ -55,15 +58,35 @@ protected slots:
     void updateAvatarIcon();
 
 private:
+    ///@brief Visual state of one line edit (deepin-installer style)
+    enum class FieldState
+    {
+        None,  ///< no input yet, no decoration
+        Ok,  ///< green glow + check icon
+        Error  ///< red glow + cross icon, message as tooltip
+    };
+
+    struct FieldUi
+    {
+        QGraphicsDropShadowEffect* glow = nullptr;
+        QAction* statusAction = nullptr;
+    };
+
     void retranslate();
     ///@brief Draw @p source as a round avatar of the given size
     QPixmap roundedAvatar( const QPixmap& source, int size ) const;
+    ///@brief White-on-translucent tick / cross icon, deepin style
+    QIcon statusIcon( bool ok ) const;
+    ///@brief Apply glow, border state and status icon to a line edit
+    void setFieldStatus( QLineEdit* edit, FieldState state, const QString& message );
 
     Ui::Page_UserSetup* ui;
     Config* m_config;
 
     QToolButton* m_avatarButton = nullptr;
     QWidget* m_avatarOverlay = nullptr;
+
+    QHash< QLineEdit*, FieldUi > m_fields;
 };
 
 #endif  // USERSPAGE_H
