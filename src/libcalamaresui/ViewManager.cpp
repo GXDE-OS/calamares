@@ -31,11 +31,13 @@
 #include <QBoxLayout>
 #include <QClipboard>
 #include <QDialogButtonBox>
+#include <QDir>
 #include <QEventLoop>
 #include <QFile>
 #include <QLabel>
 #include <QMessageBox>
 #include <QMetaObject>
+#include <QPainter>
 #include <QPushButton>
 
 #define UPDATE_BUTTON_PROPERTY( name, value ) \
@@ -51,6 +53,44 @@
         m_nextEnabled = value; \
         emit nextEnabledChanged( step, m_nextEnabled ); \
     } while ( false )
+
+namespace
+{
+/** @brief Full-screen confirmation overlay, replicating deepin-installer's
+ *  ConfirmQuitFrame: the wallpaper is re-painted so the page underneath
+ *  (and the window chrome) is fully covered.
+ */
+class ConfirmQuitOverlay : public QWidget
+{
+public:
+    using QWidget::QWidget;
+
+protected:
+    void paintEvent( QPaintEvent* ) override
+    {
+        QPainter p( this );
+        QString path = Calamares::Branding::instance()->imagePath( Calamares::Branding::ImageEntry::ProductWallpaper );
+        if ( !path.isEmpty() )
+        {
+            path = QDir( Calamares::Branding::instance()->componentDirectory() ).absoluteFilePath( path );
+        }
+        QPixmap pixmap;
+        if ( !path.isEmpty() && QFile::exists( path ) )
+        {
+            pixmap = QPixmap( path ).scaled( size(), Qt::KeepAspectRatioByExpanding );
+        }
+        if ( !pixmap.isNull() )
+        {
+            // Centered, like the background label in the main window
+            p.drawPixmap( ( width() - pixmap.width() ) / 2, ( height() - pixmap.height() ) / 2, pixmap );
+        }
+        else
+        {
+            p.fillRect( rect(), QColor( 40, 40, 40 ) );
+        }
+    }
+};
+}  // namespace
 
 namespace Calamares
 {
@@ -556,28 +596,28 @@ ViewManager::confirmCancelInstallation()
     if ( Calamares::Branding::instance() && Calamares::Branding::instance()->windowMaximize() && m_widget )
     {
         QWidget* mainWindow = m_widget->window();
-        QWidget* overlay = new QWidget( mainWindow );
-        overlay->setObjectName( QStringLiteral( "confirmQuitOverlay" ) );
-        overlay->setGeometry( mainWindow ? mainWindow->rect() : QRect() );
+        ConfirmQuitOverlay overlay( mainWindow );
+        overlay.setObjectName( QStringLiteral( "confirmQuitOverlay" ) );
+        overlay.setGeometry( mainWindow ? mainWindow->rect() : QRect() );
 
-        QBoxLayout* layout = new QVBoxLayout( overlay );
+        QBoxLayout* layout = new QVBoxLayout( &overlay );
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 15 );
         layout->addStretch();
-        QLabel* titleLabel = new QLabel( title, overlay );
+        QLabel* titleLabel = new QLabel( title, &overlay );
         titleLabel->setObjectName( QStringLiteral( "deepinTitle" ) );
         titleLabel->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
         layout->addWidget( titleLabel );
-        QLabel* commentLabel = new QLabel( question, overlay );
+        QLabel* commentLabel = new QLabel( question, &overlay );
         commentLabel->setObjectName( QStringLiteral( "deepinComment" ) );
         commentLabel->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
         layout->addWidget( commentLabel );
         layout->addStretch();
 
-        QPushButton* continueButton = new QPushButton( tr( "Continue", "@button" ), overlay );
+        QPushButton* continueButton = new QPushButton( tr( "Continue", "@button" ), &overlay );
         continueButton->setObjectName( QStringLiteral( "deepinNavButton" ) );
         continueButton->setFixedSize( QSize( 310, 36 ) );
-        QPushButton* quitButton = new QPushButton( tr( "Abort Installation", "@button" ), overlay );
+        QPushButton* quitButton = new QPushButton( tr( "Abort Installation", "@button" ), &overlay );
         quitButton->setObjectName( QStringLiteral( "deepinNavButton" ) );
         quitButton->setFixedSize( QSize( 310, 36 ) );
         layout->addWidget( continueButton, 0, Qt::AlignCenter );
@@ -585,8 +625,8 @@ ViewManager::confirmCancelInstallation()
         layout->addWidget( quitButton, 0, Qt::AlignCenter );
         layout->addSpacing( 32 );
 
-        overlay->show();
-        overlay->raise();
+        overlay.show();
+        overlay.raise();
 
         QEventLoop loop;
         bool abortConfirmed = false;
@@ -598,7 +638,6 @@ ViewManager::confirmCancelInstallation()
                           } );
         loop.exec();
 
-        overlay->deleteLater();
         return abortConfirmed ? Confirmation::CancelInstallation : Confirmation::Continue;
     }
 

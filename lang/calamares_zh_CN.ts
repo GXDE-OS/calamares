@@ -439,6 +439,16 @@ Link copied to clipboard</source>
       <translation>&amp;关闭</translation>
     </message>
     <message>
+      <source>Continue</source>
+      <comment>@button</comment>
+      <translation>继续安装</translation>
+    </message>
+    <message>
+      <source>Abort Installation</source>
+      <comment>@button</comment>
+      <translation>退出安装</translation>
+    </message>
+    <message>
       <location filename="../src/libcalamaresui/ViewManager.cpp" line="155"/>
       <source>Setup Failed</source>
       <comment>@title</comment>

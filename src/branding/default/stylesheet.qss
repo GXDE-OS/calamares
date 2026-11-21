@@ -380,8 +380,8 @@ QProgressBar::chunk {
   background-color: #2ca7f8;
 }
 
-/*** The confirmation overlay (deepin's ConfirmQuitFrame) paints nothing
- *   itself so that the wallpaper stays visible. */
+/*** The confirmation overlay (deepin's ConfirmQuitFrame) re-paints the
+ *   wallpaper itself in C++, so it must not paint a background here. */
 
 QWidget#confirmQuitOverlay {
   background: transparent;
