@@ -18,6 +18,7 @@
 #include <QFontMetrics>
 #include <QLayout>
 #include <QPainter>
+#include <QEventLoop>
 #include <QPen>
 #include <QWidget>
 
@@ -207,18 +208,29 @@ Calamares::presentAsFullscreen( QDialog* dialog )
     QWidget* mainWindow = dialog->parentWidget() ? dialog->parentWidget()->window() : nullptr;
     if ( fullscreenBranding && mainWindow )
     {
-        dialog->setWindowFlags( Qt::FramelessWindowHint | Qt::Dialog );
+        // deepin-installer style: the dialog becomes a dedicated page of
+        // the installer. Reparent it into the main window as a plain
+        // child widget covering the whole window: as a child widget its
+        // translucent background composes with the wallpaper of the main
+        // window (a top-level translucent dialog would just paint black
+        // without a compositor).
+        dialog->setParent( mainWindow );
+        dialog->setWindowFlag( Qt::Dialog, false );
         dialog->setGeometry( mainWindow->rect() );
-        // A translucent dark scrim, like the other deepin-installer pages:
-        // the wallpaper shows through and the widgets keep their
-        // translucent styling
         dialog->setStyleSheet( QStringLiteral( "QDialog { background: rgba(0, 0, 0, 0.45); }" ) );
-        // Keep some breathing room around the dialog contents
         if ( dialog->layout() )
         {
             const int m = 3 * defaultFontHeight();
             dialog->layout()->setContentsMargins( m, m / 2, m, m / 2 );
         }
+        dialog->show();
+        dialog->raise();
+
+        // Wait until the dialog is done (accept/reject), like exec()
+        QEventLoop loop;
+        QObject::connect( dialog, &QDialog::finished, &loop, &QEventLoop::quit );
+        loop.exec();
+        return dialog->result();
     }
     return dialog->exec();
 }
