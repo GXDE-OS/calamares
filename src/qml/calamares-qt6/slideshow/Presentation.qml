@@ -116,42 +116,40 @@ Item {
             if (to) to.visible = true
             return true
         }
-        // Cross-fade between the slides, deepin-installer style
+        // Cross-fade between the slides, deepin-installer style.
+        // A Timer drives the fade (not a QML animation) because the
+        // slideshow is loaded while hidden and Qt Quick property
+        // animations do not advance without rendering.
         to.z = 2
         from.z = 1
         to.visible = true
-        fadeOutAnimation.target = from
-        fadeInAnimation.target = to
-        fadeOutAnimation.start()
-        fadeInAnimation.start()
+        fadeTimer.fromItem = from
+        fadeTimer.toItem = to
+        from.opacity = 1.0
+        to.opacity = 0.0
+        fadeTimer.restart()
         return true
     }
 
-    NumberAnimation {
-        id: fadeOutAnimation
-        property: "opacity"
-        from: 1.0
-        to: 0.0
-        duration: 600
-        easing.type: Easing.InOutQuad
-        onStopped: {
-            if (target) {
-                target.visible = false
-                target.z = 0
+    Timer {
+        id: fadeTimer
+        interval: 40
+        repeat: true
+        running: false
+        property variant fromItem
+        property variant toItem
+        onTriggered: {
+            if (!fromItem || !toItem) {
+                stop()
+                return
             }
-        }
-    }
-
-    NumberAnimation {
-        id: fadeInAnimation
-        property: "opacity"
-        from: 0.0
-        to: 1.0
-        duration: 600
-        easing.type: Easing.InOutQuad
-        onStopped: {
-            if (target) {
-                target.z = 0
+            toItem.opacity = Math.min(1.0, toItem.opacity + 0.1)
+            fromItem.opacity = Math.max(0.0, fromItem.opacity - 0.1)
+            if (toItem.opacity >= 1.0) {
+                fromItem.visible = false
+                fromItem.z = 0
+                toItem.z = 0
+                stop()
             }
         }
     }
