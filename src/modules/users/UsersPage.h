@@ -23,6 +23,7 @@ class QAction;
 class Config;
 class QGraphicsDropShadowEffect;
 class QLabel;
+class QResizeEvent;
 class QLineEdit;
 class QPixmap;
 class QToolButton;
@@ -42,7 +43,10 @@ public:
 
     void onActivate();
 
-protected slots:
+protected:
+    void resizeEvent( QResizeEvent* event ) override;
+
+    protected slots:
     void onFullNameTextEdited( const QString& );
     void reportLoginNameStatus( const QString& );
     void reportHostNameStatus( const QString& );

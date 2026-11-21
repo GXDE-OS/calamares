@@ -48,6 +48,88 @@
 #include <QPainterPath>
 #include <QToolButton>
 
+namespace
+{
+/** @brief Full-screen overlay that re-paints the branding wallpaper,
+ *
+ * so picking an avatar looks like a dedicated page (deepin-installer
+ * style) instead of a translucent layer on top of the form.
+ */
+class AvatarPickerOverlay : public QWidget
+{
+public:
+    using QWidget::QWidget;
+
+protected:
+    void paintEvent( QPaintEvent* ) override
+    {
+        QPainter p( this );
+        QString path = Calamares::Branding::instance()->imagePath( Calamares::Branding::ImageEntry::ProductWallpaper );
+        if ( !path.isEmpty() )
+        {
+            path = QDir( Calamares::Branding::instance()->componentDirectory() ).absoluteFilePath( path );
+        }
+        QPixmap pixmap;
+        if ( !path.isEmpty() && QFile::exists( path ) )
+        {
+            pixmap = QPixmap( path ).scaled( size(), Qt::KeepAspectRatioByExpanding );
+        }
+        if ( !pixmap.isNull() )
+        {
+            p.drawPixmap( ( width() - pixmap.width() ) / 2, ( height() - pixmap.height() ) / 2, pixmap );
+        }
+        else
+        {
+            p.fillRect( rect(), QColor( 40, 40, 40 ) );
+        }
+    }
+};
+
+/** @brief White monochrome field icon, painted in code so that no
+ * system theme or plugin is involved.
+ */
+QPixmap
+leadingFieldIcon( const QString& kind )
+{
+    const int size = 20;
+    QPixmap pm( size, size );
+    pm.fill( Qt::transparent );
+    QPainter p( &pm );
+    p.setRenderHint( QPainter::Antialiasing );
+    QPen pen( QColor( 255, 255, 255, 200 ), 1.6 );
+    pen.setCapStyle( Qt::RoundCap );
+    p.setPen( pen );
+    p.setBrush( Qt::NoBrush );
+    if ( kind == QStringLiteral( "user" ) )
+    {
+        p.drawEllipse( QRectF( 6.5, 3, 7, 7 ) );
+        p.drawArc( QRectF( 4, 12, 12, 9 ), 0, 180 * 16 );
+    }
+    else if ( kind == QStringLiteral( "computer" ) )
+    {
+        p.drawRoundedRect( QRectF( 3, 4.5, 14, 9.5 ), 1.5, 1.5 );
+        p.drawLine( QPointF( 9, 17 ), QPointF( 15, 17 ) );
+        p.drawLine( QPointF( 12, 13.5 ), QPointF( 12, 17 ) );
+    }
+    else  // lock
+    {
+        p.drawRoundedRect( QRectF( 6, 10.5, 12, 8.5 ), 2, 2 );
+        p.drawArc( QRectF( 8.5, 3.5, 7, 9 ), 0, 180 * 16 );
+        p.setBrush( QColor( 255, 255, 255, 200 ) );
+        p.drawEllipse( QRectF( 11, 13.6, 2, 2 ) );
+    }
+    return pm;
+}
+
+///@brief The embedded default avatar (neutral user silhouette)
+QPixmap
+defaultAvatarPixmap( int size )
+{
+    return QPixmap( QStringLiteral( ":/images/default-avatar.svg" ) ).scaled( size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation );
+}
+}  // namespace
+
+
 UsersPage::UsersPage( Config* config, QWidget* parent )
     : QWidget( parent )
     , ui( new Ui::Page_UserSetup )
@@ -104,9 +186,9 @@ UsersPage::UsersPage( Config* config, QWidget* parent )
         edit->setMinimumWidth( fieldWidth );
         edit->setMaximumWidth( fieldWidth );
 
-        // Leading icon is built into the installer (never read from the
-        // system theme), a white monochrome glyph
-        QIcon icon( QStringLiteral( ":/images/%1.svg" ).arg( leadingIcon ) );
+        // Leading icon is painted in code (never read from the system
+        // theme nor from resources), a white monochrome glyph
+        const QPixmap icon = leadingFieldIcon( leadingIcon );
         if ( !icon.isNull() )
         {
             edit->addAction( icon, QLineEdit::LeadingPosition );
@@ -120,8 +202,10 @@ UsersPage::UsersPage( Config* config, QWidget* parent )
         glow->setColor( QColor( 0, 0, 0, 0 ) );
         edit->setGraphicsEffect( glow );
 
-        // Translucent error bubble under the edit, hidden by default
-        auto* tip = new QLabel( edit->parentWidget() );
+        // Translucent error bubble under the edit, hidden by default. It
+        // is a floating control (positioned manually), so it never
+        // affects the layout of the other widgets.
+        auto* tip = new QLabel( this );
         tip->setObjectName( "fieldErrorTip" );
         tip->setAlignment( Qt::AlignHCenter );
         tip->setWordWrap( true );
@@ -135,7 +219,6 @@ UsersPage::UsersPage( Config* config, QWidget* parent )
         editRow->addWidget( edit );
         editRow->addStretch();
         ui->verticalLayout_12->addLayout( editRow );
-        ui->verticalLayout_12->addWidget( tip, 0, Qt::AlignHCenter );
     };
 
     ui->verticalLayout_12->setSpacing( 10 );
@@ -284,6 +367,22 @@ UsersPage::UsersPage( Config* config, QWidget* parent )
 UsersPage::~UsersPage()
 {
     delete ui;
+}
+
+void
+UsersPage::resizeEvent( QResizeEvent* event )
+{
+    QWidget::resizeEvent( event );
+    // Keep floating error bubbles under their line edit
+    for ( auto it = m_fields.constBegin(); it != m_fields.constEnd(); ++it )
+    {
+        QLabel* tip = it.value().tipLabel;
+        if ( tip && tip->isVisible() )
+        {
+            const QRect editGeo = it.key()->geometry();
+            tip->move( editGeo.x() + ( editGeo.width() - tip->width() ) / 2, editGeo.bottom() + 6 );
+        }
+    }
 }
 
 void
@@ -455,11 +554,26 @@ UsersPage::setFieldStatus( QLineEdit* edit, FieldState state, const QString& mes
         edit->setProperty( "state", QString() );
         break;
     }
-    // Translucent error bubble below the field
+    // Translucent error bubble, floating right below the edit (it is
+    // not part of the layout and never moves the other widgets)
     if ( field.tipLabel )
     {
         field.tipLabel->setText( message );
-        field.tipLabel->setVisible( state == FieldState::Error && !message.isEmpty() );
+        const bool show = state == FieldState::Error && !message.isEmpty();
+        if ( show )
+        {
+            field.tipLabel->adjustSize();
+            // edit and tip share the same parent (the page), so the edit's
+            // geometry is already in tip coordinates
+            const QRect editGeo = edit->geometry();
+            field.tipLabel->move( editGeo.x() + ( editGeo.width() - field.tipLabel->width() ) / 2,
+                                  editGeo.bottom() + 6 );
+        }
+        field.tipLabel->setVisible( show );
+        if ( show )
+        {
+            field.tipLabel->raise();
+        }
     }
     // Re-evaluate the property-dependent style sheet rules
     edit->style()->unpolish( edit );
@@ -522,50 +636,6 @@ UsersPage::roundedAvatar( const QPixmap& source, int size ) const
     return result;
 }
 
-namespace
-{
-/** @brief Full-screen overlay that re-paints the branding wallpaper,
- *
- * so picking an avatar looks like a dedicated page (deepin-installer
- * style) instead of a translucent layer on top of the form.
- */
-class AvatarPickerOverlay : public QWidget
-{
-public:
-    using QWidget::QWidget;
-
-protected:
-    void paintEvent( QPaintEvent* ) override
-    {
-        QPainter p( this );
-        QString path = Calamares::Branding::instance()->imagePath( Calamares::Branding::ImageEntry::ProductWallpaper );
-        if ( !path.isEmpty() )
-        {
-            path = QDir( Calamares::Branding::instance()->componentDirectory() ).absoluteFilePath( path );
-        }
-        QPixmap pixmap;
-        if ( !path.isEmpty() && QFile::exists( path ) )
-        {
-            pixmap = QPixmap( path ).scaled( size(), Qt::KeepAspectRatioByExpanding );
-        }
-        if ( !pixmap.isNull() )
-        {
-            p.drawPixmap( ( width() - pixmap.width() ) / 2, ( height() - pixmap.height() ) / 2, pixmap );
-        }
-        else
-        {
-            p.fillRect( rect(), QColor( 40, 40, 40 ) );
-        }
-    }
-};
-
-///@brief The embedded default avatar (neutral user silhouette)
-QPixmap
-defaultAvatarPixmap( int size )
-{
-    return QPixmap( QStringLiteral( ":/images/default-avatar.svg" ) ).scaled( size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation );
-}
-}  // namespace
 
 void
 UsersPage::updateAvatarIcon()
