@@ -155,6 +155,15 @@ WelcomePage::initLanguages()
         // The orphaned combo-box widgets would show up at the top-left
         ui->languageWidget->hide();
         ui->languageIcon->hide();
+        // The deepin-installer page has no web-link buttons; hide the row
+        // so it cannot overlap the language list.
+        ui->verticalLayout->removeItem( ui->horizontalLayout_2 );
+        for ( auto* b : { ui->donateButton, ui->supportButton, ui->knownIssuesButton, ui->releaseNotesButton } )
+        {
+            b->hide();
+        }
+        // The list is centered within the page (its width is capped above)
+        ui->verticalLayout->setAlignment( m_languageList, Qt::AlignHCenter );
         ui->verticalLayout->setStretchFactor( m_languageList, 1 );
     }
 
