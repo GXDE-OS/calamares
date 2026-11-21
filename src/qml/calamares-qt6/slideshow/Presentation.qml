@@ -112,9 +112,48 @@ Item {
     }
 
     function switchSlides(from, to, forward) {
-        from.visible = false
+        if (from === to || !from || !to) {
+            if (to) to.visible = true
+            return true
+        }
+        // Cross-fade between the slides, deepin-installer style
+        to.z = 2
+        from.z = 1
         to.visible = true
+        fadeOutAnimation.target = from
+        fadeInAnimation.target = to
+        fadeOutAnimation.start()
+        fadeInAnimation.start()
         return true
+    }
+
+    NumberAnimation {
+        id: fadeOutAnimation
+        property: "opacity"
+        from: 1.0
+        to: 0.0
+        duration: 600
+        easing.type: Easing.InOutQuad
+        onStopped: {
+            if (target) {
+                target.visible = false
+                target.z = 0
+            }
+        }
+    }
+
+    NumberAnimation {
+        id: fadeInAnimation
+        property: "opacity"
+        from: 0.0
+        to: 1.0
+        duration: 600
+        easing.type: Easing.InOutQuad
+        onStopped: {
+            if (target) {
+                target.z = 0
+            }
+        }
     }
 
     onCurrentSlideChanged: {
