@@ -815,6 +815,25 @@ CalamaresWindow::initFullscreenUI()
 
     setStyleSheet( Calamares::Branding::instance()->stylesheet() );
 
+    // View steps may open internal editor pages (e.g. the partition
+    // editor); hook them all so the shell can hide back/next then
+    const int steps = m_viewManager->viewSteps().count();
+    for ( int row = 0; row < steps; ++row )
+    {
+        connectStepInternalPage( row );
+    }
+    QObject::connect(
+        m_viewManager,
+        &QAbstractItemModel::rowsInserted,
+        this,
+        [ this ]( const QModelIndex&, int first, int last )
+        {
+            for ( int row = first; row <= last; ++row )
+            {
+                connectStepInternalPage( row );
+            }
+        } );
+
     // Refresh title / indicator / button visibility when anything changes
     QObject::connect(
         m_viewManager, &Calamares::ViewManager::currentStepChanged, this, &CalamaresWindow::updateFullscreenPage );
@@ -831,6 +850,28 @@ CalamaresWindow::initFullscreenUI()
                       m_closeButton,
                       &QWidget::setToolTip );
 
+    updateFullscreenPage();
+}
+
+void
+CalamaresWindow::connectStepInternalPage( int row )
+{
+    const auto steps = m_viewManager->viewSteps();
+    if ( row < 0 || row >= steps.count() )
+    {
+        return;
+    }
+    QObject::connect( steps.at( row ),
+                      &Calamares::ViewStep::internalPageActive,
+                      this,
+                      &CalamaresWindow::onInternalPageActive,
+                      Qt::UniqueConnection );
+}
+
+void
+CalamaresWindow::onInternalPageActive( bool active )
+{
+    m_internalPageActive = active;
     updateFullscreenPage();
 }
 
@@ -873,8 +914,8 @@ CalamaresWindow::updateFullscreenPage()
     // navigation, like deepin-installer's install-success page
     const bool last = !executing && ( current >= steps - 1 );
     m_indicatorWrapper->setVisible( !last );
-    m_backButton->setVisible( !executing && !last );
-    m_nextButton->setVisible( !executing && !last );
+    m_backButton->setVisible( !executing && !last && !m_internalPageActive );
+    m_nextButton->setVisible( !executing && !last && !m_internalPageActive );
     m_continueButton->setVisible( last );
     m_restartButton->setVisible( last );
     m_navRow->setVisible( !executing );

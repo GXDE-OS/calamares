@@ -573,6 +573,7 @@ PartitionPage::presentEditorPage( PartitionEditorPage* page, const std::function
     // partition module; when it is done, the main page returns.
     m_pageStack->addWidget( page );
     m_pageStack->setCurrentWidget( page );
+    emit editorPageActive( true );
     QObject::connect( page,
                       &PartitionEditorPage::finished,
                       this,
@@ -581,6 +582,7 @@ PartitionPage::presentEditorPage( PartitionEditorPage* page, const std::function
                           m_pageStack->setCurrentIndex( 0 );
                           m_pageStack->removeWidget( page );
                           page->deleteLater();
+                          emit editorPageActive( false );
                           if ( accepted && onAccepted )
                           {
                               onAccepted();

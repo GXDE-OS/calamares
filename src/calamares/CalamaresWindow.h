@@ -57,11 +57,19 @@ protected:
     virtual void closeEvent( QCloseEvent* e ) override;
     virtual void resizeEvent( QResizeEvent* e ) override;
 
+private Q_SLOTS:
+    ///@brief A view step's internal editor page opened/closed
+    void onInternalPageActive( bool active );
+
 private:
     ///@brief Build the deepin-installer-like full-screen shell.
     void initFullscreenUI();
     ///@brief Refresh title, page indicator and button visibility for the current step.
     void updateFullscreenPage();
+    ///@brief Hook a view step's internal-page signal, and refresh
+    void connectStepInternalPage( int row );
+
+private:
     ///@brief Scale the wallpaper over the whole window, deepin style.
     void updateBackground();
 
@@ -70,6 +78,8 @@ private:
 
     ///@brief True when branding selects "fullscreen" expansion (deepin shell).
     bool m_fullscreenMode = false;
+    ///@brief A view step has an internal editor page open (hide back/next).
+    bool m_internalPageActive = false;
 
     // Fullscreen (deepin) shell widgets
     QLabel* m_background = nullptr;

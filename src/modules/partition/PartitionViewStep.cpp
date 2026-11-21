@@ -377,6 +377,10 @@ PartitionViewStep::next()
             {
                 m_manualPartitionPage = new PartitionPage( m_core, *m_config );
                 m_widget->addWidget( m_manualPartitionPage );
+                connect( m_manualPartitionPage,
+                         &PartitionPage::editorPageActive,
+                         this,
+                         &PartitionViewStep::internalPageActive );
             }
 
             m_widget->setCurrentWidget( m_manualPartitionPage );

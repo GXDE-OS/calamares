@@ -178,6 +178,14 @@ public:
     virtual void onCancel();
 
 signals:
+    /** @brief The step's internal editor page (if any) became active
+     *
+     * deepin-installer style: steps that open dedicated internal pages
+     * (e.g. the partition editors) report it, so the shell can hide the
+     * navigation buttons while the internal page is up.
+     */
+    void internalPageActive( bool active );
+
     /// @brief Tells the viewmanager to enable the *next* button according to @p status
     void nextStatusChanged( bool status );
 

@@ -39,6 +39,10 @@ public:
     explicit PartitionPage( PartitionCoreModule* core, const Config & config, QWidget* parent = nullptr );
     ~PartitionPage() override;
 
+signals:
+    ///@brief The internal editor page opened (true) or closed (false)
+    void editorPageActive( bool active );
+
     void onRevertClicked();
 
     int selectedDeviceIndex();
