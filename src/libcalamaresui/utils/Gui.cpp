@@ -14,6 +14,8 @@
 #include "ImageRegistry.h"
 
 #include <QBrush>
+#include <QDir>
+#include <QFileInfo>
 #include <QFont>
 #include <QFontMetrics>
 #include <QLayout>
@@ -209,6 +211,25 @@ Calamares::presentAsFullscreen( QDialog* dialog )
     {
         dialog->setWindowFlags( Qt::FramelessWindowHint | Qt::Dialog );
         dialog->setGeometry( mainWindow->rect() );
+        // Use the branding wallpaper as the dialog background, so the
+        // dialog reads as a dedicated page of the installer
+        QString wallpaper = branding->imagePath( Branding::ImageEntry::ProductWallpaper );
+        if ( !wallpaper.isEmpty() )
+        {
+            wallpaper = QDir( branding->componentDirectory() ).absoluteFilePath( wallpaper );
+        }
+        if ( !wallpaper.isEmpty() && QFileInfo::exists( wallpaper ) )
+        {
+            dialog->setStyleSheet(
+                QStringLiteral( "QDialog { background-image: url(%1); background-repeat: repeat-xy; }" )
+                    .arg( wallpaper ) );
+        }
+        // Keep some breathing room around the dialog contents
+        if ( dialog->layout() )
+        {
+            const int m = 3 * defaultFontHeight();
+            dialog->layout()->setContentsMargins( m, m / 2, m, m / 2 );
+        }
     }
     return dialog->exec();
 }
