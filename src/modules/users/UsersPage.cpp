@@ -31,6 +31,8 @@
 #include <QBoxLayout>
 #include <QFile>
 #include <QLabel>
+#include <QBoxLayout>
+#include <QLayoutItem>
 #include <QLineEdit>
 
 /** @brief Add an error message and pixmap to a label. */
@@ -83,6 +85,38 @@ UsersPage::UsersPage( Config* config, QWidget* parent )
     , m_config( config )
 {
     ui->setupUi( this );
+
+    // deepin-installer style: longer line edits and a centered form.
+    // Each row of the .ui layout is centered and the edits get a
+    // uniform, wider width than the default.
+    const int fieldWidth = qBound( 300, Calamares::defaultFontHeight() * 22, 420 );
+    for ( auto* edit : { ui->textBoxFullName,
+                         ui->textBoxLoginName,
+                         ui->textBoxHostname,
+                         ui->textBoxUserPassword,
+                         ui->textBoxUserVerifiedPassword,
+                         ui->textBoxRootPassword,
+                         ui->textBoxVerifiedRootPassword } )
+    {
+        edit->setMinimumWidth( fieldWidth );
+        edit->setMaximumWidth( fieldWidth );
+    }
+    // Center the whole form: each row of the layout gets leading and
+    // trailing stretches so it shrinks to its content and centers;
+    // standalone widgets (labels, checkboxes) are centered directly.
+    for ( int i = 0; i < ui->verticalLayout_12->count(); ++i )
+    {
+        QLayoutItem* item = ui->verticalLayout_12->itemAt( i );
+        if ( auto* rowLayout = qobject_cast< QBoxLayout* >( item->layout() ) )
+        {
+            rowLayout->insertStretch( 0, 1 );
+            rowLayout->addStretch( 1 );
+        }
+        else if ( auto* widget = item->widget() )
+        {
+            ui->verticalLayout_12->setAlignment( widget, Qt::AlignHCenter );
+        }
+    }
 
     // Connect signals and slots
     ui->textBoxUserPassword->setText( config->userPassword() );
