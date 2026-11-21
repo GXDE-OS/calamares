@@ -70,6 +70,7 @@ private:
     {
         QGraphicsDropShadowEffect* glow = nullptr;
         QAction* statusAction = nullptr;
+        QLabel* tipLabel = nullptr;
     };
 
     void retranslate();

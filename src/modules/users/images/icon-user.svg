@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- White user icon, SPDX-License-Identifier: CC0-1.0 -->
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <circle cx="12" cy="8" r="4" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-opacity="0.85"/>
+  <path d="M 4.5 20 C 4.5 15 8 13.2 12 13.2 C 16 13.2 19.5 15 19.5 20" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-opacity="0.85" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- White lock icon, SPDX-License-Identifier: CC0-1.0 -->
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <rect x="6" y="10.5" width="12" height="9" rx="2" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-opacity="0.85"/>
+  <path d="M 8.5 10.5 L 8.5 8 C 8.5 5.8 10 4.5 12 4.5 C 14 4.5 15.5 5.8 15.5 8 L 15.5 10.5" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-opacity="0.85" stroke-linecap="round"/>
+  <circle cx="12" cy="15" r="1.4" fill="#ffffff" fill-opacity="0.85"/>
+</svg>

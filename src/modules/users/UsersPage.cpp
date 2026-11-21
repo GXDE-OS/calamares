@@ -104,7 +104,9 @@ UsersPage::UsersPage( Config* config, QWidget* parent )
         edit->setMinimumWidth( fieldWidth );
         edit->setMaximumWidth( fieldWidth );
 
-        QIcon icon = QIcon::fromTheme( leadingIcon );
+        // Leading icon is built into the installer (never read from the
+        // system theme), a white monochrome glyph
+        QIcon icon( QStringLiteral( ":/images/%1.svg" ).arg( leadingIcon ) );
         if ( !icon.isNull() )
         {
             edit->addAction( icon, QLineEdit::LeadingPosition );
@@ -118,16 +120,26 @@ UsersPage::UsersPage( Config* config, QWidget* parent )
         glow->setColor( QColor( 0, 0, 0, 0 ) );
         edit->setGraphicsEffect( glow );
 
-        m_fields.insert( edit, { glow, statusAction } );
+        // Translucent error bubble under the edit, hidden by default
+        auto* tip = new QLabel( edit->parentWidget() );
+        tip->setObjectName( "fieldErrorTip" );
+        tip->setAlignment( Qt::AlignHCenter );
+        tip->setWordWrap( true );
+        tip->setMaximumWidth( fieldWidth + 60 );
+        tip->hide();
+
+        m_fields.insert( edit, { glow, statusAction, tip } );
 
         auto* editRow = new QHBoxLayout;
         editRow->addStretch();
         editRow->addWidget( edit );
         editRow->addStretch();
         ui->verticalLayout_12->addLayout( editRow );
+        ui->verticalLayout_12->addWidget( tip, 0, Qt::AlignHCenter );
     };
 
     ui->verticalLayout_12->setSpacing( 10 );
+    ui->verticalLayout_12->addStretch( 1 );
     ui->verticalLayout_12->addWidget( m_avatarButton, 0, Qt::AlignHCenter );
     ui->verticalLayout_12->addSpacing( 10 );
 
@@ -163,6 +175,7 @@ UsersPage::UsersPage( Config* config, QWidget* parent )
         adOuter->addLayout( adLayout );
         ui->verticalLayout_12->addWidget( adContainer, 0, Qt::AlignHCenter );
     }
+    ui->verticalLayout_12->addStretch( 1 );
 
     // Connect signals and slots
     ui->textBoxUserPassword->setText( config->userPassword() );
@@ -442,7 +455,12 @@ UsersPage::setFieldStatus( QLineEdit* edit, FieldState state, const QString& mes
         edit->setProperty( "state", QString() );
         break;
     }
-    edit->setToolTip( state == FieldState::Error ? message : QString() );
+    // Translucent error bubble below the field
+    if ( field.tipLabel )
+    {
+        field.tipLabel->setText( message );
+        field.tipLabel->setVisible( state == FieldState::Error && !message.isEmpty() );
+    }
     // Re-evaluate the property-dependent style sheet rules
     edit->style()->unpolish( edit );
     edit->style()->polish( edit );
@@ -625,13 +643,8 @@ UsersPage::pickAvatar()
 
     auto* list = m_avatarOverlay->findChild< QListWidget* >();
     list->clear();
-    auto* defaultItem = new QListWidgetItem( QIcon( Config::userAvatarDefault() ), QString(), list );
-    defaultItem->setData( Qt::UserRole, QString() );
-    defaultItem->setToolTip( tr( "Default", "@option" ) );
-    if ( m_config->userAvatar().isEmpty() )
-    {
-        list->setCurrentItem( defaultItem );
-    }
+    // The picker only offers the numbered faces; default.png is not
+    // listed (it duplicates one of them).
 
     for ( const QString& path : Config::userAvatarCandidates() )
     {

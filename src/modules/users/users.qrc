@@ -3,5 +3,11 @@
         <file>images/invalid.png</file>
         <file>images/valid.png</file>
         <file>images/default-avatar.svg</file>
+        <file>images/icon-user.svg</file>
+        <file>images/icon-computer.svg</file>
+        <file>images/icon-lock.svg</file>
+        <file>images/icon-user.svg</file>
+        <file>images/icon-computer.svg</file>
+        <file>images/icon-lock.svg</file>
     </qresource>
 </RCC>
