@@ -26,6 +26,7 @@
 
 #include <QCoreApplication>
 #include <QDir>
+#include <QDirIterator>
 #include <QFile>
 #include <QFileInfo>
 #include <QMetaProperty>
@@ -550,31 +551,39 @@ QStringList
 Config::userAvatarCandidates()
 {
     // deepin-installer-style avatar sources: system account-face
-    // directories (the first one that exists wins)
+    // directories (the first existing one wins), scanned recursively
     static const QStringList avatarDirs {
         "/usr/share/dde-account-faces",
         "/usr/share/gxde-account-faces",
         "/usr/share/deepin-account-faces",
+        "/usr/share/pixmaps/faces",
     };
     for ( const QString& dir : avatarDirs )
     {
-        QDir d( dir );
-        if ( !d.exists() )
+        if ( !QDir( dir ).exists() )
         {
             continue;
         }
         QStringList files;
-        for ( const QFileInfo& info :
-              d.entryInfoList( { "*.png", "*.jpg", "*.jpeg", "*.svg" }, QDir::Files, QDir::Name ) )
+        QDirIterator it( dir, { "*.png", "*.jpg", "*.jpeg", "*.svg" }, QDir::Files, QDirIterator::Subdirectories );
+        while ( it.hasNext() )
         {
-            files << info.absoluteFilePath();
+            files << it.next();
         }
+        files.sort();
         if ( !files.isEmpty() )
         {
             return files;
         }
+        cDebug() << "Avatar directory" << dir << "exists but has no images";
     }
-    return {};
+
+    // Fall back to the built-in colored avatars
+    static const QStringList builtin {
+        ":/images/avatar-1.svg", ":/images/avatar-2.svg", ":/images/avatar-3.svg", ":/images/avatar-4.svg",
+        ":/images/avatar-5.svg", ":/images/avatar-6.svg", ":/images/avatar-7.svg", ":/images/avatar-8.svg",
+    };
+    return builtin;
 }
 
 void

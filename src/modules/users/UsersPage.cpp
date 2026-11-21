@@ -29,8 +29,6 @@
 #include "utils/String.h"
 
 #include <QBoxLayout>
-#include <QDialog>
-#include <QDialogButtonBox>
 #include <QFile>
 #include <QLabel>
 #include <QBoxLayout>
@@ -38,6 +36,7 @@
 #include <QLineEdit>
 #include <QListWidget>
 #include <QPainter>
+#include <QPushButton>
 #include <QPainterPath>
 #include <QToolButton>
 
@@ -47,6 +46,10 @@ labelError( QLabel* pix, QLabel* label, Calamares::ImageType icon, const QString
 {
     label->setText( message );
     pix->setPixmap( Calamares::defaultPixmap( icon, Calamares::Original, pix->size() ) );
+    // Hide when there is nothing to say, to keep the form compact
+    const bool show = !message.isEmpty();
+    pix->setVisible( show );
+    label->setVisible( show );
 }
 
 /** @brief Clear error, set happy pixmap on a label to indicate "ok". */
@@ -55,6 +58,8 @@ labelOk( QLabel* pix, QLabel* label )
 {
     label->clear();
     pix->setPixmap( Calamares::defaultPixmap( Calamares::StatusOk, Calamares::Original, pix->size() ) );
+    pix->setVisible( true );
+    label->setVisible( false );
 }
 
 /** @brief Sets error or ok on a label depending on @p status and @p value
@@ -73,6 +78,8 @@ labelStatus( QLabel* pix, QLabel* label, const QString& value, const QString& st
             // This is different from labelOK() because no checkmark is shown
             label->clear();
             pix->clear();
+            pix->setVisible( false );
+            label->setVisible( false );
         }
         else
         {
@@ -131,28 +138,31 @@ UsersPage::UsersPage( Config* config, QWidget* parent )
         delete item;
     }
 
-    // A field = centered label on top, the edit with its status icon in a
-    // centered row, and the error text centered underneath.
+    // A field = centered label on top, the edit centered underneath, and a
+    // compact status row (icon + error) that hides itself when empty.
     auto addField = [ this, fieldWidth ]( QLabel* label, QLineEdit* edit, QLabel* iconLabel, QLabel* errorLabel )
     {
         auto* column = new QVBoxLayout;
-        column->setSpacing( 6 );
+        column->setSpacing( 4 );
         label->setAlignment( Qt::AlignHCenter );
         column->addWidget( label );
 
+        edit->setMinimumWidth( fieldWidth );
+        edit->setMaximumWidth( fieldWidth );
         auto* editRow = new QHBoxLayout;
-        editRow->setSpacing( 8 );
         editRow->addStretch();
         editRow->addWidget( edit );
-        editRow->addWidget( iconLabel );
         editRow->addStretch();
         column->addLayout( editRow );
 
-        errorLabel->setAlignment( Qt::AlignHCenter );
-        column->addWidget( errorLabel );
+        auto* statusRow = new QHBoxLayout;
+        statusRow->setSpacing( 6 );
+        statusRow->addStretch();
+        statusRow->addWidget( iconLabel );
+        statusRow->addWidget( errorLabel );
+        statusRow->addStretch();
+        column->addLayout( statusRow );
 
-        edit->setMinimumWidth( fieldWidth );
-        edit->setMaximumWidth( fieldWidth );
         ui->verticalLayout_12->addLayout( column );
     };
 
@@ -165,36 +175,43 @@ UsersPage::UsersPage( Config* config, QWidget* parent )
                                                  QLabel* errorLabel )
     {
         auto* column = new QVBoxLayout;
-        column->setSpacing( 6 );
+        column->setSpacing( 4 );
         label->setAlignment( Qt::AlignHCenter );
         column->addWidget( label );
 
         auto* edits = new QVBoxLayout;
-        edits->setSpacing( 15 );
-        edits->addWidget( first );
-        edits->addWidget( second );
+        edits->setSpacing( 8 );
+        for ( auto* edit : { first, second } )
+        {
+            edit->setMinimumWidth( fieldWidth );
+            edit->setMaximumWidth( fieldWidth );
+            edits->addWidget( edit );
+        }
 
         auto* editRow = new QHBoxLayout;
         editRow->setSpacing( 8 );
         editRow->addStretch();
         editRow->addLayout( edits );
-        editRow->addWidget( iconLabel );
+        editRow->addWidget( iconLabel, 0, Qt::AlignVCenter );
         editRow->addStretch();
         column->addLayout( editRow );
 
         errorLabel->setAlignment( Qt::AlignHCenter );
         column->addWidget( errorLabel );
 
-        for ( auto* edit : { first, second } )
-        {
-            edit->setMinimumWidth( fieldWidth );
-            edit->setMaximumWidth( fieldWidth );
-        }
         ui->verticalLayout_12->addLayout( column );
     };
 
+    ui->verticalLayout_12->setSpacing( 12 );
     ui->verticalLayout_12->addWidget( m_avatarButton, 0, Qt::AlignHCenter );
-    addField( ui->labelWhatIsYourName, ui->textBoxFullName, ui->labelFullName, ui->labelFullNameError );
+
+    // deepin-installer merges the full name and the login name into a
+    // single field: hide the separate full-name field and mirror the
+    // login name into the full name.
+    ui->labelWhatIsYourName->hide();
+    ui->textBoxFullName->hide();
+    ui->labelFullName->hide();
+    ui->labelFullNameError->hide();
     addField( ui->username_label_2, ui->textBoxLoginName, ui->labelUsername, ui->labelUsernameError );
     addField( ui->hostnameLabel, ui->textBoxHostname, ui->labelHostname, ui->labelHostnameError );
     addStackedField( ui->password_label_2,
@@ -239,9 +256,9 @@ UsersPage::UsersPage( Config* config, QWidget* parent )
     connect( config, &Config::rootPasswordSecondaryChanged, ui->textBoxVerifiedRootPassword, &QLineEdit::setText );
     connect( config, &Config::rootPasswordStatusChanged, this, &UsersPage::reportRootPasswordStatus );
 
-    ui->textBoxFullName->setText( config->fullName() );
-    connect( ui->textBoxFullName, &QLineEdit::textEdited, config, &Config::setFullName );
-    connect( config, &Config::fullNameChanged, this, &UsersPage::onFullNameTextEdited );
+    // deepin-installer merges the full name and the login name: the login
+    // name doubles as the full name
+    connect( ui->textBoxLoginName, &QLineEdit::textEdited, m_config, &Config::setFullName );
 
     // If the hostname is going to be written out, then show the field
     if ( ( m_config->hostnameAction() == HostNameAction::EtcHostname )
@@ -489,27 +506,7 @@ UsersPage::updateAvatarIcon()
     }
     if ( pm.isNull() )
     {
-        // Fall back to a system icon, then to the first candidate
-        QIcon themeIcon = QIcon::fromTheme( QStringLiteral( "avatar-default" ) );
-        if ( themeIcon.isNull() )
-        {
-            themeIcon = QIcon::fromTheme( QStringLiteral( "user" ) );
-        }
-        if ( !themeIcon.isNull() )
-        {
-            pm = themeIcon.pixmap( 96, 96 );
-        }
-        else
-        {
-            const QStringList candidates = Config::userAvatarCandidates();
-            if ( !candidates.isEmpty() )
-            {
-                pm = QPixmap( candidates.first() );
-            }
-        }
-    }
-    if ( pm.isNull() )
-    {
+        // The embedded default avatar is always available
         pm = defaultAvatarPixmap( 96 );
     }
     if ( !pm.isNull() )
@@ -521,33 +518,61 @@ UsersPage::updateAvatarIcon()
 void
 UsersPage::pickAvatar()
 {
-    const QStringList candidates = Config::userAvatarCandidates();
-
-    QDialog dialog( this );
-    dialog.setWindowTitle( tr( "Select an avatar", "@title" ) );
-    auto* list = new QListWidget( &dialog );
-    list->setIconSize( QSize( 72, 72 ) );
-    list->setViewMode( QListView::IconMode );
-    list->setResizeMode( QListView::Adjust );
-    list->setMovement( QListView::Static );
-    list->setGridSize( QSize( 96, 112 ) );
-    list->setUniformItemSizes( true );
-    list->setWordWrap( false );
-
-    // The "no avatar" option falls back to the default look
-    QIcon defaultIcon = QIcon::fromTheme( QStringLiteral( "avatar-default" ) );
-    if ( defaultIcon.isNull() )
+    // deepin-installer style: the avatar picker is a full-size overlay
+    // inside the installer page, not a small popup window
+    if ( !m_avatarOverlay )
     {
-        defaultIcon = QIcon( defaultAvatarPixmap( 72 ) );
+        m_avatarOverlay = new QWidget( this );
+        m_avatarOverlay->setObjectName( "avatarOverlay" );
+
+        auto* overlayLayout = new QVBoxLayout( m_avatarOverlay );
+        overlayLayout->setContentsMargins( 0, 0, 0, 0 );
+        overlayLayout->setSpacing( 20 );
+
+        auto* titleLabel = new QLabel( tr( "Select an avatar", "@title" ), m_avatarOverlay );
+        titleLabel->setObjectName( "deepinComment" );
+        titleLabel->setAlignment( Qt::AlignHCenter );
+        overlayLayout->addWidget( titleLabel );
+
+        auto* list = new QListWidget( m_avatarOverlay );
+        list->setObjectName( "avatarList" );
+        list->setIconSize( QSize( 88, 88 ) );
+        list->setViewMode( QListView::IconMode );
+        list->setResizeMode( QListView::Adjust );
+        list->setMovement( QListView::Static );
+        list->setGridSize( QSize( 120, 130 ) );
+        list->setUniformItemSizes( true );
+        list->setWordWrap( false );
+        list->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
+        overlayLayout->addWidget( list, 1 );
+
+        auto* backButton = new QPushButton( tr( "Back", "@button" ), m_avatarOverlay );
+        backButton->setObjectName( "deepinNavButton" );
+        backButton->setFixedSize( 200, 36 );
+        overlayLayout->addWidget( backButton, 0, Qt::AlignHCenter );
+
+        connect( backButton, &QPushButton::clicked, m_avatarOverlay, &QWidget::hide );
+        // A single click picks the avatar and returns
+        connect( list,
+                 &QListWidget::itemClicked,
+                 this,
+                 [ this ]( QListWidgetItem* item )
+                 {
+                     m_config->setUserAvatar( item->data( Qt::UserRole ).toString() );
+                     m_avatarOverlay->hide();
+                 } );
     }
-    auto* defaultItem = new QListWidgetItem( defaultIcon, tr( "Default", "@option" ), list );
+
+    auto* list = m_avatarOverlay->findChild< QListWidget* >();
+    list->clear();
+    auto* defaultItem = new QListWidgetItem( QIcon( defaultAvatarPixmap( 88 ) ), tr( "Default", "@option" ), list );
     defaultItem->setData( Qt::UserRole, QString() );
     if ( m_config->userAvatar().isEmpty() )
     {
         list->setCurrentItem( defaultItem );
     }
 
-    for ( const QString& path : candidates )
+    for ( const QString& path : Config::userAvatarCandidates() )
     {
         auto* item = new QListWidgetItem( QIcon( path ), QString(), list );
         item->setData( Qt::UserRole, path );
@@ -558,20 +583,7 @@ UsersPage::pickAvatar()
         }
     }
 
-    auto* buttons = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dialog );
-    connect( buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept );
-    connect( buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject );
-
-    auto* layout = new QVBoxLayout( &dialog );
-    layout->addWidget( list );
-    layout->addWidget( buttons );
-    dialog.resize( 480, 400 );
-
-    // A single click picks the avatar
-    connect( list, &QListWidget::itemClicked, &dialog, &QDialog::accept );
-
-    if ( dialog.exec() == QDialog::Accepted && list->currentItem() )
-    {
-        m_config->setUserAvatar( list->currentItem()->data( Qt::UserRole ).toString() );
-    }
+    m_avatarOverlay->setGeometry( this->rect() );
+    m_avatarOverlay->show();
+    m_avatarOverlay->raise();
 }

@@ -23,6 +23,7 @@ class Config;
 class QLabel;
 class QPixmap;
 class QToolButton;
+class QWidget;
 
 namespace Ui
 {
@@ -62,6 +63,7 @@ private:
     Config* m_config;
 
     QToolButton* m_avatarButton = nullptr;
+    QWidget* m_avatarOverlay = nullptr;
 };
 
 #endif  // USERSPAGE_H

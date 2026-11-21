@@ -10,6 +10,7 @@
 
 #include "Gui.h"
 
+#include "Branding.h"
 #include "ImageRegistry.h"
 
 #include <QBrush>
@@ -192,3 +193,22 @@ defaultIconSize()
 }
 
 }  // namespace Calamares
+
+int
+Calamares::presentAsFullscreen( QDialog* dialog )
+{
+    if ( !dialog )
+    {
+        return QDialog::Rejected;
+    }
+
+    const auto* branding = Branding::instance();
+    const bool fullscreenBranding = branding && branding->windowMaximize();
+    QWidget* mainWindow = dialog->parentWidget() ? dialog->parentWidget()->window() : nullptr;
+    if ( fullscreenBranding && mainWindow )
+    {
+        dialog->setWindowFlags( Qt::FramelessWindowHint | Qt::Dialog );
+        dialog->setGeometry( mainWindow->rect() );
+    }
+    return dialog->exec();
+}

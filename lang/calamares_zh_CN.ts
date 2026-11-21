@@ -4506,6 +4506,11 @@ Output:
       <comment>@option</comment>
       <translation>默认</translation>
     </message>
+    <message>
+      <source>Back</source>
+      <comment>@button</comment>
+      <translation>返回</translation>
+    </message>
   </context>
   <context>
     <name>UsersQmlViewStep</name>

@@ -17,6 +17,7 @@
 
 #include <QDateTime>
 #include <QDir>
+#include <QPixmap>
 #include <QFile>
 #include <QFileInfo>
 #include <QTextStream>
@@ -170,35 +171,45 @@ CreateUserJob::exec()
 
     // deepin-installer style: write the chosen avatar into AccountsService
     // in the target system, so the desktop picks it up for the new user.
+    // The avatar is always stored as a PNG (built-in avatars are SVG
+    // resources which have to be rendered first).
     const QString avatarPath = m_config->userAvatar();
-    if ( !avatarPath.isEmpty() && QFile::exists( avatarPath ) )
+    if ( !avatarPath.isEmpty() )
     {
-        const QString accountsIcons = destDir.absolutePath() + "/var/lib/AccountsService/icons";
-        const QString accountsUsers = destDir.absolutePath() + "/var/lib/AccountsService/users";
-        QDir().mkpath( accountsIcons );
-        QDir().mkpath( accountsUsers );
-
-        const QString targetIcon = accountsIcons + '/' + m_config->loginName();
-        QFile::remove( targetIcon );
-        if ( QFile::copy( avatarPath, targetIcon ) )
+        const QPixmap avatar( avatarPath );
+        if ( !avatar.isNull() )
         {
-            QFile::setPermissions( targetIcon,
-                                   QFile::ReadOwner | QFile::WriteOwner | QFile::ReadGroup | QFile::ReadOther );
+            const QString accountsIcons = destDir.absolutePath() + "/var/lib/AccountsService/icons";
+            const QString accountsUsers = destDir.absolutePath() + "/var/lib/AccountsService/users";
+            QDir().mkpath( accountsIcons );
+            QDir().mkpath( accountsUsers );
 
-            QFile accountsFile( accountsUsers + '/' + m_config->loginName() );
-            if ( accountsFile.open( QIODevice::WriteOnly | QIODevice::Truncate ) )
+            const QString targetIcon = accountsIcons + '/' + m_config->loginName() + ".png";
+            QFile::remove( targetIcon );
+            if ( avatar.save( targetIcon, "PNG" ) )
             {
-                accountsFile.write( QString( "[User]\nIcon=/var/lib/AccountsService/icons/%1\n" )
-                                        .arg( m_config->loginName() )
-                                        .toUtf8() );
-                accountsFile.close();
-                QFile::setPermissions( accountsFile.fileName(), QFile::ReadOwner | QFile::WriteOwner );
+                QFile::setPermissions( targetIcon,
+                                       QFile::ReadOwner | QFile::WriteOwner | QFile::ReadGroup | QFile::ReadOther );
+
+                QFile accountsFile( accountsUsers + '/' + m_config->loginName() );
+                if ( accountsFile.open( QIODevice::WriteOnly | QIODevice::Truncate ) )
+                {
+                    accountsFile.write( QString( "[User]\nIcon=/var/lib/AccountsService/icons/%1.png\n" )
+                                            .arg( m_config->loginName() )
+                                            .toUtf8() );
+                    accountsFile.close();
+                    QFile::setPermissions( accountsFile.fileName(), QFile::ReadOwner | QFile::WriteOwner );
+                }
+                cDebug() << "[CREATEUSER]: avatar written to" << targetIcon;
             }
-            cDebug() << "[CREATEUSER]: avatar written to" << targetIcon;
+            else
+            {
+                cWarning() << "[CREATEUSER]: could not save avatar" << avatarPath << "to the target system";
+            }
         }
         else
         {
-            cWarning() << "[CREATEUSER]: could not copy avatar" << avatarPath << "to the target system";
+            cWarning() << "[CREATEUSER]: avatar" << avatarPath << "could not be loaded";
         }
     }
 

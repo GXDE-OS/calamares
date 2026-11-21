@@ -13,6 +13,7 @@
 
 #include "DllMacro.h"
 
+#include <QDialog>
 #include <QObject>
 #include <QPixmap>
 #include <QSize>
@@ -88,6 +89,15 @@ UIDLLEXPORT int defaultFontSize();  // in points
 UIDLLEXPORT int defaultFontHeight();  // in pixels, DPI-specific
 UIDLLEXPORT QFont largeFont();
 UIDLLEXPORT QSize defaultIconSize();
+
+/** @brief Show a dialog inside the full-screen installer window
+ *
+ * deepin-installer style: with "fullscreen" branding the dialog (e.g.
+ * the partition editor) appears as a frameless overlay covering the
+ * whole installer window instead of a small popup. With normal
+ * branding this behaves like plain exec().
+ */
+UIDLLEXPORT int presentAsFullscreen( QDialog* dialog );
 
 /**
  * @brief Size constants for the main Calamares window.
