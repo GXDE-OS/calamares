@@ -5,7 +5,7 @@ SPDX-FileCopyrightText: 2014 Aurélien Gâteau &lt;agateau@kde.org&gt;
 SPDX-License-Identifier: GPL-3.0-or-later
  </author>
  <class>CreatePartitionDialog</class>
- <widget class="QDialog" name="CreatePartitionDialog">
+ <widget class="QWidget" name="CreatePartitionDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -275,70 +275,4 @@ SPDX-License-Identifier: GPL-3.0-or-later
   <tabstop>fsComboBox</tabstop>
  </tabstops>
  <resources/>
- <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>CreatePartitionDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>185</x>
-     <y>203</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>178</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>CreatePartitionDialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>185</x>
-     <y>203</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>243</x>
-     <y>178</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>extendedRadioButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>fsComboBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>131</x>
-     <y>36</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>134</x>
-     <y>66</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>extendedRadioButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>label_2</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>109</x>
-     <y>43</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>79</x>
-     <y>64</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
 </ui>

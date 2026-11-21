@@ -14,9 +14,12 @@
 
 #include <QMutex>
 #include <QScopedPointer>
+#include <functional>
 #include <QWidget>
 
 class Config;
+class QStackedLayout;
+class PartitionEditorPage;
 class PartitionCoreModule;
 class Ui_PartitionPage;
 
@@ -56,6 +59,11 @@ private Q_SLOTS:
 private:
     QScopedPointer< Ui_PartitionPage > m_ui;
     PartitionCoreModule* m_core;
+
+    /** deepin-installer style: the partition editors open as dedicated
+     *  pages inside this stack, on top of the main partition page */
+    QStackedLayout* m_pageStack = nullptr;
+    void presentEditorPage( PartitionEditorPage* page, const std::function< void() >& onAccepted );
     void updateButtons();
     void onNewPartitionTableClicked();
     void onNewVolumeGroupClicked();

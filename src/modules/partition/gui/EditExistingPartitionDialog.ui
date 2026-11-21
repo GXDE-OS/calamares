@@ -5,7 +5,7 @@ SPDX-FileCopyrightText: 2014 Aurélien Gâteau &lt;agateau@kde.org&gt;
 SPDX-License-Identifier: GPL-3.0-or-later
  </author>
  <class>EditExistingPartitionDialog</class>
- <widget class="QDialog" name="EditExistingPartitionDialog">
+ <widget class="QWidget" name="EditExistingPartitionDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -252,38 +252,4 @@ SPDX-License-Identifier: GPL-3.0-or-later
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources/>
- <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>EditExistingPartitionDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>EditExistingPartitionDialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
 </ui>

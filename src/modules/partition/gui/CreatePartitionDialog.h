@@ -16,7 +16,7 @@
 #include <kpmcore/core/partitionrole.h>
 #include <kpmcore/core/partitiontable.h>
 
-#include <QDialog>
+#include "PartitionEditorPage.h"
 #include <QScopedPointer>
 
 class PartitionCoreModule;
@@ -30,7 +30,7 @@ class Ui_CreatePartitionDialog;
  * The dialog which is shown to create a new partition or to edit a
  * to-be-created partition.
  */
-class CreatePartitionDialog : public QDialog
+class CreatePartitionDialog : public PartitionEditorPage
 {
     Q_OBJECT
 

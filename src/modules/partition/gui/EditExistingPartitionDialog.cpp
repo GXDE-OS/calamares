@@ -62,7 +62,7 @@ EditExistingPartitionDialog::EditExistingPartitionDialog( PartitionCoreModule* c
                                                           Partition* partition,
                                                           const QStringList& usedMountPoints,
                                                           QWidget* parentWidget )
-    : QDialog( parentWidget )
+    : PartitionEditorPage( parentWidget )
     , m_ui( new Ui_EditExistingPartitionDialog )
     , m_core( core )
     , m_device( device )
@@ -72,6 +72,11 @@ EditExistingPartitionDialog::EditExistingPartitionDialog( PartitionCoreModule* c
 {
     m_ui->setupUi( this );
     m_ui->encryptWidget->hide();
+
+    // deepin-installer style: the editor page reports its outcome through
+    // finished(); the partition page returns to its main page.
+    connect( m_ui->buttonBox, &QDialogButtonBox::accepted, this, [ this ]() { emit finished( true ); } );
+    connect( m_ui->buttonBox, &QDialogButtonBox::rejected, this, [ this ]() { emit finished( false ); } );
     standardMountPoints( *( m_ui->mountPointComboBox ), PartitionInfo::mountPoint( partition ) );
 
     QColor color = ColorUtils::colorForPartition( m_partition );

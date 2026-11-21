@@ -13,7 +13,7 @@
 
 #include <kpmcore/core/partitiontable.h>
 
-#include <QDialog>
+#include "PartitionEditorPage.h"
 #include <QScopedPointer>
 
 class PartitionCoreModule;
@@ -28,7 +28,7 @@ class Ui_EditExistingPartitionDialog;
  * It lets you decide how to reuse the partition: whether to keep its content
  * or reformat it, whether to resize or move it.
  */
-class EditExistingPartitionDialog : public QDialog
+class EditExistingPartitionDialog : public PartitionEditorPage
 {
     Q_OBJECT
 public:

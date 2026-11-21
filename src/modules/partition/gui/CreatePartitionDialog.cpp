@@ -52,7 +52,7 @@ CreatePartitionDialog::CreatePartitionDialog( PartitionCoreModule* core,
                                               PartitionNode* parentPartition,
                                               const QStringList& usedMountPoints,
                                               QWidget* parentWidget )
-    : QDialog( parentWidget )
+    : PartitionEditorPage( parentWidget )
     , m_ui( new Ui_CreatePartitionDialog )
     , m_core( core )
     , m_partitionSizeController( new PartitionSizeController( this ) )
@@ -63,6 +63,10 @@ CreatePartitionDialog::CreatePartitionDialog( PartitionCoreModule* core,
     m_ui->setupUi( this );
     m_ui->encryptWidget->setText( tr( "En&crypt", "@action" ) );
     m_ui->encryptWidget->hide();
+
+    // deepin-installer style: report the outcome through finished()
+    connect( m_ui->buttonBox, &QDialogButtonBox::accepted, this, [ this ]() { emit finished( true ); } );
+    connect( m_ui->buttonBox, &QDialogButtonBox::rejected, this, [ this ]() { emit finished( false ); } );
 
     if ( m_device->type() != Device::Type::LVM_Device )
     {

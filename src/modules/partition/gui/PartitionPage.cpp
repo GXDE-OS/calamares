@@ -14,6 +14,10 @@
 
 #include "PartitionPage.h"
 
+#include "PartitionEditorPage.h"
+
+#include <QStackedLayout>
+
 // Local
 #include "Config.h"
 #include "core/BootLoaderModel.h"
@@ -69,6 +73,39 @@ PartitionPage::PartitionPage( PartitionCoreModule* core, const Config & config, 
     }
 
     m_ui->setupUi( this );
+
+    // deepin-installer style: the partition editors (create / edit
+    // partition) open as dedicated pages on top of this main page.
+    // Wrap the main content into page 0 of a stack.
+    {
+        auto* stack = new QStackedLayout;
+        stack->setContentsMargins( 0, 0, 0, 0 );
+        auto* mainPage = new QWidget( this );
+        auto* mainLayout = new QVBoxLayout( mainPage );
+        mainLayout->setContentsMargins( 0, 0, 0, 0 );
+        QLayout* oldLayout = layout();
+        while ( oldLayout && oldLayout->count() > 0 )
+        {
+            QLayoutItem* it = oldLayout->takeAt( 0 );
+            if ( it->widget() )
+            {
+                mainLayout->addWidget( it->widget() );
+            }
+            else if ( it->layout() )
+            {
+                mainLayout->addLayout( it->layout() );
+            }
+            else
+            {
+                delete it;
+            }
+        }
+        delete oldLayout;
+        stack->addWidget( mainPage );
+        setLayout( stack );
+        m_pageStack = stack;
+    }
+
     m_ui->partitionLabelsView->setVisible(
         Calamares::JobQueue::instance()->globalStorage()->value( "alwaysShowPartitionLabels" ).toBool() );
     m_ui->deviceComboBox->setModel( m_core->deviceModel() );
@@ -412,14 +449,15 @@ PartitionPage::onCreateClicked()
         return;
     }
 
-    QPointer< CreatePartitionDialog > dlg = new CreatePartitionDialog(
+    auto* dlg = new CreatePartitionDialog(
         m_core, model->device(), CreatePartitionDialog::FreeSpace { partition }, getCurrentUsedMountpoints(), this );
-    if ( Calamares::presentAsFullscreen( dlg.data() ) == QDialog::Accepted )
-    {
-        Partition* newPart = dlg->getNewlyCreatedPartition();
-        m_core->createPartition( model->device(), newPart, dlg->newFlags() );
-    }
-    delete dlg;
+    presentEditorPage(
+        dlg,
+        [ this, dlg, model, partition ]()
+        {
+            Partition* newPart = dlg->getNewlyCreatedPartition();
+            m_core->createPartition( model->device(), newPart, dlg->newFlags() );
+        } );
 }
 
 void
@@ -516,15 +554,38 @@ PartitionPage::updatePartitionToCreate( Device* device, Partition* partition )
     QStringList mountPoints = getCurrentUsedMountpoints();
     mountPoints.removeOne( PartitionInfo::mountPoint( partition ) );
 
-    QPointer< CreatePartitionDialog > dlg
-        = new CreatePartitionDialog( m_core, device, CreatePartitionDialog::FreshPartition { partition }, mountPoints, this );
-    if ( Calamares::presentAsFullscreen( dlg.data() ) == QDialog::Accepted )
-    {
-        Partition* newPartition = dlg->getNewlyCreatedPartition();
-        m_core->deletePartition( device, partition );
-        m_core->createPartition( device, newPartition, dlg->newFlags() );
-    }
-    delete dlg;
+    auto* dlg = new CreatePartitionDialog(
+        m_core, device, CreatePartitionDialog::FreshPartition { partition }, mountPoints, this );
+    presentEditorPage(
+        dlg,
+        [ this, dlg, device, partition ]()
+        {
+            Partition* newPartition = dlg->getNewlyCreatedPartition();
+            m_core->deletePartition( device, partition );
+            m_core->createPartition( device, newPartition, dlg->newFlags() );
+        } );
+}
+
+void
+PartitionPage::presentEditorPage( PartitionEditorPage* page, const std::function< void() >& onAccepted )
+{
+    // deepin-installer style: the editor is a dedicated page of the
+    // partition module; when it is done, the main page returns.
+    m_pageStack->addWidget( page );
+    m_pageStack->setCurrentWidget( page );
+    QObject::connect( page,
+                      &PartitionEditorPage::finished,
+                      this,
+                      [ this, page, onAccepted ]( bool accepted )
+                      {
+                          m_pageStack->setCurrentIndex( 0 );
+                          m_pageStack->removeWidget( page );
+                          page->deleteLater();
+                          if ( accepted && onAccepted )
+                          {
+                              onAccepted();
+                          }
+                      } );
 }
 
 void
@@ -533,15 +594,14 @@ PartitionPage::editExistingPartition( Device* device, Partition* partition )
     QStringList mountPoints = getCurrentUsedMountpoints();
     mountPoints.removeOne( PartitionInfo::mountPoint( partition ) );
 
-    QPointer< EditExistingPartitionDialog > dlg
-        = new EditExistingPartitionDialog( m_core, device, partition, mountPoints, this );
-    if ( Calamares::presentAsFullscreen( dlg.data() ) == QDialog::Accepted )
-    {
-        dlg->applyChanges( m_core );
-    }
-    delete dlg;
-
-    updateBootLoaderInstallPath();
+    auto* dlg = new EditExistingPartitionDialog( m_core, device, partition, mountPoints, this );
+    presentEditorPage(
+        dlg,
+        [ this, dlg ]()
+        {
+            dlg->applyChanges( m_core );
+            updateBootLoaderInstallPath();
+        } );
 }
 
 void

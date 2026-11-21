@@ -77,6 +77,7 @@ if(KPMcore_FOUND)
             gui/EncryptWidget.cpp
             gui/ListPhysicalVolumeWidgetItem.cpp
             gui/PartitionPage.cpp
+    gui/PartitionEditorPage.cpp
             gui/PartitionBarsView.cpp
             gui/PartitionDialogHelpers.cpp
             gui/PartitionLabelsView.cpp
