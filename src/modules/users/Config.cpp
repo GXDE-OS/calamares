@@ -551,36 +551,58 @@ QStringList
 Config::userAvatarCandidates()
 {
     // deepin-installer-style avatar sources: the account-face packages
-    // (gxde-account-faces installs into /var/lib/AccountsService/icons),
-    // scanned recursively. The first existing directory wins; when none
-    // is available only the built-in "default" avatar is offered.
+    // (gxde-account-faces installs into /var/lib/AccountsService/icons).
+    // Only the numbered faces (<number>.png) are offered, in numeric
+    // order; guest.png / bigger/ and other extras are skipped.
     static const QStringList avatarDirs {
         "/var/lib/AccountsService/icons",
         "/usr/share/gxde-account-faces",
         "/usr/share/dde-account-faces",
         "/usr/share/deepin-account-faces",
-        "/usr/share/pixmaps/faces",
     };
+    static const QRegularExpression numberedFace( QStringLiteral( "\\d+\\.png" ) );
     for ( const QString& dir : avatarDirs )
     {
-        if ( !QDir( dir ).exists() )
+        QDir d( dir );
+        if ( !d.exists() )
         {
             continue;
         }
         QStringList files;
-        QDirIterator it( dir, { "*.png", "*.jpg", "*.jpeg", "*.svg" }, QDir::Files, QDirIterator::Subdirectories );
-        while ( it.hasNext() )
+        for ( const QFileInfo& info : d.entryInfoList( { "*.png" }, QDir::Files, QDir::Name ) )
         {
-            files << it.next();
+            if ( numberedFace.match( info.fileName() ).hasMatch() )
+            {
+                files << info.absoluteFilePath();
+            }
         }
-        files.sort();
         if ( !files.isEmpty() )
         {
             return files;
         }
-        cDebug() << "Avatar directory" << dir << "exists but has no images";
+        cDebug() << "Avatar directory" << dir << "exists but has no numbered faces";
     }
     return {};
+}
+
+QString
+Config::userAvatarDefault()
+{
+    // The account-face packages ship a default.png; fall back to the
+    // embedded neutral silhouette.
+    static const QStringList defaultFaces {
+        "/var/lib/AccountsService/icons/default.png",
+        "/usr/share/gxde-account-faces/default.png",
+        "/usr/share/dde-account-faces/default.png",
+    };
+    for ( const QString& path : defaultFaces )
+    {
+        if ( QFile::exists( path ) )
+        {
+            return path;
+        }
+    }
+    return QStringLiteral( ":/images/default-avatar.svg" );
 }
 
 void

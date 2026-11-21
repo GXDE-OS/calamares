@@ -39,6 +39,7 @@
 #include <QLineEdit>
 #include <QListWidget>
 #include <QPainter>
+#include <QSizePolicy>
 #include <QPushButton>
 #include <QPainterPath>
 #include <QToolButton>
@@ -193,6 +194,9 @@ UsersPage::UsersPage( Config* config, QWidget* parent )
         editRow->addStretch();
         ui->verticalLayout_12->addLayout( editRow );
 
+        iconLabel->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
+        errorLabel->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Preferred );
+        errorLabel->setMaximumWidth( 480 );
         auto* statusRow = new QHBoxLayout;
         statusRow->setSpacing( 6 );
         statusRow->addStretch();
@@ -222,6 +226,9 @@ UsersPage::UsersPage( Config* config, QWidget* parent )
             ui->verticalLayout_12->addLayout( editRow );
         }
 
+        iconLabel->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
+        errorLabel->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Preferred );
+        errorLabel->setMaximumWidth( 480 );
         auto* statusRow = new QHBoxLayout;
         statusRow->setSpacing( 6 );
         statusRow->addStretch();
@@ -476,6 +483,15 @@ passwordStatus( QLabel* iconLabel, QLabel* messageLabel, int validity, const QSt
 void
 UsersPage::reportRootPasswordStatus( int validity, const QString& message )
 {
+    // When the root password fields are hidden (setRootPassword: false,
+    // or "reuse" is checked), do not show any status for them either.
+    const bool rootFieldsVisible = ui->textBoxRootPassword->isVisible();
+    if ( !rootFieldsVisible )
+    {
+        ui->labelRootPassword->hide();
+        ui->labelRootPasswordError->hide();
+        return;
+    }
     passwordStatus( ui->labelRootPassword, ui->labelRootPasswordError, validity, message );
 }
 
@@ -562,7 +578,11 @@ UsersPage::updateAvatarIcon()
     }
     if ( pm.isNull() )
     {
-        // The embedded default avatar is always available
+        // The package's default.png (falls back to the embedded silhouette)
+        pm = QPixmap( Config::userAvatarDefault() );
+    }
+    if ( pm.isNull() )
+    {
         pm = defaultAvatarPixmap( 96 );
     }
     if ( !pm.isNull() )
@@ -623,8 +643,7 @@ UsersPage::pickAvatar()
 
     auto* list = m_avatarOverlay->findChild< QListWidget* >();
     list->clear();
-    auto* defaultItem
-        = new QListWidgetItem( QIcon( defaultAvatarPixmap( 88 ) ), QString(), list );
+    auto* defaultItem = new QListWidgetItem( QIcon( Config::userAvatarDefault() ), QString(), list );
     defaultItem->setData( Qt::UserRole, QString() );
     defaultItem->setToolTip( tr( "Default", "@option" ) );
     if ( m_config->userAvatar().isEmpty() )

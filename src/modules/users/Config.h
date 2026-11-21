@@ -321,9 +321,15 @@ public Q_SLOTS:
 
     /** @brief List of avatars offered for selection (paths)
      *
-     * Scans the system avatar directories (dde-account-faces and friends).
+     * The numbered faces from the account-face packages
+     * (gxde-account-faces and friends).
      */
     static QStringList userAvatarCandidates();
+
+    /** @brief Path of the default avatar shipped by the account-face
+     * package (default.png), or the embedded fallback.
+     */
+    static QString userAvatarDefault();
 
 signals:
     void userAvatarChanged( const QString& );
