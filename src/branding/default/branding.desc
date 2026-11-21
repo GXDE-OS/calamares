@@ -38,8 +38,9 @@ welcomeExpandingLogo:   true
 # Size and expansion policy for Calamares.
 #  - "normal" or unset, expand as needed, use *windowSize*
 #  - "fullscreen", start as large as possible, ignore *windowSize*
+#    (this selects the deepin-installer-like full-screen UI)
 #  - "noexpand", don't expand automatically, use *windowSize*
-windowExpanding:    normal
+windowExpanding:    fullscreen
 
 # Size of Calamares window, expressed as w,h. Both w and h
 # may be either pixels (suffix px) or font-units (suffix em).
@@ -78,7 +79,9 @@ windowPlacement: center
 # to putting the sidebar on the left. Also valid is "qml,top".
 # While "widget,top" is valid, the widgets code is **not** flexible
 # and results will be terrible.
-sidebar: widget
+# The deepin-installer-like full-screen UI ignores the sidebar
+# (page steps are shown as dots at the bottom instead).
+sidebar: none
 
 # Kind of navigation (button panel on the bottom).
 #  - "widget" or unset, use traditional navigation
@@ -87,7 +90,9 @@ sidebar: widget
 # In addition, you **may** specify a side, separated by a comma,
 # from the kind. The same sides are valid as for *sidebar*,
 # except the default is *bottom*.
-navigation: widget
+# The deepin-installer-like full-screen UI ships its own
+# navigation buttons (Back / Next) at the bottom of the window.
+navigation: none
 
 
 ### STRINGS, IMAGES AND COLORS
@@ -165,7 +170,8 @@ images:
     # productBanner:       "banner.png"
     productIcon:         "squid.png"
     productLogo:         "squid.png"
-    # productWallpaper:    "wallpaper.png"
+    # Full-screen background of the deepin-installer-like UI
+    productWallpaper:    "wallpaper.jpg"
     productWelcome:      "languages.png"
 
 # Colors for text and background components.
