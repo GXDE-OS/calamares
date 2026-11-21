@@ -274,7 +274,7 @@ CalamaresApplication::initViewSteps()
     if ( Calamares::Branding::instance()->windowMaximize() )
     {
         m_mainwindow->setWindowFlag( Qt::FramelessWindowHint );
-        m_mainwindow->showMaximized();
+        m_mainwindow->showFullScreen();
     }
     else
     {

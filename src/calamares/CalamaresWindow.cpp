@@ -16,6 +16,7 @@
 #include "Branding.h"
 #include "CalamaresConfig.h"
 #include "DebugWindow.h"
+#include "PageIndicator.h"
 #include "Settings.h"
 #include "ViewManager.h"
 
@@ -32,6 +33,7 @@
 #if QT_VERSION < QT_VERSION_CHECK( 6, 0, 0 )
 #include <QDesktopWidget>
 #endif
+#include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QLabel>
@@ -434,6 +436,15 @@ CalamaresWindow::CalamaresWindow( QWidget* parent )
     const Calamares::Branding* const branding = Calamares::Branding::instance();
     using ImageEntry = Calamares::Branding::ImageEntry;
 
+    // Branding "fullscreen" expansion selects the deepin-installer-like
+    // full-screen shell instead of the classic sidebar window.
+    m_fullscreenMode = branding->windowMaximize();
+    if ( m_fullscreenMode )
+    {
+        initFullscreenUI();
+        return;
+    }
+
     using Calamares::windowMinimumHeight;
     using Calamares::windowMinimumWidth;
     using Calamares::windowPreferredHeight;
@@ -575,4 +586,225 @@ CalamaresWindow::closeEvent( QCloseEvent* event )
         QApplication::exit( EXIT_SUCCESS );
 #endif
     }
+}
+
+void
+CalamaresWindow::resizeEvent( QResizeEvent* event )
+{
+    if ( m_fullscreenMode )
+    {
+        updateBackground();
+    }
+    QWidget::resizeEvent( event );
+}
+
+/** @brief A 40x40 borderless corner button, like deepin-installer's close button.
+ *
+ * The close button gets its image from the deepin style sheet; the other
+ * corner buttons carry a Calamares icon and are painted translucent.
+ */
+static QPushButton*
+makeCornerButton( QWidget* parent, const QString& objectName )
+{
+    QPushButton* button = new QPushButton( parent );
+    button->setObjectName( objectName );
+    button->setFlat( true );
+    button->setFocusPolicy( Qt::TabFocus );
+    button->setFixedSize( 40, 40 );
+    return button;
+}
+
+void
+CalamaresWindow::initFullscreenUI()
+{
+    // Needs to match what's checked in DebugWindow
+    this->setObjectName( "mainApp" );
+
+    // deepin-installer runs as a frameless full-screen window
+    this->setWindowFlags( Qt::FramelessWindowHint );
+
+    // Wallpaper background; created first so it is painted behind everything
+    m_background = new QLabel( this );
+    m_background->setObjectName( "deepinBackground" );
+    m_background->setScaledContents( false );
+
+    m_viewManager = Calamares::ViewManager::instance( this );
+    // No side panels in the deepin shell; pages span the whole window
+    m_viewManager->setPanelSides( {} );
+
+    // Top-right corner buttons (about, debug, close), like deepin-installer's
+    // close_button_ in MainWindow::initUI()
+    m_closeButton = makeCornerButton( this, "deepinCloseButton" );
+    QObject::connect( m_closeButton, &QPushButton::clicked, m_viewManager, &Calamares::ViewManager::quit );
+
+    QHBoxLayout* cornerLayout = new QHBoxLayout();
+    cornerLayout->setContentsMargins( 0, 0, 0, 0 );
+    cornerLayout->setSpacing( 0 );
+    cornerLayout->addStretch();
+    if ( m_debugManager->enabled() )
+    {
+        m_aboutButton = makeCornerButton( this, "deepinCornerButton" );
+        m_aboutButton->setIcon(
+            Calamares::defaultPixmap( Calamares::Information, Calamares::Original, QSize( 22, 22 ) ) );
+        CALAMARES_RETRANSLATE_FOR(
+            m_aboutButton,
+            m_aboutButton->setToolTip( QCoreApplication::translate( "calamares-sidebar", "About", "@button" ) ); );
+        QObject::connect( m_aboutButton, &QPushButton::clicked, m_debugManager, &Calamares::DebugWindowManager::about );
+        cornerLayout->addWidget( m_aboutButton );
+
+        m_debugButton = makeCornerButton( this, "deepinCornerButton" );
+        m_debugButton->setIcon( Calamares::defaultPixmap( Calamares::Bugs, Calamares::Original, QSize( 22, 22 ) ) );
+        CALAMARES_RETRANSLATE_FOR(
+            m_debugButton,
+            m_debugButton->setToolTip( QCoreApplication::translate( "calamares-sidebar", "Debug", "@button" ) ); );
+        QObject::connect( m_debugButton, &QPushButton::clicked, m_debugManager, &Calamares::DebugWindowManager::show );
+        QObject::connect(
+            m_debugManager, &Calamares::DebugWindowManager::visibleChanged, m_debugButton, &QPushButton::setChecked );
+        cornerLayout->addWidget( m_debugButton );
+    }
+    cornerLayout->addWidget( m_closeButton );
+    // Add 4px at top and right margin, like deepin-installer's close_button_wrapper
+    QFrame* cornerWrapper = new QFrame( this );
+    cornerWrapper->setContentsMargins( 0, 4, 4, 0 );
+    cornerWrapper->setLayout( cornerLayout );
+
+    // Large page title, like deepin-installer's TitleLabel on each page
+    m_titleLabel = new QLabel( this );
+    m_titleLabel->setObjectName( "deepinTitle" );
+    m_titleLabel->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
+    m_titleLabel->setFixedHeight( 56 );
+
+    // Central widget holds the ViewManager pages
+    QWidget* centralWidget = m_viewManager->centralWidget();
+    centralWidget->setParent( this );
+
+    // Navigation buttons (Back / Next), styled like deepin-installer's NavButton
+    const QSize navButtonSize( 310, 36 );
+    m_backButton = new QPushButton( this );
+    m_backButton->setObjectName( "deepinNavButton" );
+    m_backButton->setFixedSize( navButtonSize );
+    m_backButton->setEnabled( m_viewManager->backEnabled() );
+    QObject::connect( m_backButton, &QPushButton::clicked, m_viewManager, &Calamares::ViewManager::back );
+    QObject::connect( m_viewManager, &Calamares::ViewManager::backEnabledChanged, m_backButton, &QPushButton::setEnabled );
+    QObject::connect( m_viewManager, &Calamares::ViewManager::backLabelChanged, m_backButton, &QPushButton::setText );
+    QObject::connect(
+        m_viewManager, &Calamares::ViewManager::backIconChanged, [ = ]( QString n ) { setButtonIcon( m_backButton, n ); } );
+
+    m_nextButton = new QPushButton( this );
+    m_nextButton->setObjectName( "deepinNavButton" );
+    m_nextButton->setFixedSize( navButtonSize );
+    m_nextButton->setEnabled( m_viewManager->nextEnabled() );
+    QObject::connect( m_nextButton, &QPushButton::clicked, m_viewManager, &Calamares::ViewManager::next );
+    QObject::connect( m_viewManager,
+                      &Calamares::ViewManager::nextEnabledChanged,
+                      m_nextButton,
+                      [ = ]( Calamares::ViewStep* step, bool enabled )
+                      { setNextButtonEnabled( m_nextButton, step, enabled ); } );
+    QObject::connect( m_viewManager, &Calamares::ViewManager::nextLabelChanged, m_nextButton, &QPushButton::setText );
+    QObject::connect(
+        m_viewManager, &Calamares::ViewManager::nextIconChanged, [ = ]( QString n ) { setButtonIcon( m_nextButton, n ); } );
+
+    QHBoxLayout* navLayout = new QHBoxLayout();
+    navLayout->setContentsMargins( 0, 0, 0, 0 );
+    navLayout->setSpacing( 15 );
+    navLayout->addStretch();
+    navLayout->addWidget( m_backButton );
+    navLayout->addWidget( m_nextButton );
+    navLayout->addStretch();
+    m_navRow = new QWidget( this );
+    m_navRow->setLayout( navLayout );
+
+    // Page-indicator dots at the bottom of the window, like deepin-installer's
+    // page_indicator_ in MainWindow::initUI()
+    m_pageIndicator = new PageIndicator( 0, this );
+    m_indicatorWrapper = new QFrame( this );
+    m_indicatorWrapper->setFixedHeight( 48 );
+    QHBoxLayout* indicatorLayout = new QHBoxLayout();
+    indicatorLayout->setContentsMargins( 0, 0, 0, 0 );
+    indicatorLayout->addWidget( m_pageIndicator );
+    m_indicatorWrapper->setLayout( indicatorLayout );
+
+    QVBoxLayout* vboxLayout = new QVBoxLayout();
+    vboxLayout->setContentsMargins( 0, 0, 0, 0 );
+    vboxLayout->setSpacing( 0 );
+    vboxLayout->addWidget( cornerWrapper );
+    vboxLayout->addSpacing( 10 );
+    vboxLayout->addWidget( m_titleLabel );
+    vboxLayout->addWidget( centralWidget, 1 );
+    vboxLayout->addWidget( m_navRow );
+    vboxLayout->addWidget( m_indicatorWrapper );
+    vboxLayout->addSpacing( 32 );
+
+    this->setLayout( vboxLayout );
+    this->setContentsMargins( 0, 0, 0, 0 );
+
+    setStyleSheet( Calamares::Branding::instance()->stylesheet() );
+
+    // Refresh title / indicator / button visibility when anything changes
+    QObject::connect(
+        m_viewManager, &Calamares::ViewManager::currentStepChanged, this, &CalamaresWindow::updateFullscreenPage );
+    QObject::connect(
+        m_viewManager, &Calamares::ViewManager::backAndNextVisibleChanged, this, &CalamaresWindow::updateFullscreenPage );
+    QObject::connect(
+        m_viewManager, &Calamares::ViewManager::rowsInserted, this, &CalamaresWindow::updateFullscreenPage );
+    // Hide the close button while installation is running (cancel disabled),
+    // and hide it entirely when cancel is disabled; deepin-installer does the same.
+    QObject::connect( m_viewManager, &Calamares::ViewManager::cancelEnabled, m_closeButton, &QWidget::setVisible );
+    QObject::connect( m_viewManager, &Calamares::ViewManager::quitVisibleChanged, m_closeButton, &QWidget::setVisible );
+    QObject::connect( m_viewManager,
+                      &Calamares::ViewManager::quitTooltipChanged,
+                      m_closeButton,
+                      &QWidget::setToolTip );
+
+    updateFullscreenPage();
+}
+
+void
+CalamaresWindow::updateFullscreenPage()
+{
+    if ( !m_viewManager || !m_pageIndicator )
+    {
+        return;
+    }
+
+    const int steps = m_viewManager->viewSteps().count();
+    const int current = m_viewManager->currentStepIndex();
+
+    m_pageIndicator->updatePages( steps );
+    m_pageIndicator->setCurrentPage( current );
+
+    // The step's name as a large centered title, deepin-installer style
+    const QModelIndex index( m_viewManager->index( current, 0 ) );
+    m_titleLabel->setText( m_viewManager->data( index, Qt::DisplayRole ).toString() );
+
+    // The very last page (all done) has no navigation and no dots,
+    // like deepin-installer's install-success page
+    const bool last = ( current >= steps - 1 );
+    m_indicatorWrapper->setVisible( !last );
+    m_navRow->setVisible( !last && m_viewManager->backAndNextVisible() );
+}
+
+void
+CalamaresWindow::updateBackground()
+{
+    if ( !m_background )
+    {
+        return;
+    }
+
+    QString imagePath = Calamares::Branding::instance()->imagePath( Calamares::Branding::ImageEntry::ProductWallpaper );
+    if ( !imagePath.isEmpty() )
+    {
+        // Branding image paths are relative to the branding component directory
+        imagePath = QDir( Calamares::Branding::instance()->componentDirectory() ).absoluteFilePath( imagePath );
+    }
+    if ( imagePath.isEmpty() || !QFileInfo::exists( imagePath ) )
+    {
+        imagePath = QStringLiteral( ":/deepin/default_wallpaper.jpg" );
+    }
+    // Other platforms may have performance issues, deepin scales
+    // KeepAspectRatioByExpanding so the wallpaper always covers the window.
+    const QPixmap pixmap = QPixmap( imagePath ).scaled( size(), Qt::KeepAspectRatioByExpanding );
+    m_background->setPixmap( pixmap );
+    m_background->setFixedSize( size() );
 }
