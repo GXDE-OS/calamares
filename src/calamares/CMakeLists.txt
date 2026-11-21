@@ -9,6 +9,7 @@ set(calamaresSources
     CalamaresApplication.cpp
     CalamaresWindow.cpp
     DebugWindow.cpp
+    PageIndicator.cpp
     VariantModel.cpp
     progresstree/ProgressTreeDelegate.cpp
     progresstree/ProgressTreeView.cpp
@@ -38,7 +39,7 @@ calamares_autorcc( calamares_bin )
 
 target_link_libraries(
     calamares_bin
-    PRIVATE calamares calamaresui calamares-i18n kdsingleapplication ${qtname}::Core ${qtname}::Widgets
+    PRIVATE calamares calamaresui calamares-i18n kdsingleapplication ${qtname}::Core ${qtname}::Widgets ${qtname}::Svg
 )
 target_link_libraries(calamares_bin PRIVATE ${kfname}::CoreAddons)
 if(BUILD_CRASH_REPORTING)
