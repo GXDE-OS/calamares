@@ -550,11 +550,14 @@ Config::setUserAvatar( const QString& path )
 QStringList
 Config::userAvatarCandidates()
 {
-    // deepin-installer-style avatar sources: system account-face
-    // directories (the first existing one wins), scanned recursively
+    // deepin-installer-style avatar sources: the account-face packages
+    // (gxde-account-faces installs into /var/lib/AccountsService/icons),
+    // scanned recursively. The first existing directory wins; when none
+    // is available only the built-in "default" avatar is offered.
     static const QStringList avatarDirs {
-        "/usr/share/dde-account-faces",
+        "/var/lib/AccountsService/icons",
         "/usr/share/gxde-account-faces",
+        "/usr/share/dde-account-faces",
         "/usr/share/deepin-account-faces",
         "/usr/share/pixmaps/faces",
     };
@@ -577,13 +580,7 @@ Config::userAvatarCandidates()
         }
         cDebug() << "Avatar directory" << dir << "exists but has no images";
     }
-
-    // Fall back to the built-in colored avatars
-    static const QStringList builtin {
-        ":/images/avatar-1.svg", ":/images/avatar-2.svg", ":/images/avatar-3.svg", ":/images/avatar-4.svg",
-        ":/images/avatar-5.svg", ":/images/avatar-6.svg", ":/images/avatar-7.svg", ":/images/avatar-8.svg",
-    };
-    return builtin;
+    return {};
 }
 
 void

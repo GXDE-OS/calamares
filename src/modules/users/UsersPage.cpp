@@ -17,6 +17,7 @@
 #include "UsersPage.h"
 
 #include "Config.h"
+#include "Branding.h"
 #include "ui_page_usersetup.h"
 
 #include "GlobalStorage.h"
@@ -29,9 +30,11 @@
 #include "utils/String.h"
 
 #include <QBoxLayout>
+#include <QDir>
 #include <QFile>
 #include <QLabel>
 #include <QBoxLayout>
+#include <QDir>
 #include <QLayoutItem>
 #include <QLineEdit>
 #include <QListWidget>
@@ -92,6 +95,44 @@ labelStatus( QLabel* pix, QLabel* label, const QString& value, const QString& st
     }
 }
 
+namespace
+{
+/** @brief Full-screen overlay that re-paints the branding wallpaper,
+ *
+ * so picking an avatar looks like a dedicated page (deepin-installer
+ * style) instead of a translucent layer on top of the form.
+ */
+class AvatarPickerOverlay : public QWidget
+{
+public:
+    using QWidget::QWidget;
+
+protected:
+    void paintEvent( QPaintEvent* ) override
+    {
+        QPainter p( this );
+        QString path = Calamares::Branding::instance()->imagePath( Calamares::Branding::ImageEntry::ProductWallpaper );
+        if ( !path.isEmpty() )
+        {
+            path = QDir( Calamares::Branding::instance()->componentDirectory() ).absoluteFilePath( path );
+        }
+        QPixmap pixmap;
+        if ( !path.isEmpty() && QFile::exists( path ) )
+        {
+            pixmap = QPixmap( path ).scaled( size(), Qt::KeepAspectRatioByExpanding );
+        }
+        if ( !pixmap.isNull() )
+        {
+            p.drawPixmap( ( width() - pixmap.width() ) / 2, ( height() - pixmap.height() ) / 2, pixmap );
+        }
+        else
+        {
+            p.fillRect( rect(), QColor( 40, 40, 40 ) );
+        }
+    }
+};
+}  // namespace
+
 UsersPage::UsersPage( Config* config, QWidget* parent )
     : QWidget( parent )
     , ui( new Ui::Page_UserSetup )
@@ -138,22 +179,19 @@ UsersPage::UsersPage( Config* config, QWidget* parent )
         delete item;
     }
 
-    // A field = centered label on top, the edit centered underneath, and a
-    // compact status row (icon + error) that hides itself when empty.
+    // A field = the edit centered (labels are hidden, placeholders carry
+    // the meaning, deepin-installer style) and a compact status row
+    // (icon + error) that hides itself when empty.
     auto addField = [ this, fieldWidth ]( QLabel* label, QLineEdit* edit, QLabel* iconLabel, QLabel* errorLabel )
     {
-        auto* column = new QVBoxLayout;
-        column->setSpacing( 4 );
-        label->setAlignment( Qt::AlignHCenter );
-        column->addWidget( label );
-
+        Q_UNUSED( label )
         edit->setMinimumWidth( fieldWidth );
         edit->setMaximumWidth( fieldWidth );
         auto* editRow = new QHBoxLayout;
         editRow->addStretch();
         editRow->addWidget( edit );
         editRow->addStretch();
-        column->addLayout( editRow );
+        ui->verticalLayout_12->addLayout( editRow );
 
         auto* statusRow = new QHBoxLayout;
         statusRow->setSpacing( 6 );
@@ -161,9 +199,7 @@ UsersPage::UsersPage( Config* config, QWidget* parent )
         statusRow->addWidget( iconLabel );
         statusRow->addWidget( errorLabel );
         statusRow->addStretch();
-        column->addLayout( statusRow );
-
-        ui->verticalLayout_12->addLayout( column );
+        ui->verticalLayout_12->addLayout( statusRow );
     };
 
     // Like addField, but with two edits stacked vertically (password and
@@ -174,44 +210,43 @@ UsersPage::UsersPage( Config* config, QWidget* parent )
                                                  QLabel* iconLabel,
                                                  QLabel* errorLabel )
     {
-        auto* column = new QVBoxLayout;
-        column->setSpacing( 4 );
-        label->setAlignment( Qt::AlignHCenter );
-        column->addWidget( label );
-
-        auto* edits = new QVBoxLayout;
-        edits->setSpacing( 8 );
+        Q_UNUSED( label )
         for ( auto* edit : { first, second } )
         {
             edit->setMinimumWidth( fieldWidth );
             edit->setMaximumWidth( fieldWidth );
-            edits->addWidget( edit );
+            auto* editRow = new QHBoxLayout;
+            editRow->addStretch();
+            editRow->addWidget( edit );
+            editRow->addStretch();
+            ui->verticalLayout_12->addLayout( editRow );
         }
 
-        auto* editRow = new QHBoxLayout;
-        editRow->setSpacing( 8 );
-        editRow->addStretch();
-        editRow->addLayout( edits );
-        editRow->addWidget( iconLabel, 0, Qt::AlignVCenter );
-        editRow->addStretch();
-        column->addLayout( editRow );
-
-        errorLabel->setAlignment( Qt::AlignHCenter );
-        column->addWidget( errorLabel );
-
-        ui->verticalLayout_12->addLayout( column );
+        auto* statusRow = new QHBoxLayout;
+        statusRow->setSpacing( 6 );
+        statusRow->addStretch();
+        statusRow->addWidget( iconLabel );
+        statusRow->addWidget( errorLabel );
+        statusRow->addStretch();
+        ui->verticalLayout_12->addLayout( statusRow );
     };
 
-    ui->verticalLayout_12->setSpacing( 12 );
+    ui->verticalLayout_12->setSpacing( 10 );
     ui->verticalLayout_12->addWidget( m_avatarButton, 0, Qt::AlignHCenter );
+    ui->verticalLayout_12->addSpacing( 10 );
 
     // deepin-installer merges the full name and the login name into a
     // single field: hide the separate full-name field and mirror the
-    // login name into the full name.
+    // login name into the full name. Labels are hidden as well; the
+    // line-edit placeholders carry the meaning.
     ui->labelWhatIsYourName->hide();
     ui->textBoxFullName->hide();
     ui->labelFullName->hide();
     ui->labelFullNameError->hide();
+    ui->username_label_2->hide();
+    ui->hostnameLabel->hide();
+    ui->password_label_2->hide();
+    ui->labelChooseRootPassword->hide();
     addField( ui->username_label_2, ui->textBoxLoginName, ui->labelUsername, ui->labelUsernameError );
     addField( ui->hostnameLabel, ui->textBoxHostname, ui->labelHostname, ui->labelHostnameError );
     addStackedField( ui->password_label_2,
@@ -370,6 +405,16 @@ UsersPage::retranslate()
     reportUserPasswordStatus( up.first, up.second );
     const auto rp = m_config->rootPasswordStatus();
     reportRootPasswordStatus( rp.first, rp.second );
+
+    // Keep the detached labels hidden (deepin-installer merged form)
+    ui->labelWhatIsYourName->hide();
+    ui->username_label_2->hide();
+    ui->hostnameLabel->hide();
+    ui->password_label_2->hide();
+    ui->labelChooseRootPassword->hide();
+    ui->textBoxFullName->hide();
+    ui->labelFullName->hide();
+    ui->labelFullNameError->hide();
 }
 
 void
@@ -380,6 +425,16 @@ UsersPage::onActivate()
     reportUserPasswordStatus( up.first, up.second );
     const auto rp = m_config->rootPasswordStatus();
     reportRootPasswordStatus( rp.first, rp.second );
+
+    // Keep the detached labels hidden (deepin-installer merged form)
+    ui->labelWhatIsYourName->hide();
+    ui->username_label_2->hide();
+    ui->hostnameLabel->hide();
+    ui->password_label_2->hide();
+    ui->labelChooseRootPassword->hide();
+    ui->textBoxFullName->hide();
+    ui->labelFullName->hide();
+    ui->labelFullNameError->hide();
 }
 
 void
@@ -446,7 +501,8 @@ UsersPage::onReuseUserPasswordChanged( const int checked )
      * to set up initial visibility.
      */
     const bool visible = m_config->writeRootPassword() ? !checked : false;
-    ui->labelChooseRootPassword->setVisible( visible );
+    // labelChooseRootPassword stays hidden: the line-edit placeholders
+    // carry the meaning (deepin-installer style, merged fields)
     ui->labelRootPassword->setVisible( visible );
     ui->labelRootPasswordError->setVisible( visible );
     ui->textBoxRootPassword->setVisible( visible );
@@ -522,7 +578,7 @@ UsersPage::pickAvatar()
     // inside the installer page, not a small popup window
     if ( !m_avatarOverlay )
     {
-        m_avatarOverlay = new QWidget( this );
+        m_avatarOverlay = new AvatarPickerOverlay( this->window() );
         m_avatarOverlay->setObjectName( "avatarOverlay" );
 
         auto* overlayLayout = new QVBoxLayout( m_avatarOverlay );
@@ -530,21 +586,23 @@ UsersPage::pickAvatar()
         overlayLayout->setSpacing( 20 );
 
         auto* titleLabel = new QLabel( tr( "Select an avatar", "@title" ), m_avatarOverlay );
-        titleLabel->setObjectName( "deepinComment" );
+        titleLabel->setObjectName( "deepinTitle" );
         titleLabel->setAlignment( Qt::AlignHCenter );
         overlayLayout->addWidget( titleLabel );
 
         auto* list = new QListWidget( m_avatarOverlay );
         list->setObjectName( "avatarList" );
-        list->setIconSize( QSize( 88, 88 ) );
+        list->setIconSize( QSize( 96, 96 ) );
         list->setViewMode( QListView::IconMode );
         list->setResizeMode( QListView::Adjust );
         list->setMovement( QListView::Static );
-        list->setGridSize( QSize( 120, 130 ) );
+        list->setGridSize( QSize( 130, 140 ) );
         list->setUniformItemSizes( true );
         list->setWordWrap( false );
         list->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
-        overlayLayout->addWidget( list, 1 );
+        list->setMinimumWidth( 820 );
+        list->setMaximumWidth( 980 );
+        overlayLayout->addWidget( list, 1, Qt::AlignHCenter );
 
         auto* backButton = new QPushButton( tr( "Back", "@button" ), m_avatarOverlay );
         backButton->setObjectName( "deepinNavButton" );
@@ -565,8 +623,10 @@ UsersPage::pickAvatar()
 
     auto* list = m_avatarOverlay->findChild< QListWidget* >();
     list->clear();
-    auto* defaultItem = new QListWidgetItem( QIcon( defaultAvatarPixmap( 88 ) ), tr( "Default", "@option" ), list );
+    auto* defaultItem
+        = new QListWidgetItem( QIcon( defaultAvatarPixmap( 88 ) ), QString(), list );
     defaultItem->setData( Qt::UserRole, QString() );
+    defaultItem->setToolTip( tr( "Default", "@option" ) );
     if ( m_config->userAvatar().isEmpty() )
     {
         list->setCurrentItem( defaultItem );
@@ -583,7 +643,8 @@ UsersPage::pickAvatar()
         }
     }
 
-    m_avatarOverlay->setGeometry( this->rect() );
+    QWidget* mainWindow = this->window();
+    m_avatarOverlay->setGeometry( mainWindow ? mainWindow->rect() : this->rect() );
     m_avatarOverlay->show();
     m_avatarOverlay->raise();
 }
