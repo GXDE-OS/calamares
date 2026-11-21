@@ -43,6 +43,7 @@
 #include <QQuickItem>
 #include <QQuickWidget>
 #endif
+#include <QRegularExpression>
 #include <QTreeView>
 
 #include <algorithm>
@@ -103,6 +104,19 @@ setButtonIcon( QPushButton* button, const QString& name )
     {
         button->setIcon( icon );
     }
+}
+
+/** @brief Strip button mnemonics for the deepin-style nav buttons.
+ *
+ * Handles both the latin "&Next" style and the CJK "后退(&B)" style,
+ * so the buttons read plainly ("后退", "下一步") like deepin-installer.
+ */
+static QString
+stripButtonMnemonic( QString text )
+{
+    text.remove( QRegularExpression( QStringLiteral( "\\s*\\(&[A-Za-z0-9]+\\)" ) ) );
+    text.remove( QLatin1Char( '&' ) );
+    return text;
 }
 
 /** @brief Enable the "Next" button and possibly auto-proceed to next page */
@@ -623,6 +637,24 @@ CalamaresWindow::initFullscreenUI()
     // deepin-installer runs as a frameless full-screen window
     this->setWindowFlags( Qt::FramelessWindowHint );
 
+    // Dark-wallpaper friendly palette, so widgets and custom-drawn
+    // delegates (e.g. the welcome requirements list) blend with the
+    // wallpaper instead of painting bright solid blocks on top of it.
+    QPalette pal = QApplication::palette();
+    const QColor translucentWhite = QColor( 255, 255, 255, 30 );
+    pal.setColor( QPalette::Window, translucentWhite );
+    pal.setColor( QPalette::Base, QColor( 255, 255, 255, 20 ) );
+    pal.setColor( QPalette::AlternateBase, QColor( 255, 255, 255, 15 ) );
+    pal.setColor( QPalette::Button, translucentWhite );
+    pal.setColor( QPalette::WindowText, Qt::white );
+    pal.setColor( QPalette::Text, Qt::white );
+    pal.setColor( QPalette::ButtonText, Qt::white );
+    pal.setColor( QPalette::Highlight, QColor( 255, 255, 255, 60 ) );
+    pal.setColor( QPalette::HighlightedText, Qt::white );
+    pal.setColor( QPalette::ToolTipBase, QColor( 60, 60, 60, 230 ) );
+    pal.setColor( QPalette::ToolTipText, Qt::white );
+    QApplication::setPalette( pal );
+
     // Wallpaper background; created first so it is painted behind everything
     m_background = new QLabel( this );
     m_background->setObjectName( "deepinBackground" );
@@ -678,39 +710,40 @@ CalamaresWindow::initFullscreenUI()
     QWidget* centralWidget = m_viewManager->centralWidget();
     centralWidget->setParent( this );
 
-    // Navigation buttons (Back / Next), styled like deepin-installer's NavButton
-    const QSize navButtonSize( 310, 36 );
+    // Navigation buttons (Back / Next), styled like deepin-installer 15's
+    // NavButton: narrow buttons stacked vertically and centered. The
+    // mnemonics ("&Next" -> "Next") are stripped from the labels.
+    const QSize navButtonSize( 200, 36 );
     m_backButton = new QPushButton( this );
     m_backButton->setObjectName( "deepinNavButton" );
     m_backButton->setFixedSize( navButtonSize );
     m_backButton->setEnabled( m_viewManager->backEnabled() );
+    m_backButton->setText( stripButtonMnemonic( m_viewManager->backLabel() ) );
     QObject::connect( m_backButton, &QPushButton::clicked, m_viewManager, &Calamares::ViewManager::back );
     QObject::connect( m_viewManager, &Calamares::ViewManager::backEnabledChanged, m_backButton, &QPushButton::setEnabled );
-    QObject::connect( m_viewManager, &Calamares::ViewManager::backLabelChanged, m_backButton, &QPushButton::setText );
-    QObject::connect(
-        m_viewManager, &Calamares::ViewManager::backIconChanged, [ = ]( QString n ) { setButtonIcon( m_backButton, n ); } );
+    QObject::connect( m_viewManager, &Calamares::ViewManager::backLabelChanged, m_backButton, [ = ]( QString t )
+                      { m_backButton->setText( stripButtonMnemonic( t ) ); } );
 
     m_nextButton = new QPushButton( this );
     m_nextButton->setObjectName( "deepinNavButton" );
     m_nextButton->setFixedSize( navButtonSize );
     m_nextButton->setEnabled( m_viewManager->nextEnabled() );
+    m_nextButton->setText( stripButtonMnemonic( m_viewManager->nextLabel() ) );
     QObject::connect( m_nextButton, &QPushButton::clicked, m_viewManager, &Calamares::ViewManager::next );
     QObject::connect( m_viewManager,
                       &Calamares::ViewManager::nextEnabledChanged,
                       m_nextButton,
                       [ = ]( Calamares::ViewStep* step, bool enabled )
                       { setNextButtonEnabled( m_nextButton, step, enabled ); } );
-    QObject::connect( m_viewManager, &Calamares::ViewManager::nextLabelChanged, m_nextButton, &QPushButton::setText );
-    QObject::connect(
-        m_viewManager, &Calamares::ViewManager::nextIconChanged, [ = ]( QString n ) { setButtonIcon( m_nextButton, n ); } );
+    QObject::connect( m_viewManager, &Calamares::ViewManager::nextLabelChanged, m_nextButton, [ = ]( QString t )
+                      { m_nextButton->setText( stripButtonMnemonic( t ) ); } );
 
-    QHBoxLayout* navLayout = new QHBoxLayout();
+    // Stacked vertically and centered, like deepin-installer 15
+    QVBoxLayout* navLayout = new QVBoxLayout();
     navLayout->setContentsMargins( 0, 0, 0, 0 );
     navLayout->setSpacing( 15 );
-    navLayout->addStretch();
-    navLayout->addWidget( m_backButton );
-    navLayout->addWidget( m_nextButton );
-    navLayout->addStretch();
+    navLayout->addWidget( m_backButton, 0, Qt::AlignHCenter );
+    navLayout->addWidget( m_nextButton, 0, Qt::AlignHCenter );
     m_navRow = new QWidget( this );
     m_navRow->setLayout( navLayout );
 
@@ -724,13 +757,18 @@ CalamaresWindow::initFullscreenUI()
     indicatorLayout->addWidget( m_pageIndicator );
     m_indicatorWrapper->setLayout( indicatorLayout );
 
+    // Content is inset from the window edges, like deepin-installer 15
+    QHBoxLayout* centralLayout = new QHBoxLayout();
+    centralLayout->setContentsMargins( 40, 0, 40, 0 );
+    centralLayout->addWidget( centralWidget );
+
     QVBoxLayout* vboxLayout = new QVBoxLayout();
     vboxLayout->setContentsMargins( 0, 0, 0, 0 );
     vboxLayout->setSpacing( 0 );
     vboxLayout->addWidget( cornerWrapper );
     vboxLayout->addSpacing( 10 );
     vboxLayout->addWidget( m_titleLabel );
-    vboxLayout->addWidget( centralWidget, 1 );
+    vboxLayout->addLayout( centralLayout, 1 );
     vboxLayout->addWidget( m_navRow );
     vboxLayout->addWidget( m_indicatorWrapper );
     vboxLayout->addSpacing( 32 );
