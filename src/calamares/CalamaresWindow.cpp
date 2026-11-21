@@ -25,6 +25,7 @@
 #include "utils/Logger.h"
 #include "utils/Qml.h"
 #include "utils/Retranslator.h"
+#include "viewpages/ExecutionViewStep.h"
 #include "viewpages/ViewStep.h"
 
 #include <QApplication>
@@ -445,7 +446,8 @@ CalamaresWindow::CalamaresWindow( QWidget* parent )
     CALAMARES_RETRANSLATE( const auto* branding = Calamares::Branding::instance();
                            setWindowTitle( Calamares::Settings::instance()->isSetupMode()
                                                ? tr( "%1 Setup Program" ).arg( branding->productName() )
-                                               : tr( "%1 Installer" ).arg( branding->productName() ) ); );
+                                               : tr( "%1 Installer" ).arg( branding->productName() ) );
+                           updateFullscreenPage(); );
 
     const Calamares::Branding* const branding = Calamares::Branding::instance();
     using ImageEntry = Calamares::Branding::ImageEntry;
@@ -706,6 +708,13 @@ CalamaresWindow::initFullscreenUI()
     m_titleLabel->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
     m_titleLabel->setFixedHeight( 56 );
 
+    // Secondary line under the title (used on the install page,
+    // like deepin-installer's "cup of coffee" message)
+    m_subTitleLabel = new QLabel( this );
+    m_subTitleLabel->setObjectName( "deepinComment" );
+    m_subTitleLabel->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
+    m_subTitleLabel->hide();
+
     // Central widget holds the ViewManager pages
     QWidget* centralWidget = m_viewManager->centralWidget();
     centralWidget->setParent( this );
@@ -768,6 +777,7 @@ CalamaresWindow::initFullscreenUI()
     vboxLayout->addWidget( cornerWrapper );
     vboxLayout->addSpacing( 10 );
     vboxLayout->addWidget( m_titleLabel );
+    vboxLayout->addWidget( m_subTitleLabel );
     vboxLayout->addLayout( centralLayout, 1 );
     vboxLayout->addWidget( m_navRow );
     vboxLayout->addWidget( m_indicatorWrapper );
@@ -811,9 +821,26 @@ CalamaresWindow::updateFullscreenPage()
     m_pageIndicator->updatePages( steps );
     m_pageIndicator->setCurrentPage( current );
 
-    // The step's name as a large centered title, deepin-installer style
+    // The step's name as a large centered title, deepin-installer style.
+    // On the installation (execution) page, use the deepin title and the
+    // "cup of coffee" message underneath it.
     const QModelIndex index( m_viewManager->index( current, 0 ) );
-    m_titleLabel->setText( m_viewManager->data( index, Qt::DisplayRole ).toString() );
+    const Calamares::ViewStepList viewSteps = m_viewManager->viewSteps();
+    const bool executing = current >= 0 && current < viewSteps.count()
+        && qobject_cast< const Calamares::ExecutionViewStep* >( viewSteps.at( current ) ) != nullptr;
+    if ( executing )
+    {
+        m_titleLabel->setText( tr( "Installing", "@title" ) );
+        m_subTitleLabel->setText( tr( "You can experience the smoothness that %1 brings you in the time it takes to drink a cup of coffee.",
+                                      "@info" )
+                                      .arg( Calamares::Branding::instance()->shortProductName() ) );
+        m_subTitleLabel->show();
+    }
+    else
+    {
+        m_titleLabel->setText( m_viewManager->data( index, Qt::DisplayRole ).toString() );
+        m_subTitleLabel->hide();
+    }
 
     // The very last page (all done) has no navigation and no dots,
     // like deepin-installer's install-success page

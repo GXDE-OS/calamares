@@ -77,6 +77,7 @@ private:
     QPushButton* m_aboutButton = nullptr;
     QPushButton* m_debugButton = nullptr;
     QLabel* m_titleLabel = nullptr;
+    QLabel* m_subTitleLabel = nullptr;
     QWidget* m_navRow = nullptr;
     QPushButton* m_backButton = nullptr;
     QPushButton* m_nextButton = nullptr;

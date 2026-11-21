@@ -652,6 +652,16 @@ The installer will quit and all changes will be lost.</source>
       <source>%1 Installer</source>
       <translation>%1 安装程序</translation>
     </message>
+    <message>
+      <source>Installing</source>
+      <comment>@title</comment>
+      <translation>正在安装</translation>
+    </message>
+    <message>
+      <source>You can experience the smoothness that %1 brings you in the time it takes to drink a cup of coffee.</source>
+      <comment>@info</comment>
+      <translation>只需要一杯咖啡的时间，您就可以体验%1给您带来的畅快感</translation>
+    </message>
   </context>
   <context>
     <name>ChangeFilesystemLabelJob</name>
