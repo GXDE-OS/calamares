@@ -23,6 +23,7 @@ class WelcomePage;
 
 class CheckerContainer;
 class Config;
+class QListView;
 class WelcomePage : public QWidget
 {
     Q_OBJECT
@@ -64,6 +65,9 @@ private:
     Ui::WelcomePage* ui;
     CheckerContainer* m_checkingWidget;
     Calamares::Locale::TranslationsModel* m_languages;
+
+    ///@brief deepin-installer style large language list (replaces the combo)
+    QListView* m_languageList = nullptr;
 
     Config* m_conf;
 };

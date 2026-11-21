@@ -89,33 +89,8 @@ ResultsListWidget::requirementsComplete()
         delete m_centralWidget;
         m_centralWidget = nullptr;
 
-        if ( !Calamares::Branding::instance()->imagePath( Calamares::Branding::ProductWelcome ).isEmpty() )
-        {
-            QPixmap theImage
-                = QPixmap( Calamares::Branding::instance()->imagePath( Calamares::Branding::ProductWelcome ) );
-            if ( !theImage.isNull() )
-            {
-                QLabel* imageLabel;
-                if ( Calamares::Branding::instance()->welcomeExpandingLogo() )
-                {
-                    FixedAspectRatioLabel* p = new FixedAspectRatioLabel;
-                    p->setPixmap( theImage );
-                    imageLabel = p;
-                }
-                else
-                {
-                    imageLabel = new QLabel;
-                    imageLabel->setPixmap( theImage );
-                }
-
-                imageLabel->setContentsMargins( 4, Calamares::defaultFontHeight() * 3 / 4, 4, 4 );
-                imageLabel->setAlignment( Qt::AlignCenter );
-                imageLabel->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
-                imageLabel->setObjectName( "welcomeLogo" );
-                // This specifically isn't assigned to m_centralWidget
-                m_centralLayout->addWidget( imageLabel );
-            }
-        }
+        // deepin-installer style: keep the page clean (the language list is
+        // the main content), no large welcome image in the middle
         m_explanation->setAlignment( Qt::AlignCenter );
     }
 }

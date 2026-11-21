@@ -34,7 +34,9 @@
 #include <QDesktopServices>
 #include <QFocusEvent>
 #include <QLabel>
+#include <QListView>
 #include <QMessageBox>
+#include <QScreen>
 
 WelcomePage::WelcomePage( Config* config, QWidget* parent )
     : QWidget( parent )
@@ -105,19 +107,68 @@ WelcomePage::init()
 void
 WelcomePage::initLanguages()
 {
+    // deepin-installer style: a large, centered language list instead of a
+    // combo box, with the product logo on top of the page.
+    if ( !m_languageList )
+    {
+        m_languageList = new QListView( this );
+        m_languageList->setObjectName( "languageList" );
+        m_languageList->setSelectionMode( QAbstractItemView::SingleSelection );
+        m_languageList->setEditTriggers( QAbstractItemView::NoEditTriggers );
+        m_languageList->setUniformItemSizes( true );
+        m_languageList->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
+        m_languageList->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+
+        // The list covers most of the screen, like deepin-installer
+        const int listWidth = qBound( 480, QApplication::primaryScreen()->size().width() * 3 / 5, 1200 );
+        const int listHeight = qBound( 300, QApplication::primaryScreen()->size().height() * 2 / 5, 620 );
+        m_languageList->setMinimumWidth( listWidth );
+        m_languageList->setMaximumWidth( listWidth );
+        m_languageList->setMinimumHeight( listHeight );
+
+        // Product logo on top of the page
+        const QPixmap logo
+            = Calamares::Branding::instance()->image( Calamares::Branding::ProductLogo, QSize( 128, 128 ) );
+        if ( !logo.isNull() )
+        {
+            auto* logoLabel = new QLabel( this );
+            logoLabel->setObjectName( "welcomeLogo" );
+            logoLabel->setPixmap( logo );
+            logoLabel->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
+            logoLabel->setFixedHeight( 128 );
+            const int logoIdx = ui->verticalLayout->indexOf( ui->aboveTextSpacer );
+            ui->verticalLayout->insertWidget( logoIdx < 0 ? 0 : logoIdx, logoLabel, 0, Qt::AlignHCenter );
+        }
+
+        // Replace the combo-box row with the list
+        const int comboRowIdx = ui->verticalLayout->indexOf( ui->horizontalLayout_3 );
+        const int listStretch = 1;
+        if ( comboRowIdx >= 0 )
+        {
+            ui->verticalLayout->insertWidget( comboRowIdx, m_languageList, listStretch );
+        }
+        else
+        {
+            ui->verticalLayout->addWidget( m_languageList, listStretch );
+        }
+        ui->verticalLayout->removeItem( ui->horizontalLayout_3 );
+        // The orphaned combo-box widgets would show up at the top-left
+        ui->languageWidget->hide();
+        ui->languageIcon->hide();
+        ui->verticalLayout->setStretchFactor( m_languageList, 1 );
+    }
+
     // Fill the list of translations
-    ui->languageWidget->clear();
-    ui->languageWidget->setInsertPolicy( QComboBox::InsertAtBottom );
+    m_languageList->setModel( m_conf->languagesModel() );
+    m_languageList->setItemDelegate( new LocaleTwoColumnDelegate( m_languageList ) );
 
-    ui->languageWidget->setModel( m_conf->languagesModel() );
-    ui->languageWidget->setItemDelegate( new LocaleTwoColumnDelegate( ui->languageWidget ) );
+    m_languageList->setCurrentIndex( m_conf->languagesModel()->index( m_conf->localeIndex(), 0 ) );
 
-    ui->languageWidget->setCurrentIndex( m_conf->localeIndex() );
-
-    connect( ui->languageWidget,
-             static_cast< void ( QComboBox::* )( int ) >( &QComboBox::currentIndexChanged ),
+    connect( m_languageList->selectionModel(),
+             &QItemSelectionModel::currentRowChanged,
              m_conf,
-             &Config::setLocaleIndex );
+             [ this ]( const QModelIndex& current, const QModelIndex& )
+             { m_conf->setLocaleIndex( current.row() ); } );
 }
 
 void
@@ -190,9 +241,9 @@ WelcomePage::verdict() const
 void
 WelcomePage::externallySelectedLanguage( int row )
 {
-    if ( ( row >= 0 ) && ( row < ui->languageWidget->count() ) )
+    if ( m_languageList && ( row >= 0 ) && ( row < m_languageList->model()->rowCount() ) )
     {
-        ui->languageWidget->setCurrentIndex( row );
+        m_languageList->setCurrentIndex( m_languageList->model()->index( row, 0 ) );
     }
 }
 
