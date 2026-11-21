@@ -51,6 +51,9 @@ SlideshowQML::SlideshowQML( QWidget* parent )
 
     m_qmlShow->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
     m_qmlShow->setResizeMode( QQuickWidget::SizeRootObjectToView );
+    // Let the wallpaper show through around the slide content
+    m_qmlShow->setClearColor( QColor( 0, 0, 0, 0 ) );
+    m_qmlShow->setAttribute( Qt::WA_AlwaysStackOnTop );
     m_qmlShow->engine()->addImportPath( Calamares::qmlModulesDir().absolutePath() );
 
     cDebug() << "QML import paths:" << Logger::DebugList( m_qmlShow->engine()->importPathList() );

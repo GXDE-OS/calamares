@@ -72,6 +72,7 @@ ExecutionViewStep::ExecutionViewStep( QObject* parent )
     , m_log_widget( new LogWidget )
 {
     m_widget->setObjectName( "slideshow" );
+    m_tab_widget->setObjectName( "execTabWidget" );
     m_progressBar->setObjectName( "exec-progress" );
     CALAMARES_RETRANSLATE( m_progressBar->setFormat(
         tr( "%p%", "Progress percentage indicator: %p is where the number 0..100 is placed" ) ); );
