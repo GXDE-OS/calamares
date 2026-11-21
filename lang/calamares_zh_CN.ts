@@ -662,6 +662,11 @@ The installer will quit and all changes will be lost.</source>
       <comment>@info</comment>
       <translation>只需要一杯咖啡的时间，您就可以体验%1给您带来的畅快感</translation>
     </message>
+    <message>
+      <source>Restart now</source>
+      <comment>@button</comment>
+      <translation>立即重启</translation>
+    </message>
   </context>
   <context>
     <name>ChangeFilesystemLabelJob</name>

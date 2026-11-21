@@ -81,6 +81,7 @@ private:
     QWidget* m_navRow = nullptr;
     QPushButton* m_backButton = nullptr;
     QPushButton* m_nextButton = nullptr;
+    QPushButton* m_restartButton = nullptr;
     PageIndicator* m_pageIndicator = nullptr;
     QWidget* m_indicatorWrapper = nullptr;
 };

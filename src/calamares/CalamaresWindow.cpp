@@ -747,12 +747,22 @@ CalamaresWindow::initFullscreenUI()
     QObject::connect( m_viewManager, &Calamares::ViewManager::nextLabelChanged, m_nextButton, [ = ]( QString t )
                       { m_nextButton->setText( stripButtonMnemonic( t ) ); } );
 
+    // "Restart now" button, shown on the final page like deepin-installer's
+    // install-success page; quitting triggers the finished module's restart
+    m_restartButton = new QPushButton( this );
+    m_restartButton->setObjectName( "deepinNavButton" );
+    m_restartButton->setFixedSize( navButtonSize );
+    m_restartButton->setText( tr( "Restart now", "@button" ) );
+    m_restartButton->hide();
+    QObject::connect( m_restartButton, &QPushButton::clicked, m_viewManager, &Calamares::ViewManager::quit );
+
     // Stacked vertically and centered, like deepin-installer 15
     QVBoxLayout* navLayout = new QVBoxLayout();
     navLayout->setContentsMargins( 0, 0, 0, 0 );
     navLayout->setSpacing( 15 );
     navLayout->addWidget( m_backButton, 0, Qt::AlignHCenter );
     navLayout->addWidget( m_nextButton, 0, Qt::AlignHCenter );
+    navLayout->addWidget( m_restartButton, 0, Qt::AlignHCenter );
     m_navRow = new QWidget( this );
     m_navRow->setLayout( navLayout );
 
@@ -842,11 +852,14 @@ CalamaresWindow::updateFullscreenPage()
         m_subTitleLabel->hide();
     }
 
-    // The very last page (all done) has no navigation and no dots,
-    // like deepin-installer's install-success page
-    const bool last = ( current >= steps - 1 );
+    // The very last page (all done) shows the restart button instead of the
+    // navigation, like deepin-installer's install-success page
+    const bool last = !executing && ( current >= steps - 1 );
     m_indicatorWrapper->setVisible( !last );
-    m_navRow->setVisible( !last && m_viewManager->backAndNextVisible() );
+    m_backButton->setVisible( !executing && !last );
+    m_nextButton->setVisible( !executing && !last );
+    m_restartButton->setVisible( last );
+    m_navRow->setVisible( !executing );
 }
 
 void
