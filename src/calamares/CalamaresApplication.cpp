@@ -274,6 +274,12 @@ CalamaresApplication::initViewSteps()
     if ( Calamares::Branding::instance()->windowMaximize() )
     {
         m_mainwindow->setWindowFlag( Qt::FramelessWindowHint );
+        // deepin-installer style: force the window to the full screen
+        // geometry, since a window manager may be absent (e.g. in a
+        // live session) and Qt's showFullScreen() would not resize.
+        const QRect screenGeometry = m_mainwindow->screen()->geometry();
+        m_mainwindow->move( screenGeometry.topLeft() );
+        m_mainwindow->setFixedSize( screenGeometry.size() );
         m_mainwindow->showFullScreen();
     }
     else
