@@ -31,9 +31,12 @@
 #include <QBoxLayout>
 #include <QClipboard>
 #include <QDialogButtonBox>
+#include <QEventLoop>
 #include <QFile>
+#include <QLabel>
 #include <QMessageBox>
 #include <QMetaObject>
+#include <QPushButton>
 
 #define UPDATE_BUTTON_PROPERTY( name, value ) \
     do \
@@ -546,6 +549,59 @@ ViewManager::confirmCancelInstallation()
                                                      "The setup program will quit and all changes will be lost." )
                                                : tr( "Do you really want to cancel the current install process?\n"
                                                      "The installer will quit and all changes will be lost." );
+
+    // In the deepin-installer-like full-screen shell, ask for confirmation
+    // with a full-screen page (replicating deepin's ConfirmQuitFrame)
+    // instead of a message box.
+    if ( Calamares::Branding::instance() && Calamares::Branding::instance()->windowMaximize() && m_widget )
+    {
+        QWidget* mainWindow = m_widget->window();
+        QWidget* overlay = new QWidget( mainWindow );
+        overlay->setObjectName( QStringLiteral( "confirmQuitOverlay" ) );
+        overlay->setGeometry( mainWindow ? mainWindow->rect() : QRect() );
+
+        QBoxLayout* layout = new QVBoxLayout( overlay );
+        layout->setContentsMargins( 0, 0, 0, 0 );
+        layout->setSpacing( 15 );
+        layout->addStretch();
+        QLabel* titleLabel = new QLabel( title, overlay );
+        titleLabel->setObjectName( QStringLiteral( "deepinTitle" ) );
+        titleLabel->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
+        layout->addWidget( titleLabel );
+        QLabel* commentLabel = new QLabel( question, overlay );
+        commentLabel->setObjectName( QStringLiteral( "deepinComment" ) );
+        commentLabel->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
+        layout->addWidget( commentLabel );
+        layout->addStretch();
+
+        QPushButton* continueButton = new QPushButton( tr( "Continue", "@button" ), overlay );
+        continueButton->setObjectName( QStringLiteral( "deepinNavButton" ) );
+        continueButton->setFixedSize( QSize( 310, 36 ) );
+        QPushButton* quitButton = new QPushButton( tr( "Abort Installation", "@button" ), overlay );
+        quitButton->setObjectName( QStringLiteral( "deepinNavButton" ) );
+        quitButton->setFixedSize( QSize( 310, 36 ) );
+        layout->addWidget( continueButton, 0, Qt::AlignCenter );
+        layout->addSpacing( 15 );
+        layout->addWidget( quitButton, 0, Qt::AlignCenter );
+        layout->addSpacing( 32 );
+
+        overlay->show();
+        overlay->raise();
+
+        QEventLoop loop;
+        bool abortConfirmed = false;
+        QObject::connect( continueButton, &QPushButton::clicked, &loop, [ & ]() { loop.quit(); } );
+        QObject::connect( quitButton, &QPushButton::clicked, &loop, [ & ]()
+                          {
+                              abortConfirmed = true;
+                              loop.quit();
+                          } );
+        loop.exec();
+
+        overlay->deleteLater();
+        return abortConfirmed ? Confirmation::CancelInstallation : Confirmation::Continue;
+    }
+
     QMessageBox mb( QMessageBox::Question, title, question, QMessageBox::Yes | QMessageBox::No, m_widget );
     mb.setDefaultButton( QMessageBox::No );
     Calamares::fixButtonLabels( &mb );
