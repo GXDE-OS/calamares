@@ -34,6 +34,8 @@
 
 #include "Branding.h"
 #include "GlobalStorage.h"
+
+#include "utils/Gui.h"
 #include "JobQueue.h"
 #include "partition/PartitionQuery.h"
 #include "utils/Logger.h"
@@ -239,7 +241,7 @@ PartitionPage::onNewPartitionTableClicked()
     }
 
     ui.areYouSureLabel->setText( areYouSure );
-    if ( dlg->exec() == QDialog::Accepted )
+    if ( Calamares::presentAsFullscreen( dlg.data() ) == QDialog::Accepted )
     {
         PartitionTable::TableType type = ui.mbrRadioButton->isChecked() ? PartitionTable::msdos : PartitionTable::gpt;
         m_core->createPartitionTable( device, type );
@@ -301,7 +303,7 @@ PartitionPage::onNewVolumeGroupClicked()
     QPointer< CreateVolumeGroupDialog > dlg
         = new CreateVolumeGroupDialog( vgName, selectedPVs, availablePVs, peSize, this );
 
-    if ( dlg->exec() == QDialog::Accepted )
+    if ( Calamares::presentAsFullscreen( dlg.data() ) == QDialog::Accepted )
     {
         QModelIndex partitionIndex = m_ui->partitionTreeView->currentIndex();
 
@@ -360,7 +362,7 @@ PartitionPage::onResizeVolumeGroupClicked()
 
     QPointer< ResizeVolumeGroupDialog > dlg = new ResizeVolumeGroupDialog( device, availablePVs, selectedPVs, this );
 
-    if ( dlg->exec() == QDialog::Accepted )
+    if ( Calamares::presentAsFullscreen( dlg.data() ) == QDialog::Accepted )
     {
         m_core->resizeVolumeGroup( device, selectedPVs );
     }
@@ -412,7 +414,7 @@ PartitionPage::onCreateClicked()
 
     QPointer< CreatePartitionDialog > dlg = new CreatePartitionDialog(
         m_core, model->device(), CreatePartitionDialog::FreeSpace { partition }, getCurrentUsedMountpoints(), this );
-    if ( dlg->exec() == QDialog::Accepted )
+    if ( Calamares::presentAsFullscreen( dlg.data() ) == QDialog::Accepted )
     {
         Partition* newPart = dlg->getNewlyCreatedPartition();
         m_core->createPartition( model->device(), newPart, dlg->newFlags() );
@@ -516,7 +518,7 @@ PartitionPage::updatePartitionToCreate( Device* device, Partition* partition )
 
     QPointer< CreatePartitionDialog > dlg
         = new CreatePartitionDialog( m_core, device, CreatePartitionDialog::FreshPartition { partition }, mountPoints, this );
-    if ( dlg->exec() == QDialog::Accepted )
+    if ( Calamares::presentAsFullscreen( dlg.data() ) == QDialog::Accepted )
     {
         Partition* newPartition = dlg->getNewlyCreatedPartition();
         m_core->deletePartition( device, partition );
@@ -533,7 +535,7 @@ PartitionPage::editExistingPartition( Device* device, Partition* partition )
 
     QPointer< EditExistingPartitionDialog > dlg
         = new EditExistingPartitionDialog( m_core, device, partition, mountPoints, this );
-    if ( dlg->exec() == QDialog::Accepted )
+    if ( Calamares::presentAsFullscreen( dlg.data() ) == QDialog::Accepted )
     {
         dlg->applyChanges( m_core );
     }
