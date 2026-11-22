@@ -39,14 +39,15 @@ public:
     explicit PartitionPage( PartitionCoreModule* core, const Config & config, QWidget* parent = nullptr );
     ~PartitionPage() override;
 
-signals:
-    ///@brief The internal editor page opened (true) or closed (false)
-    void editorPageActive( bool active );
-
+public:
     void onRevertClicked();
 
     int selectedDeviceIndex();
     void selectDeviceByIndex( int index );
+
+signals:
+    ///@brief The internal editor page opened (true) or closed (false)
+    void editorPageActive( bool active );
 
 private Q_SLOTS:
     /// @brief Update everything when the base device changes

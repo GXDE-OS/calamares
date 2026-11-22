@@ -65,6 +65,18 @@ CreatePartitionDialog::CreatePartitionDialog( PartitionCoreModule* core,
     m_ui->encryptWidget->hide();
 
     // deepin-installer style: report the outcome through finished()
+    // deepin-installer style: plain buttons, centered at the bottom,
+    // without the theme icons
+    m_ui->buttonBox->setCenterButtons( true );
+    for ( auto* b : { m_ui->buttonBox->button( QDialogButtonBox::Ok ),
+                      m_ui->buttonBox->button( QDialogButtonBox::Cancel ) } )
+    {
+        if ( b )
+        {
+            b->setIcon( QIcon() );
+            b->setFixedSize( 200, 36 );
+        }
+    }
     connect( m_ui->buttonBox, &QDialogButtonBox::accepted, this, [ this ]() { emit finished( true ); } );
     connect( m_ui->buttonBox, &QDialogButtonBox::rejected, this, [ this ]() { emit finished( false ); } );
 

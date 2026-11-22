@@ -75,6 +75,18 @@ EditExistingPartitionDialog::EditExistingPartitionDialog( PartitionCoreModule* c
 
     // deepin-installer style: the editor page reports its outcome through
     // finished(); the partition page returns to its main page.
+    // deepin-installer style: plain buttons, centered at the bottom,
+    // without the theme icons
+    m_ui->buttonBox->setCenterButtons( true );
+    for ( auto* b : { m_ui->buttonBox->button( QDialogButtonBox::Ok ),
+                      m_ui->buttonBox->button( QDialogButtonBox::Cancel ) } )
+    {
+        if ( b )
+        {
+            b->setIcon( QIcon() );
+            b->setFixedSize( 200, 36 );
+        }
+    }
     connect( m_ui->buttonBox, &QDialogButtonBox::accepted, this, [ this ]() { emit finished( true ); } );
     connect( m_ui->buttonBox, &QDialogButtonBox::rejected, this, [ this ]() { emit finished( false ); } );
     standardMountPoints( *( m_ui->mountPointComboBox ), PartitionInfo::mountPoint( partition ) );
