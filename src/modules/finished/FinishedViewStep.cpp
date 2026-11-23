@@ -14,7 +14,9 @@
 #include "Config.h"
 #include "FinishedPage.h"
 
+#include "Branding.h"
 #include "JobQueue.h"
+#include "utils/Logger.h"
 
 #include <QApplication>
 
@@ -86,7 +88,22 @@ void
 FinishedViewStep::onActivate()
 {
     m_config->doNotify();
-    connect( qApp, &QApplication::aboutToQuit, m_config, qOverload<>( &Config::doRestart ) );
+
+    // With the full-screen shell, the final page has explicit "Restart now"
+    // and "Continue without rebooting" buttons: the first reboots directly,
+    // the second must only quit. Upstream's quit-triggered restart would make
+    // both actions reboot (notably when the module is configured "always"),
+    // so leave restart control to the buttons in that shell.
+    const bool fullscreenShell = Calamares::Branding::instance()
+        && Calamares::Branding::instance()->windowMaximize();
+    if ( fullscreenShell )
+    {
+        cDebug() << "Full-screen shell: restart is handled by the final-page buttons, not by quit.";
+    }
+    else
+    {
+        connect( qApp, &QApplication::aboutToQuit, m_config, qOverload<>( &Config::doRestart ), Qt::UniqueConnection );
+    }
 }
 
 

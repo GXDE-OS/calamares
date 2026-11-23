@@ -14,7 +14,10 @@
 
 #include "Config.h"
 
+#include "Branding.h"
 #include "JobQueue.h"
+#include "utils/Logger.h"
+
 #include <QApplication>
 
 CALAMARES_PLUGIN_FACTORY_DEFINITION( FinishedQmlViewStepFactory, registerPlugin< FinishedQmlViewStep >(); )
@@ -67,7 +70,19 @@ void
 FinishedQmlViewStep::onActivate()
 {
     m_config->doNotify();
-    connect( qApp, &QApplication::aboutToQuit, m_config, qOverload<>( &Config::doRestart ) );
+
+    // The full-screen shell owns the final-page restart / continue actions,
+    // so quitting from "continue" must not run the configured restart command.
+    const bool fullscreenShell = Calamares::Branding::instance()
+        && Calamares::Branding::instance()->windowMaximize();
+    if ( fullscreenShell )
+    {
+        cDebug() << "Full-screen shell: restart is handled by the final-page buttons, not by quit.";
+    }
+    else
+    {
+        connect( qApp, &QApplication::aboutToQuit, m_config, qOverload<>( &Config::doRestart ), Qt::UniqueConnection );
+    }
     QmlViewStep::onActivate();
 }
 

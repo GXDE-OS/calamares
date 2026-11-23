@@ -33,16 +33,22 @@ FinishedPage::FinishedPage( Config* config, QWidget* parent )
     ui->mainText->setOpenExternalLinks( true );
 
     // The full-screen shell provides dedicated restart / continue
-    // buttons, so the restart checkbox has no purpose here.
-    ui->restartCheckBox->hide();
+    // buttons, so the restart checkbox has no purpose there. Keep the
+    // checkbox in the classic window, where it is the only way to choose.
+    const bool fullscreenShell = Calamares::Branding::instance()
+        && Calamares::Branding::instance()->windowMaximize();
+    if ( fullscreenShell )
+    {
+        ui->restartCheckBox->hide();
+    }
 
     connect( config,
              &Config::restartModeChanged,
-             [ this ]( Config::RestartMode mode )
+             [ this, fullscreenShell ]( Config::RestartMode mode )
              {
                  using Mode = Config::RestartMode;
 
-                 ui->restartCheckBox->hide();  // the full-screen shell has its own buttons
+                 ui->restartCheckBox->setVisible( !fullscreenShell && mode != Mode::Never );
                  ui->restartCheckBox->setEnabled( mode != Mode::Always );
              } );
     connect( config, &Config::restartNowWantedChanged, ui->restartCheckBox, &QCheckBox::setChecked );
