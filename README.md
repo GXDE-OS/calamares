@@ -19,6 +19,22 @@
 > be customizable by distribution maintainers without the need for cumbersome patching,
 > thanks to third-party branding and external modules support.
 
+## Screenshots
+
+The images below show the full-screen, wallpaper-based installer used by GXDE OS 25 (lizhi), a distribution that brands Calamares for its own installation flow.
+
+### Welcome
+
+![Welcome page](docs/screenshots/welcome.png)
+
+### Location
+
+![Location page](docs/screenshots/locale.png)
+
+### User
+
+![User page](docs/screenshots/users.png)
+
 ## Target Audience
 
 Calamares is a Linux installer; users who install Linux on a computer will hopefully
